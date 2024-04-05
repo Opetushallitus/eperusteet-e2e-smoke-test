@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - master
     
 env:
   TEST_AUTOMATION_USERNAME: ${{ secrets.TEST_AUTOMATION_USERNAME }}
