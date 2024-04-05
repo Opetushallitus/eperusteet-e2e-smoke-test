@@ -1,5 +1,9 @@
 name: Playwright Tests
-on: [workflow_dispatch, push]
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+      - main
     
 env:
   TEST_AUTOMATION_USERNAME: ${{ secrets.TEST_AUTOMATION_USERNAME }}
