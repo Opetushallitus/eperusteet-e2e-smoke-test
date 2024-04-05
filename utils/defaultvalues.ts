@@ -1,6 +1,5 @@
 export const CI_baseUrl = 'https://virkailija.hahtuvaopintopolku.fi';
 
-
 export const CI_VALUES = {
   baseUrl: 'https://virkailija.hahtuvaopintopolku.fi',
   eperusteUrl: 'https://virkailija.hahtuvaopintopolku.fi/eperusteet-app',
@@ -14,6 +13,9 @@ export const LOCAL_VALUES = {
 export const ENVIRONMENT_VALUES = process.env.CI ? CI_VALUES : LOCAL_VALUES;
 
 export const DEFAULT_VALUES = {
-  loginUrl: `${ENVIRONMENT_VALUES.baseUrl}/`,
+  ...ENVIRONMENT_VALUES,
+  loginUrl: `${ENVIRONMENT_VALUES.baseUrl}`,
+  loginTitleExpect: 'Perusteprojektit - ePerusteet',
+  perusteprojektitUrl: `${ENVIRONMENT_VALUES.eperusteUrl}/#/fi/perusteprojektit`,
   uusiPerusteUrl: `${ENVIRONMENT_VALUES.eperusteUrl}/#/fi/perusteprojektit/uusi`,
 }
