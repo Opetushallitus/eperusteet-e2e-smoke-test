@@ -1,0 +1,14 @@
+{
+  "name": "smoketests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.42.1",
+    "@types/node": "^20.12.4"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:dev": "playwright test --ui"
+  }
+}
