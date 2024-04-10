@@ -6,7 +6,7 @@ export const CI_VALUES = {
 }
 
 export const LOCAL_VALUES = {
-  baseUrl: 'http://localhost:9001',
+  baseUrl: 'http://test:test@localhost:9001',
   eperusteUrl: 'http://localhost:9001',
 }
 
@@ -17,5 +17,6 @@ export const DEFAULT_VALUES = {
   loginUrl: `${ENVIRONMENT_VALUES.baseUrl}`,
   loginTitleExpect: 'Perusteprojektit - ePerusteet',
   perusteprojektitUrl: `${ENVIRONMENT_VALUES.eperusteUrl}/#/fi/perusteprojektit`,
+  perusteprojektiUrl: `${ENVIRONMENT_VALUES.eperusteUrl}/#/fi/perusteprojekti`,
   uusiPerusteUrl: `${ENVIRONMENT_VALUES.eperusteUrl}/#/fi/perusteprojektit/uusi`,
 }
