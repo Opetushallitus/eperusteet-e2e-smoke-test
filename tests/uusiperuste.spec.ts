@@ -1,20 +1,22 @@
 import { test, expect, Page } from '@playwright/test';
-import {login} from "../utils/commonmethods";
 import {DEFAULT_VALUES} from "../utils/defaultvalues";
 
 test.describe.configure({ mode: 'serial' });
-test.describe('test', async () => {
+test.describe('Peruste', async () => {
   let page: Page;
   let perusteProjektiUrl;
+  let perusteProjektiNimi = 'TestAutomation';
+  let perusteDiaari = '111/111/1111';
+
   test.beforeEach(async ({ browser }) => {
     page = await browser.newPage();
   });
 
-  test('Uusi peruste luotu', async () => {
-    await login(page)
+  test('Uusi peruste luotu', async ({ page }) => {
+    // await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(DEFAULT_VALUES.uusiPerusteUrl);
     await page.getByText('Seuraava').click();
-    const projektiNimi = 'TestAutomation ' + new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').replace('.', '');
+    const projektiNimi = perusteProjektiNimi + new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').replace('.', '');
     await page.getByPlaceholder('Kirjoita projektin nimi').fill(projektiNimi);
     await page.locator('.multiselect').first().click();
     await page.getByText('Varhaiskasvatus').click();
@@ -28,15 +30,15 @@ test.describe('test', async () => {
   });
 
   test('Päivitä peruste', async ({ page }) => {
-    await login(page)
+    // await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
     await page.getByText('settings').click();
     await page.getByRole('menuitem', { name: 'Perusteen tiedot' }).click();
     await page.getByRole('button', { name: 'Muokkaa' }).click();
     await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').click();
-    await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').fill('TestAutomation');
+    await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').fill(perusteProjektiNimi);
     await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').click();
-    await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').fill('111/111/1111');
+    await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').fill(perusteDiaari);
     await page.getByRole('group', { name: 'Määräyksen päätöspäivämäärä' }).click();
     await page.getByRole('button', { name: '2' }).first().click();
     // Alku ja loppupäivä samassa groupissa, joten pitää kaivaa syvemmältä, jotta voi asettaa päivämäärän
@@ -52,7 +54,7 @@ test.describe('test', async () => {
   });
 
   test('Julkaise peruste', async ({ page }) => {
-    await login(page)
+    // await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
     await page.hover('.ep-valid-popover')
     await page.getByRole('tooltip', { name: 'Siirry julkaisunäkymään' }).getByRole('link').click();
@@ -65,7 +67,7 @@ test.describe('test', async () => {
   });
 
   test('Tarkista PDF ja luo uusi PDF', async ({ page }) => {
-    await login(page)
+    // await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
     await page.getByText('settings').click();
     await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
@@ -76,8 +78,25 @@ test.describe('test', async () => {
     await expect(page.locator('.sisalto')).toContainText('Työversio');
   });
 
-  test('Arkistoi peruste', async () => {
-    await login(page)
+  test('Luo OPS-pohja', async ({ page }) => {
+    // await login(page, DEFAULT_VALUES.baseYlopsUrl)
+    await page.goto(DEFAULT_VALUES.opsPohjatUrl);
+    await page.getByRole('link', { name: 'Luo uusi' }).click();
+    // odotetaan, että perustelistaus ladataan
+    await page.waitForTimeout(5000);
+    await page.getByRole('combobox').selectOption({ label: perusteProjektiNimi + ' (' + perusteDiaari + ')' });
+    await page.getByRole('textbox').click();
+    await page.getByRole('textbox').fill('TestAutomation pohja');
+    await page.getByRole('button', { name: 'Luo pohja' }).click();
+    // odotetaan, pohjan näkymä latautuu
+    await page.waitForTimeout(5000);
+    await page.hover('.ep-valid-popover')
+    await page.getByRole('tooltip', { name: 'Aseta valmiiksi' }).getByRole('link').click();
+    await expect(page.locator('body')).toContainText('Tilan vaihto onnistui');
+  });
+
+  test('Arkistoi peruste', async ({ page }) => {
+    // await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
     await page.getByText('settings').click();
     await page.getByRole('menuitem', { name: 'Arkistoi peruste' }).click();

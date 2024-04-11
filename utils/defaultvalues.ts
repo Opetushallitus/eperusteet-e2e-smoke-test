@@ -1,22 +1,33 @@
 export const CI_baseUrl = 'https://virkailija.hahtuvaopintopolku.fi';
 
 export const CI_VALUES = {
-  baseUrl: 'https://virkailija.hahtuvaopintopolku.fi',
+  basePerusteetUrl: CI_baseUrl,
+  baseAmosaaUrl: CI_baseUrl,
+  baseYlopsUrl: CI_baseUrl,
   eperusteUrl: 'https://virkailija.hahtuvaopintopolku.fi/eperusteet-app',
+  amosaaUrl: 'https://virkailija.hahtuvaopintopolku.fi/eperusteet-amosaa-app',
+  ylopsUrl: 'https://virkailija.hahtuvaopintopolku.fi/eperusteet-ylops-app',
 }
 
 export const LOCAL_VALUES = {
-  baseUrl: 'http://test:test@localhost:9001',
+  basePerusteetUrl: 'http://test:test@localhost:9001',
+  baseAmosaaUrl: '',
+  baseYlopsUrl: 'http://test:test@localhost:9040',
   eperusteUrl: 'http://localhost:9001',
+  amosaaUrl: '',
+  ylopsUrl: 'http://localhost:9040',
 }
 
 export const ENVIRONMENT_VALUES = process.env.CI ? CI_VALUES : LOCAL_VALUES;
 
 export const DEFAULT_VALUES = {
   ...ENVIRONMENT_VALUES,
-  loginUrl: `${ENVIRONMENT_VALUES.baseUrl}`,
+  loginPerusteetUrl: `${ENVIRONMENT_VALUES.basePerusteetUrl}`,
+  loginAmosaaUrl: `${ENVIRONMENT_VALUES.baseAmosaaUrl}`,
+  loginYlopsUrl: `${ENVIRONMENT_VALUES.baseYlopsUrl}`,
   loginTitleExpect: 'Perusteprojektit - ePerusteet',
   perusteprojektitUrl: `${ENVIRONMENT_VALUES.eperusteUrl}/#/fi/perusteprojektit`,
   perusteprojektiUrl: `${ENVIRONMENT_VALUES.eperusteUrl}/#/fi/perusteprojekti`,
   uusiPerusteUrl: `${ENVIRONMENT_VALUES.eperusteUrl}/#/fi/perusteprojektit/uusi`,
+  opsPohjatUrl: `${ENVIRONMENT_VALUES.ylopsUrl}/#/fi/pohjat`,
 }
