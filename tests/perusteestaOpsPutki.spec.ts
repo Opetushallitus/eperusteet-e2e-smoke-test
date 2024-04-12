@@ -6,7 +6,7 @@ test.describe.configure({ mode: 'serial' });
 test.describe('Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
   let latausTimeout = 60000*5;
-  let luontiTimeout = 15000;
+  let waitTimeout = 10000;
 
   let perusteProjektiUrl;
   let opetussuunnitelmaUrl;
@@ -32,7 +32,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.getByText('Seuraava').click();
     await page.getByRole('button', { name: 'Luo perusteprojekti' }).click();
     await expect(page.locator('h1').locator('span').first()).toHaveText(projektiNimi, {
-      timeout: luontiTimeout
+      timeout: latausTimeout
     });
     perusteProjektiUrl = page.url();
   });
@@ -56,7 +56,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.locator('.ProseMirror').fill("Kuvausteksti");
     await page.setInputFiles('input[type="file"]', './files/testpdf.pdf');
     // odotetaan, että pdf ladataan selaimeen
-    await page.waitForTimeout(latausTimeout);
+    await page.waitForTimeout(waitTimeout);
     await page.getByRole('button', { name: 'Tallenna' }).click();
     await expect(page.locator('body')).toContainText('Tallennus onnistui', {
       timeout: latausTimeout
@@ -100,7 +100,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     });
     await page.getByRole('link', { name: 'Luo uusi' }).click();
     // odotetaan, että perustelistaus ladataan
-    await page.waitForTimeout(latausTimeout);
+    await page.waitForTimeout(waitTimeout);
     await page.getByRole('combobox').selectOption({ label: perusteProjektiNimi + ' (' + perusteDiaari + ')' });
     await page.getByRole('textbox').click();
 
