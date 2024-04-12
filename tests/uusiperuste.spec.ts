@@ -31,7 +31,9 @@ test.describe('Peruste', async () => {
     await page.getByText('Seuraava').click();
     await page.getByText('Seuraava').click();
     await page.getByRole('button', { name: 'Luo perusteprojekti' }).click();
-    await expect(page.locator('h1').locator('span').first()).toHaveText(projektiNimi, { timeout: luontiTimeout });
+    await expect(page.locator('h1').locator('span').first()).toHaveText(projektiNimi, {
+      timeout: luontiTimeout
+    });
     perusteProjektiUrl = page.url();
   });
 
@@ -56,22 +58,26 @@ test.describe('Peruste', async () => {
     // odotetaan, että pdf ladataan selaimeen
     await page.waitForTimeout(latausTimeout);
     await page.getByRole('button', { name: 'Tallenna' }).click();
-    await expect(page.locator('body')).toContainText('Tallennus onnistui');
+    await expect(page.locator('body')).toContainText('Tallennus onnistui', {
+      timeout: latausTimeout
+    });
   });
 
   test('Julkaise peruste', async ({ page }) => {
     await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
-    // odotetaan, että peruste ladataan
-    await page.waitForTimeout(latausTimeout);
+    await expect(page.locator('.ep-valid-popover')).toHaveCount(1, {
+      timeout: latausTimeout
+    });
     await page.hover('.ep-valid-popover')
     await page.getByRole('tooltip', { name: 'Siirry julkaisunäkymään' }).getByRole('link').click();
     await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
     await page.getByRole('button', { name: 'Julkaise' }).click();
     await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
     //odotetaan julkaisuprosessin päättymistä
-    await page.waitForTimeout(luontiTimeout);
-    await expect(page.locator('.julkaisu').first()).toContainText('Uusin versio');
+    await expect(page.locator('.julkaisu')).toContainText('Uusin versio', {
+      timeout: latausTimeout
+    });
   });
 
   test('Tarkista perusteen PDF ja luo uusi PDF', async ({ page }) => {
@@ -81,14 +87,17 @@ test.describe('Peruste', async () => {
     await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
     await expect(page.locator('.sisalto')).toContainText('Julkaistu');
     await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
-    //odotetaan generointiprosessin päättymistä
-    await page.waitForTimeout(luontiTimeout);
-    await expect(page.locator('.sisalto')).toContainText('Työversio');
+    await expect(page.locator('.sisalto')).toContainText('Työversio', {
+      timeout: latausTimeout
+    });
   });
 
   test('Luo OPS-pohja', async ({ page }) => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(DEFAULT_VALUES.opsPohjatUrl);
+    await expect(page.locator('.uusi')).toContainText('Luo uusi', {
+      timeout: latausTimeout
+    });
     await page.getByRole('link', { name: 'Luo uusi' }).click();
     // odotetaan, että perustelistaus ladataan
     await page.waitForTimeout(latausTimeout);
@@ -98,12 +107,15 @@ test.describe('Peruste', async () => {
     pohjaNimi = perusteProjektiNimi + ' pohja ' + new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').replace('.', '');
     await page.getByRole('textbox').fill(pohjaNimi);
     await page.getByRole('button', { name: 'Luo pohja' }).click();
-    // odotetaan, pohjan näkymä latautuu
-    await page.waitForTimeout(latausTimeout);
+    await expect(page.locator('.done-icon')).toHaveCount(1, {
+      timeout: latausTimeout
+    });
     await page.hover('.ep-valid-popover')
-    await page.getByRole('button',{ name: 'Aseta valmiiksi' }).click();
-    await page.getByLabel('Aseta pohja valmiiksi').getByRole('button', { name: 'Aseta valmiiksi' }).click();
-    await expect(page.locator('body')).toContainText('Tilan vaihto onnistui');
+    await page.getByRole('tooltip', { name: 'Aseta valmiiksi' }).click();
+    await page.locator('.modal-content').getByRole('button', { name: 'Aseta valmiiksi' }).click();
+    await expect(page.locator('body')).toContainText('Tilan vaihto onnistui', {
+      timeout: latausTimeout
+    });
     // otetaan ops-pohjan url talteen arkistointia varten.
     opsPohjaUrl = page.url()
   });
@@ -113,8 +125,9 @@ test.describe('Peruste', async () => {
     await page.goto(DEFAULT_VALUES.opsUrl);
     await page.getByRole('link', { name: 'Luo uusi' }).click();
     await page.getByText('Oletuspohja', { exact: true }).click();
-    // odotetaan, että pohjien listaus ladataan
-    await page.waitForTimeout(latausTimeout);
+    await expect(page.locator('.multiselect')).toHaveCount(1, {
+      timeout: latausTimeout
+    });
     await page.locator('.multiselect').first().click();
     await page.getByText(pohjaNimi + ' (' + perusteDiaari + ')').first().click();
     const opsNimi = perusteProjektiNimi + ' ops ' + new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').replace('.', '');
@@ -124,7 +137,9 @@ test.describe('Peruste', async () => {
     await page.getByRole('combobox').nth(2).click();
     await page.getByText('Jyväskylän kaupunki').click();
     await page.getByRole('button', { name: 'Luo opetussuunnitelma' }).click();
-    await expect(page.locator('body')).toContainText('Opetussuunnitelma luotu onnistuneesti');
+    await expect(page.locator('body')).toContainText('Opetussuunnitelma luotu onnistuneesti', {
+      timeout: latausTimeout
+    });
     // otetaan opsin url talteen, jonka avulla testataan loput opsiin liittyvät.
     opetussuunnitelmaUrl = page.url()
   });
@@ -140,22 +155,25 @@ test.describe('Peruste', async () => {
     await page.getByRole('button', { name: '1' }).first().click();
     await page.getByLabel('Suomi', { exact: true }).check({ force: true });
     await page.getByRole('button', { name: 'Tallenna' }).click();
-    await expect(page.locator('body')).toContainText('Opetussuunnitelman tallentaminen onnistui');
+    await expect(page.locator('body')).toContainText('Opetussuunnitelman tallentaminen onnistui', {
+      timeout: latausTimeout
+    });
   });
 
   test('Julkaise OPS', async ({ page }) => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(opetussuunnitelmaUrl);
-    // odotetaan, että ops ladataan
-    await page.waitForTimeout(latausTimeout);
+    await expect(page.locator('.ep-valid-popover')).toHaveCount(1, {
+      timeout: latausTimeout
+    });
     await page.hover('.ep-valid-popover')
     await page.getByRole('tooltip', { name: 'Siirry julkaisunäkymään' }).getByRole('link').click();
     await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
     await page.getByRole('button', { name: 'Julkaise' }).click();
     await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
-    //odotetaan julkaisuprosessin päättymistä
-    await page.waitForTimeout(luontiTimeout);
-    await expect(page.locator('.julkaisu').first()).toContainText('Julkaistu versio');
+    await expect(page.locator('.julkaisu').first()).toContainText('Julkaistu versio', {
+      timeout: latausTimeout
+    });
   });
 
   test('Tarkista opsin PDF ja luo uusi PDF', async ({ page }) => {
@@ -165,9 +183,9 @@ test.describe('Peruste', async () => {
     await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
     await expect(page.locator('.sisalto')).toContainText('Julkaistu');
     await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
-    //odotetaan generointiprosessin päättymistä
-    await page.waitForTimeout(luontiTimeout);
-    await expect(page.locator('.sisalto')).toContainText('Työversio');
+    await expect(page.locator('.sisalto').first()).toContainText('Työversio', {
+      timeout: latausTimeout
+    });
   });
 
   test('Arkistoi peruste', async ({ page }) => {
@@ -176,7 +194,9 @@ test.describe('Peruste', async () => {
     await page.getByText('settings').click();
     await page.getByRole('menuitem', { name: 'Arkistoi peruste' }).click();
     await page.getByRole('button', { name: 'Kyllä' }).click();
-    await expect(page.locator('body')).toContainText('Arkistoitu onnistuneesti');
+    await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti', {
+      timeout: latausTimeout
+    });
   });
 
   test('Arkistoi OPS-pohja', async ({ page }) => {
@@ -185,7 +205,9 @@ test.describe('Peruste', async () => {
     await page.getByText('settings').click();
     await page.getByRole('menuitem', { name: 'Arkistoi pohja' }).click();
     await page.getByRole('button', { name: 'Kyllä' }).click();
-    await expect(page.locator('body')).toContainText('Arkistoitu onnistuneesti');
+    await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti', {
+      timeout: latausTimeout
+    });
   });
 
   test('Arkistoi OPS', async ({ page }) => {
@@ -194,6 +216,8 @@ test.describe('Peruste', async () => {
     await page.getByText('settings').click();
     await page.getByRole('menuitem', { name: 'Arkistoi opetussuunnitelma' }).click();
     await page.getByRole('button', { name: 'Kyllä' }).click();
-    await expect(page.locator('body')).toContainText('Arkistoitu onnistuneesti');
+    await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti', {
+      timeout: latausTimeout
+    });
   });
 });
