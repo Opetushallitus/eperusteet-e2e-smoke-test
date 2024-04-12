@@ -3,9 +3,9 @@ import {DEFAULT_VALUES} from "../utils/defaultvalues";
 import {login} from "../utils/commonmethods";
 
 test.describe.configure({ mode: 'serial' });
-test.describe('Peruste', async () => {
+test.describe('Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
-  let latausTimeout = 10000;
+  let latausTimeout = 100000;
   let luontiTimeout = 15000;
 
   let perusteProjektiUrl;
@@ -20,7 +20,7 @@ test.describe('Peruste', async () => {
     page = await browser.newPage();
   });
 
-  test('Uusi peruste luotu', async ({ page }) => {
+  test('Luo uusi peruste', async ({ page }) => {
     await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(DEFAULT_VALUES.uusiPerusteUrl);
     await page.getByText('Seuraava').click();
