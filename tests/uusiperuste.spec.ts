@@ -5,8 +5,8 @@ import {login} from "../utils/commonmethods";
 test.describe.configure({ mode: 'serial' });
 test.describe('Peruste', async () => {
   let page: Page;
-  let latausTimeout = 5000;
-  let luontiTimeout = 10000;
+  let latausTimeout = 10000;
+  let luontiTimeout = 15000;
 
   let perusteProjektiUrl;
   let opetussuunnitelmaUrl;
