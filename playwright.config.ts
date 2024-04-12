@@ -37,9 +37,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/eperusteet.json',
       },
-      dependencies: ['setup'],
     },
 
     // {
