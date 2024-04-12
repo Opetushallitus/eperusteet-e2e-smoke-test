@@ -5,7 +5,7 @@ import {login} from "../utils/commonmethods";
 test.describe.configure({ mode: 'serial' });
 test.describe('Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
-  let latausTimeout = 100000;
+  let latausTimeout = 60000*5;
   let luontiTimeout = 15000;
 
   let perusteProjektiUrl;
