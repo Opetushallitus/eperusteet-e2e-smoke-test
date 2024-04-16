@@ -61,7 +61,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   test('Julkaise peruste', async ({ page }) => {
     await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
-    await expect(page.locator('.ep-valid-popover')).toHaveCount(1);
+    await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
     await page.hover('.ep-valid-popover')
     await page.getByRole('tooltip', { name: 'Siirry julkaisunäkymään' }).getByRole('link').click();
     await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
@@ -140,7 +140,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   test('Julkaise OPS', async ({ page }) => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(opetussuunnitelmaUrl);
-    await expect(page.locator('.ep-valid-popover')).toHaveCount(1);
+    await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
     await page.hover('.ep-valid-popover')
     await page.getByRole('tooltip', { name: 'Siirry julkaisunäkymään' }).getByRole('link').click();
     await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');

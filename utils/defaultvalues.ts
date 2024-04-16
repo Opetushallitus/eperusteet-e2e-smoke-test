@@ -1,4 +1,5 @@
 export const CI_baseUrl = 'https://virkailija.hahtuvaopintopolku.fi';
+export const koulutustoimija = '24';
 
 export const CI_VALUES = {
   basePerusteetUrl: CI_baseUrl,
@@ -11,10 +12,10 @@ export const CI_VALUES = {
 
 export const LOCAL_VALUES = {
   basePerusteetUrl: 'http://test:test@localhost:9001',
-  baseAmosaaUrl: '',
+  baseAmosaaUrl: 'http://test:test@localhost:9002',
   baseYlopsUrl: 'http://test:test@localhost:9040',
   eperusteUrl: 'http://localhost:9001',
-  amosaaUrl: '',
+  amosaaUrl: 'http://localhost:9002',
   ylopsUrl: 'http://localhost:9040',
 }
 
@@ -24,6 +25,7 @@ export const DEFAULT_VALUES = {
   ...ENVIRONMENT_VALUES,
   loginPerusteetUrl: `${ENVIRONMENT_VALUES.basePerusteetUrl}`,
   loginAmosaaUrl: `${ENVIRONMENT_VALUES.baseAmosaaUrl}`,
+  loginAmmatillinenUrl: `${ENVIRONMENT_VALUES.baseAmosaaUrl}/#/ammatillinen`,
   loginYlopsUrl: `${ENVIRONMENT_VALUES.baseYlopsUrl}`,
   loginTitleExpect: 'Perusteprojektit - ePerusteet',
   perusteprojektitUrl: `${ENVIRONMENT_VALUES.eperusteUrl}/#/fi/perusteprojektit`,
@@ -31,4 +33,5 @@ export const DEFAULT_VALUES = {
   uusiPerusteUrl: `${ENVIRONMENT_VALUES.eperusteUrl}/#/fi/perusteprojektit/uusi`,
   opsPohjatUrl: `${ENVIRONMENT_VALUES.ylopsUrl}/#/fi/pohjat`,
   opsUrl: `${ENVIRONMENT_VALUES.ylopsUrl}/#/fi/opetussuunnitelmat`,
+  totsuUrl: `${ENVIRONMENT_VALUES.amosaaUrl}/#/ammatillinen/fi/koulutustoimija/${koulutustoimija}/toteutussuunnitelmat`,
 }
