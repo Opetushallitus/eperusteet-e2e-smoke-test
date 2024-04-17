@@ -1,13 +1,13 @@
-export const CI_baseUrl = 'https://virkailija.hahtuvaopintopolku.fi';
-export const koulutustoimija = '24';
+export const CI_baseUrl = 'https://virkailija.testiopintopolku.fi';
+export const koulutustoimija = process.env.CI ? '5967220' : process.env.test_koulutustoimija;
 
 export const CI_VALUES = {
   basePerusteetUrl: CI_baseUrl,
   baseAmosaaUrl: CI_baseUrl,
   baseYlopsUrl: CI_baseUrl,
-  eperusteUrl: 'https://virkailija.hahtuvaopintopolku.fi/eperusteet-app',
-  amosaaUrl: 'https://virkailija.hahtuvaopintopolku.fi/eperusteet-amosaa-app',
-  ylopsUrl: 'https://virkailija.hahtuvaopintopolku.fi/eperusteet-ylops-app',
+  eperusteUrl: `${CI_baseUrl}/eperusteet-app`,
+  amosaaUrl: `${CI_baseUrl}/eperusteet-amosaa-app`,
+  ylopsUrl: `${CI_baseUrl}/eperusteet-ylops-app`,
 }
 
 export const LOCAL_VALUES = {

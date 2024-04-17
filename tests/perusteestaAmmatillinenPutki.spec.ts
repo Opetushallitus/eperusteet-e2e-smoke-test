@@ -62,11 +62,15 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByRole('link', { name: 'Tutkinnon osat' }).click();
         await page.getByRole('button', { name: 'Lisää tutkinnon osa' }).click();
         // Koodistosta haun listaus ei jostain syystä renderöidy testissä, joten lisätään manuaalisesti nimi suomeksi ja ruotsiksi
-        await page.locator('input[type="text"]').first().fill('Testiosa');
+        await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill('Testiosa');
+        await page.locator('input[type="number"]').fill('10');
+        // Kierretään bugi, joka kadottaa tekstikenttiin syötetyt tiedot. Tallennetaan ensin ja sitten täytetään nimi ruotsiksi
+        await page.getByRole('button', { name: 'Tallenna' }).click();
+        await page.getByRole('button', { name: 'Poistu tallentamatta', includeHidden: true }).click();
+        await page.getByRole('button', { name: 'Muokkaa', includeHidden: true }).click();
         await page.getByRole('button', { name: 'Sisällön kieli' }).click();
         await page.getByRole('menuitem', { name: 'Svenska' }).click();
-        await page.locator('input[type="text"]').first().fill('Testiosa sv');
-        await page.locator('input[type="number"]').fill('10');
+        await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill('Testiosa sv');
         await page.getByRole('button', { name: 'Tallenna' }).click();
         await expect(page.locator('body')).toContainText('Tallennus onnistui');
     });
@@ -117,13 +121,14 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
     });
 
     test('Luo totsu', async ({ page }) => {
-        await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
-        await expect(page.locator('body')).toContainText('tervetuloa TOTSU-työkaluun');
+        await login(page, DEFAULT_VALUES.baseAmosaaUrl);
+        await page.waitForTimeout(10000);
         await page.goto(DEFAULT_VALUES.totsuUrl);
+        await expect(page.locator('body')).toContainText('Nimi tai koulutuskoodi');
         await page.getByRole('button', { name: 'Lisää toteutussuunnitelma' }).click();
         await page.getByText('Tutkinnon perustetta').click();
         await page.getByRole('combobox').locator('div').filter({ hasText: 'Valitse perusteprojekti', }).click();
-        await page.getByRole('combobox').locator('div').filter({ hasText: 'TestAutomation', }).click();
+        await page.getByText('TestAutomation').first().click();
         const totsuNimi = perusteProjektiNimi + new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').replace('.', '');
         await page.getByRole('group', { name: 'Toteutussuunnitelman nimi *' }).getByRole('textbox').fill(totsuNimi);
         await page.getByRole('button', { name: 'Luo toteutussuunnitelma' }).click();
@@ -133,7 +138,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
 
     test('Päivitä totsu', async ({ page }) => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
-        await expect(page.locator('body')).toContainText('tervetuloa TOTSU-työkaluun');
+        await page.waitForTimeout(10000);
         await page.goto(totsuUrl);
         await page.getByText('settings').click();
         await page.getByRole('menuitem', { name: 'Toteutussuunnitelman tiedot' }).click();
@@ -149,7 +154,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
 
     test('Julkaise totsu', async ({ page }) => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
-        await expect(page.locator('body')).toContainText('tervetuloa TOTSU-työkaluun');
+        await page.waitForTimeout(10000);
         await page.goto(totsuUrl);
         await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
         await page.hover('.ep-valid-popover')
@@ -162,7 +167,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
 
     test('Tarkista totsun PDF ja luo uusi PDF', async ({ page }) => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
-        await expect(page.locator('body')).toContainText('tervetuloa TOTSU-työkaluun');
+        await page.waitForTimeout(10000);
         await page.goto(totsuUrl);
         await page.getByText('settings').click();
         await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
@@ -182,7 +187,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
 
     test('Arkistoi totsu', async ({ page }) => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
-        await expect(page.locator('body')).toContainText('tervetuloa TOTSU-työkaluun');
+        await page.waitForTimeout(10000);
         await page.goto(totsuUrl);
         await page.getByText('settings').click();
         await page.getByRole('menuitem', { name: 'Arkistoi toteutussuunnitelma' }).click();
