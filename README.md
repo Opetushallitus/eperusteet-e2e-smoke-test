@@ -21,3 +21,6 @@ For testing services from outside
 * Luodaan pohjasta opetussuunnitelma, joka julkaistaan
     * Testataan, että pdf on generoitu ja luodaan uusi pdf
 * Arkistoidaan peruste, opetussuunnitelman pohja ja opetussuunnitelma
+
+# Config
+* Pilvessä testien suoritusajat vaihtelevat. Timeouteja on säädetty pitkiksi, jotta testit menevät todennäköisemmin läpi.

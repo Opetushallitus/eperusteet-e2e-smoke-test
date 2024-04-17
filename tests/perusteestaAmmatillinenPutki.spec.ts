@@ -61,15 +61,24 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.goto(perusteProjektiUrl);
         await page.getByRole('link', { name: 'Tutkinnon osat' }).click();
         await page.getByRole('button', { name: 'Lisää tutkinnon osa' }).click();
-        // Koodistosta haun listaus ei jostain syystä renderöidy testissä, joten lisätään manuaalisesti nimi suomeksi ja ruotsiksi
+        // Koodistosta haun listaus ei jostain syystä renderöidy testissä, joten lisätään manuaalisesti
         await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill('Testiosa');
         await page.locator('input[type="number"]').fill('10');
-        // Kierretään bugi, joka kadottaa tekstikenttiin syötetyt tiedot. Tallennetaan ensin ja sitten täytetään nimi ruotsiksi
         await page.getByRole('button', { name: 'Tallenna' }).click();
-        await page.getByRole('button', { name: 'Poistu tallentamatta', includeHidden: true }).click();
-        await page.getByRole('button', { name: 'Muokkaa', includeHidden: true }).click();
+        await expect(page.locator('body')).toContainText('Tallennus onnistui');
+    });
+
+    test('Päivitä tutkinnon osa', async ({ page }) => {
+        // Playwrightissa jokin bugi, joka ilmenee kun vaihtaa kieltä. Tämä tyhjentää tekstikentät ja tallennuksessa ohjaa satunnaisesti uuden luontiin mikä tuo testiin ennustamattomuutta.
+        // Päivitetään tutkinnon osalle nimi ruotsiksi erikseen
+        await login(page, DEFAULT_VALUES.basePerusteetUrl)
+        await page.goto(perusteProjektiUrl);
+        await page.getByRole('link', { name: 'Tutkinnon osat' }).click();
+        await page.getByRole('link', { name: 'Testiosa' }).click();
+        await expect(page.locator('body')).toContainText('Tutkinnon osan nimi');
         await page.getByRole('button', { name: 'Sisällön kieli' }).click();
         await page.getByRole('menuitem', { name: 'Svenska' }).click();
+        await page.getByRole('button', { name: 'Muokkaa' }).click();
         await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill('Testiosa sv');
         await page.getByRole('button', { name: 'Tallenna' }).click();
         await expect(page.locator('body')).toContainText('Tallennus onnistui');
@@ -121,7 +130,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
     });
 
     test('Luo totsu', async ({ page }) => {
-        await login(page, DEFAULT_VALUES.baseAmosaaUrl);
+        await login(page, DEFAULT_VALUES.loginAmmatillinenUrl);
         await page.waitForTimeout(10000);
         await page.goto(DEFAULT_VALUES.totsuUrl);
         await expect(page.locator('body')).toContainText('Nimi tai koulutuskoodi');
@@ -162,7 +171,8 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
         await page.getByRole('button', { name: 'Julkaise' }).click();
         await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
-        await expect(page.locator('.julkaisu').first()).toContainText('Julkaistu versio');
+        await expect(page.locator('.julkaistu')).toContainText('Julkaisu kesken');
+        await expect(page.locator('.julkaisu')).toContainText('Julkaistu versio');
     });
 
     test('Tarkista totsun PDF ja luo uusi PDF', async ({ page }) => {
