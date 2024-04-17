@@ -171,8 +171,8 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
         await page.getByRole('button', { name: 'Julkaise' }).click();
         await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
-        await expect(page.locator('.julkaistu')).toContainText('Julkaisu kesken');
-        await expect(page.locator('.julkaisu')).toContainText('Julkaistu versio');
+        await expect(page.locator('.julkaistu')).toHaveCount(1);
+        await expect(page.locator('.julkaistu')).toContainText('Julkaistu versio');
     });
 
     test('Tarkista totsun PDF ja luo uusi PDF', async ({ page }) => {
