@@ -67,7 +67,6 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
     await page.getByRole('button', { name: 'Julkaise' }).click();
     await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
-    //odotetaan julkaisuprosessin päättymistä
     await expect(page.locator('.julkaisu')).toContainText('Uusin versio');
   });
 
