@@ -171,7 +171,9 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
         await page.getByRole('button', { name: 'Julkaise' }).click();
         await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
-        await expect(page.locator('.validation-text')).toContainText('Julkaistu');
+        // Manuaalinen odotus, että elementin teksti muuttuu kun julkaistu. Muuten playwright ei huomaa muutosta.
+        await page.waitForTimeout(30000);
+        await expect(page.locator('.julkaistu')).toContainText('Julkaistu versio');
     });
 
     test('Tarkista totsun PDF ja luo uusi PDF', async ({ page }) => {
