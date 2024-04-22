@@ -20,6 +20,7 @@ For testing services from outside
 ### eperusteet-service, ylops-service ja pdf-service:
 * Perusteiden laadinnassa luodaan uusi varhaiskasvatuksen peruste, joka julkaistaan
     * Testataan, että pdf on generoitu ja luodaan uusi pdf
+* Varmistaan, että määräys löytyy julkisen sivun määräyskokoelmasta
 * Luodaan perusteesta opetussuunnitelman pohja, joka asetetaan valmiiksi
 * Luodaan pohjasta opetussuunnitelma, joka julkaistaan
     * Testataan, että pdf on generoitu ja luodaan uusi pdf
@@ -27,3 +28,4 @@ For testing services from outside
 
 # Muuta
 * Pilvessä testien suoritusajat vaihtelevat. Timeouteja on säädetty pitkiksi, jotta testit menevät todennäköisemmin läpi.
+* Joissakin testeissä on jouduttu käyttämään jonkinlaista kiertotietä, jotta testi menee onnistuneesti läpi. Nämä on yleensä kommentoitu erikseen.

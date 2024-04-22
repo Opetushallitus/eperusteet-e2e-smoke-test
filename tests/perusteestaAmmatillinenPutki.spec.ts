@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import {DEFAULT_VALUES} from "../utils/defaultvalues";
-import {login} from "../utils/commonmethods";
+import {createNimi, login} from "../utils/commonmethods";
 
 test.describe.configure({ mode: 'serial' });
 test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
@@ -19,7 +19,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await login(page, DEFAULT_VALUES.basePerusteetUrl)
         await page.goto(DEFAULT_VALUES.uusiPerusteUrl);
         await page.getByText('Seuraava').click();
-        const projektiNimi = perusteProjektiNimi + new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').replace('.', '');
+        const projektiNimi =  await createNimi(perusteProjektiNimi);
         await page.getByPlaceholder('Kirjoita projektin nimi').fill(projektiNimi);
         await page.locator('.multiselect').first().click();
         await page.getByText('Ammatillinen perustutkinto').click();
@@ -37,7 +37,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByRole('menuitem', { name: 'Perusteen tiedot' }).click();
         await page.getByRole('button', { name: 'Muokkaa' }).click();
         await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').click();
-        await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').fill(perusteProjektiNimi);
+        await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').fill(await createNimi(perusteProjektiNimi));
         await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').click();
         await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').fill(perusteDiaari);
         await page.getByRole('group', { name: 'Määräyksen päätöspäivämäärä' }).click();
@@ -138,7 +138,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByText('Tutkinnon perustetta').click();
         await page.getByRole('combobox').locator('div').filter({ hasText: 'Valitse perusteprojekti', }).click();
         await page.getByText('TestAutomation').first().click();
-        const totsuNimi = perusteProjektiNimi + new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').replace('.', '');
+        const totsuNimi = await createNimi(perusteProjektiNimi + ' totsu');
         await page.getByRole('group', { name: 'Toteutussuunnitelman nimi *' }).getByRole('textbox').fill(totsuNimi);
         await page.getByRole('button', { name: 'Luo toteutussuunnitelma' }).click();
         await expect(page.locator('body')).toContainText('Tiedotteet');
