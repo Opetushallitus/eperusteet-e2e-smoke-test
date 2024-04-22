@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import {DEFAULT_VALUES} from "../utils/defaultvalues";
-import {login} from "../utils/commonmethods";
+import {createNimi, login} from "../utils/commonmethods";
 
 test.describe.configure({ mode: 'serial' });
 test.describe('Uusi peruste ja perusteesta OPS', async () => {
@@ -13,6 +13,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
 
   let perusteProjektiNimi = 'TestAutomation';
   let pohjaNimi;
+  let projektiNimi;
   let perusteDiaari = '111/111/1111';
 
   test.beforeEach(async ({ browser }) => {
@@ -23,7 +24,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(DEFAULT_VALUES.uusiPerusteUrl);
     await page.getByText('Seuraava').click();
-    const projektiNimi = perusteProjektiNimi + new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').replace('.', '');
+    projektiNimi = await createNimi(perusteProjektiNimi);
     await page.getByPlaceholder('Kirjoita projektin nimi').fill(projektiNimi);
     await page.locator('.multiselect').first().click();
     await page.getByText('Varhaiskasvatus').click();
@@ -41,7 +42,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.getByRole('menuitem', { name: 'Perusteen tiedot' }).click();
     await page.getByRole('button', { name: 'Muokkaa' }).click();
     await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').click();
-    await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').fill(perusteProjektiNimi);
+    await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').fill(projektiNimi);
     await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').click();
     await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').fill(perusteDiaari);
     await page.getByRole('group', { name: 'Määräyksen päätöspäivämäärä' }).click();
@@ -70,6 +71,15 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await expect(page.locator('.julkaisu')).toContainText('Uusin versio');
   });
 
+  test('Hae määräys määräyskokoelmasta', async ({ page }) => {
+    await page.goto(DEFAULT_VALUES.julkinenMaarayksetUrl);
+    await page.getByRole('button', { name: 'Hyväksy evästeet' }).click();
+    await page.getByPlaceholder('Hae määräyksiä').fill(projektiNimi);
+    await expect(page.locator('.maarays')).toHaveCount(1);
+    await page.getByRole('link', { name: projektiNimi }).click();
+    await expect(page.locator('.url')).toContainText('Avaa määräys');
+  });
+
   test('Tarkista perusteen PDF ja luo uusi PDF', async ({ page }) => {
     await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
@@ -87,10 +97,9 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.getByRole('link', { name: 'Luo uusi' }).click();
     // odotetaan, että perustelistaus ladataan
     await page.waitForTimeout(timeout);
-    await page.getByRole('combobox').selectOption({ label: perusteProjektiNimi + ' (' + perusteDiaari + ')' });
+    await page.getByRole('combobox').selectOption({ label: projektiNimi + ' (' + perusteDiaari + ')' });
     await page.getByRole('textbox').click();
-
-    pohjaNimi = perusteProjektiNimi + ' pohja ' + new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').replace('.', '');
+    pohjaNimi = await createNimi(perusteProjektiNimi + ' pohja');
     await page.getByRole('textbox').fill(pohjaNimi);
     await page.getByRole('button', { name: 'Luo pohja' }).click();
     await expect(page.locator('.done-icon')).toHaveCount(1);
@@ -110,7 +119,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await expect(page.locator('.multiselect')).toHaveCount(1);
     await page.locator('.multiselect').first().click();
     await page.getByText(pohjaNimi + ' (' + perusteDiaari + ')').first().click();
-    const opsNimi = perusteProjektiNimi + ' ops ' + new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').replace('.', '');
+    const opsNimi = await createNimi(perusteProjektiNimi + ' ops');
     await page.locator('div').filter({ hasText: /^Opetussuunnitelman nimi \*Tähän opetussuunnitelman nimi$/ }).getByRole('textbox').fill(opsNimi);
     await page.getByRole('combobox').nth(1).click();
     await page.getByText('Jyväskylä').click();
