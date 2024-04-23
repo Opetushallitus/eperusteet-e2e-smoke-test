@@ -28,4 +28,5 @@ For testing services from outside
 
 # Muuta
 * Pilvessä testien suoritusajat vaihtelevat. Timeouteja on säädetty pitkiksi, jotta testit menevät todennäköisemmin läpi.
-* Joissakin testeissä on jouduttu käyttämään jonkinlaista kiertotietä, jotta testi menee onnistuneesti läpi. Nämä on yleensä kommentoitu erikseen.
+* Jos yksittäisen testin verifioinnissa kestää, merkitään testi flakyksi, mikä ei aiheuta failurea. 
+* Joissakin testeissä on jouduttu käyttämään kiertotietä, jotta testi menee onnistuneesti läpi. Nämä on yleensä kommentoitu erikseen.

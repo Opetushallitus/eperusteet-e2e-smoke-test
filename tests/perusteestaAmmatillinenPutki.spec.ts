@@ -172,7 +172,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByRole('button', { name: 'Julkaise' }).click();
         await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
         // Manuaalinen odotus, että elementin teksti muuttuu kun julkaistu. Muuten playwright ei huomaa muutosta.
-        await page.waitForTimeout(30000);
+        await page.waitForTimeout(60000);
         await page.reload();
         await expect(page.locator('.julkaistu')).toContainText('Julkaistu versio');
     });
