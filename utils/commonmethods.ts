@@ -12,5 +12,7 @@ export const login = async (page: Page, url) => {
 };
 
 export const createNimi = async (nimi: string) => {
-  return  nimi + ' ' + new Date().toISOString().slice(0, 16).replace(/[T]/g, ' ');
+  // korjataan timezonea
+  const currentDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000);
+  return  nimi + ' ' + currentDate.toISOString().slice(0, 16).replace(/[T]/g, ' ');
 };
