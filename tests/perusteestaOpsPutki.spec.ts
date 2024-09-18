@@ -38,7 +38,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   test('Päivitä peruste', async ({ page }) => {
     await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
-    await page.getByText('settings').click();
+    await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Perusteen tiedot' }).click();
     await page.getByRole('button', { name: 'Muokkaa' }).click();
     await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').click();
@@ -83,7 +83,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   test('Tarkista perusteen PDF ja luo uusi PDF', async ({ page }) => {
     await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
-    await page.getByText('settings').click();
+    await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
     await expect(page.locator('.sisalto')).toContainText('Julkaistu');
     await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
@@ -134,7 +134,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   test('Päivitä OPS', async ({ page }) => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(opetussuunnitelmaUrl);
-    await page.getByText('settings').click();
+    await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Tiedot' }).click();
     await page.getByRole('button', { name: 'Muokkaa' }).click();
     await page.getByRole('textbox').nth(1).fill('test');
@@ -160,7 +160,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   test('Tarkista opsin PDF ja luo uusi PDF', async ({ page }) => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(opetussuunnitelmaUrl);
-    await page.getByText('settings').click();
+    await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
     await expect(page.locator('.sisalto')).toContainText('Julkaistu');
     await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
@@ -170,7 +170,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   test('Arkistoi peruste', async ({ page }) => {
     await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
-    await page.getByText('settings').click();
+    await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Arkistoi peruste' }).click();
     await page.getByRole('button', { name: 'Kyllä' }).click();
     await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
@@ -179,7 +179,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   test('Arkistoi OPS-pohja', async ({ page }) => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(opsPohjaUrl);
-    await page.getByText('settings').click();
+    await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Arkistoi pohja' }).click();
     await page.getByRole('button', { name: 'Kyllä' }).click();
     await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
@@ -188,7 +188,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   test('Arkistoi OPS', async ({ page }) => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(opetussuunnitelmaUrl);
-    await page.getByText('settings').click();
+    await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Arkistoi opetussuunnitelma' }).click();
     await page.getByRole('button', { name: 'Kyllä' }).click();
     await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
