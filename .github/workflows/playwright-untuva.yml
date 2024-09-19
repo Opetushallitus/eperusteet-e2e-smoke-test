@@ -1,0 +1,31 @@
+name: Playwright Tests
+on:
+  workflow_dispatch
+
+env:
+  TEST_AUTOMATION_USERNAME: ${{ secrets.TEST_AUTOMATION_USERNAME }}
+  TEST_AUTOMATION_PASSWORD: ${{ secrets.TEST_AUTOMATION_PASSWORD }}
+  CI: untuvaopintopolku
+
+jobs:
+  test:
+    timeout-minutes: 120
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - name: install playwright and run tests
+        run: |
+          npm install -g yarn && yarn
+          yarn playwright install --with-deps
+          yarn playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
