@@ -115,14 +115,17 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(DEFAULT_VALUES.opsUrl);
     await page.getByRole('link', { name: 'Luo uusi' }).click();
-    await page.getByText('Oletuspohja', { exact: true }).click();
+    await page.getByText('Kunnan tai koulutuksen järjestäjän opetussuunnitelman', { exact: true }).click();
+    await page.getByText('Vain perustetta', { exact: true }).click();
     await expect(page.locator('.multiselect')).toHaveCount(1);
     await page.locator('.multiselect').first().click();
     await page.getByText(pohjaNimi + ' (' + perusteDiaari + ')').first().click();
     const opsNimi = await createNimi(perusteProjektiNimi + ' ops');
     await page.locator('div').filter({ hasText: /^Opetussuunnitelman nimi \*Tähän opetussuunnitelman nimi$/ }).getByRole('textbox').fill(opsNimi);
+    await page.getByText('Lisää kunta', { exact: true }).click();
     await page.getByRole('combobox').nth(1).click();
     await page.getByText('Jyväskylä').click();
+    await page.getByText('Lisää koulutuksen järjestäjä', { exact: true }).click();
     await page.getByRole('combobox').nth(2).click();
     await page.getByText('Jyväskylän kaupunki').click();
     await page.getByRole('button', { name: 'Luo opetussuunnitelma' }).click();
@@ -142,7 +145,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.getByRole('button', { name: '1' }).first().click();
     await page.getByLabel('Suomi', { exact: true }).check({ force: true });
     await page.getByRole('button', { name: 'Tallenna' }).click();
-    await expect(page.locator('body')).toContainText('Opetussuunnitelman tallentaminen onnistui');
+    await expect(page.locator('body')).toContainText('Tallennus onnistui');
   });
 
   test('Julkaise OPS', async ({ page }) => {
