@@ -6,6 +6,7 @@ export const CI_VALUES = {
   basePerusteetUrl: CI_baseUrl,
   baseAmosaaUrl: CI_baseUrl,
   baseYlopsUrl: CI_baseUrl,
+  baseJulkinenUrl: julkinenBaseUrl,
   eperusteUrl: `${CI_baseUrl}/eperusteet-service/ui`,
   amosaaUrl: `${CI_baseUrl}/eperusteet-amosaa-service/ui`,
   ylopsUrl: `${CI_baseUrl}/eperusteet-ylops-service/ui`,
@@ -15,6 +16,7 @@ export const LOCAL_VALUES = {
   basePerusteetUrl: 'http://test:test@localhost:9001',
   baseAmosaaUrl: 'http://test:test@localhost:9002',
   baseYlopsUrl: 'http://test:test@localhost:9040',
+  baseJulkinenUrl: 'http://localhost:9020',
   eperusteUrl: 'http://localhost:9001',
   amosaaUrl: 'http://localhost:9002',
   ylopsUrl: 'http://localhost:9040',
@@ -36,4 +38,6 @@ export const DEFAULT_VALUES = {
   opsPohjatUrl: `${ENVIRONMENT_VALUES.ylopsUrl}/#/fi/pohjat`,
   opsUrl: `${ENVIRONMENT_VALUES.ylopsUrl}/#/fi/opetussuunnitelmat`,
   totsuUrl: `${ENVIRONMENT_VALUES.amosaaUrl}/#/ammatillinen/fi/koulutustoimija/${koulutustoimija}/toteutussuunnitelmat`,
+  julkinenUrl: ENVIRONMENT_VALUES.baseJulkinenUrl,
+  julkinenAmmatillinenUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/selaus/ammatillinen`,
 }

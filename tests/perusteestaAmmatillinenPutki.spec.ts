@@ -7,8 +7,10 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
     let page: Page;
     let perusteProjektiUrl;
     let totsuUrl;
+    let projektiNimi
+    let totsuNimi;
 
-    let perusteProjektiNimi = 'TestAutomation';
+    let projektiNimi_prefix = 'TestAutomation';
     let perusteDiaari = '222/222/2222';
 
     test.beforeEach(async ({ browser }) => {
@@ -19,7 +21,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await login(page, DEFAULT_VALUES.basePerusteetUrl)
         await page.goto(DEFAULT_VALUES.uusiPerusteUrl);
         await page.getByText('Seuraava').click();
-        const projektiNimi =  await createNimi(perusteProjektiNimi);
+        projektiNimi =  await createNimi(projektiNimi_prefix);
         await page.getByPlaceholder('Kirjoita projektin nimi').fill(projektiNimi);
         await page.locator('.multiselect').first().click();
         await page.getByText('Ammatillinen perustutkinto').click();
@@ -37,7 +39,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByRole('menuitem', { name: 'Perusteen tiedot' }).click();
         await page.getByRole('button', { name: 'Muokkaa' }).click();
         await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').click();
-        await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').fill(await createNimi(perusteProjektiNimi));
+        await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').fill(projektiNimi);
         await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').click();
         await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').fill(perusteDiaari);
         await page.getByRole('group', { name: 'Määräyksen päätöspäivämäärä' }).click();
@@ -129,6 +131,16 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await expect(page.locator('.sisalto')).toContainText('kvliite.pdf');
     });
 
+    test('Avaa julkinen ammatillinen peruste', async ({ page }) => {
+        await page.goto(DEFAULT_VALUES.julkinenAmmatillinenUrl);
+        await page.getByRole('button', { name: 'Hyväksy evästeet' }).click();
+        await page.getByPlaceholder('Tutkinnon peruste tai tutkinnon osa').fill(projektiNimi);
+        await expect(page.locator('body')).toContainText(projektiNimi);
+        await page.getByRole('link', { name: projektiNimi }).click();
+        await page.getByRole('link', { name: 'Voimaantulo:' }).click();
+        await expect(page.locator('.content')).toContainText(projektiNimi);
+    });
+
     test('Luo totsu', async ({ page }) => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl);
         await page.waitForTimeout(10000);
@@ -138,7 +150,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByText('Tutkinnon perustetta').click();
         await page.getByRole('combobox').locator('div').filter({ hasText: 'Valitse perusteprojekti', }).click();
         await page.getByText('TestAutomation').first().click();
-        const totsuNimi = await createNimi(perusteProjektiNimi + ' totsu');
+        totsuNimi = await createNimi(projektiNimi_prefix + ' totsu');
         await page.getByRole('group', { name: 'Toteutussuunnitelman nimi *' }).getByRole('textbox').fill(totsuNimi);
         await page.getByRole('button', { name: 'Luo toteutussuunnitelma' }).click();
         await expect(page.locator('body')).toContainText('Tiedotteet');
@@ -186,6 +198,16 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await expect(page.locator('.sisalto')).toContainText('Julkaistu');
         await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
         await expect(page.locator('.sisalto').first()).toContainText('Työversio');
+    });
+
+    test('Avaa julkinen totsu', async ({ page }) => {
+        await page.goto(DEFAULT_VALUES.julkinenAmmatillinenUrl);
+        await page.getByRole('button', { name: 'Hyväksy evästeet' }).click();
+        await page.getByPlaceholder('Tutkinnon peruste tai tutkinnon osa').fill(projektiNimi);
+        await expect(page.locator('body')).toContainText(projektiNimi);
+        await page.getByRole('link', { name: projektiNimi }).click();
+        await page.getByRole('link', { name: totsuNimi }).click();
+        await expect(page.locator('.content')).toContainText(totsuNimi);
     });
 
     test('Arkistoi ammatillinen peruste', async ({ page }) => {
