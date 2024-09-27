@@ -35,7 +35,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
     test('Päivitä peruste', async ({ page }) => {
         await login(page, DEFAULT_VALUES.basePerusteetUrl)
         await page.goto(perusteProjektiUrl);
-        await page.getByText('settings').click();
+        await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Perusteen tiedot' }).click();
         await page.getByRole('button', { name: 'Muokkaa' }).click();
         await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').click();
@@ -120,7 +120,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
     test('Tarkista perusteen PDF ja luo uusi PDF', async ({ page }) => {
         await login(page, DEFAULT_VALUES.basePerusteetUrl)
         await page.goto(perusteProjektiUrl);
-        await page.getByText('settings').click();
+        await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
         await expect(page.locator('.sisalto')).toContainText('Julkaistu');
         // Työversio
@@ -161,7 +161,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
         await page.waitForTimeout(10000);
         await page.goto(totsuUrl);
-        await page.getByText('settings').click();
+        await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Toteutussuunnitelman tiedot' }).click();
         await page.getByRole('button', { name: 'Muokkaa' }).click();
         await page.getByRole('group', { name: 'Päätösnumero' }).getByRole('textbox').fill('1');
@@ -193,7 +193,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
         await page.waitForTimeout(10000);
         await page.goto(totsuUrl);
-        await page.getByText('settings').click();
+        await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
         await expect(page.locator('.sisalto')).toContainText('Julkaistu');
         await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
@@ -213,7 +213,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
     test('Arkistoi ammatillinen peruste', async ({ page }) => {
         await login(page, DEFAULT_VALUES.basePerusteetUrl)
         await page.goto(perusteProjektiUrl);
-        await page.getByText('settings').click();
+        await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Arkistoi peruste' }).click();
         await page.getByRole('button', { name: 'Kyllä' }).click();
         await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
@@ -223,7 +223,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
         await page.waitForTimeout(10000);
         await page.goto(totsuUrl);
-        await page.getByText('settings').click();
+        await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Arkistoi toteutussuunnitelma' }).click();
         await page.getByRole('button', { name: 'Kyllä' }).click();
         await expect(page.locator('body').first()).toContainText('Suunnitelma arkistoitu');

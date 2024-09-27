@@ -1,6 +1,6 @@
 export const CI_baseUrl = 'https://virkailija.testiopintopolku.fi';
 export const julkinenBaseUrl = 'https://eperusteet.testiopintopolku.fi';
-export const koulutustoimija = process.env.CI ? '6815670' : process.env.test_koulutustoimija;
+export const koulutustoimija = process.env.CI ? '98278' : process.env.test_koulutustoimija;
 
 export const CI_VALUES = {
   basePerusteetUrl: CI_baseUrl,
