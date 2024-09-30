@@ -10,6 +10,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   let perusteProjektiUrl;
   let opetussuunnitelmaUrl;
   let opsPohjaUrl;
+  let opsNimi;
 
   let perusteProjektiNimi = 'TestAutomation';
   let pohjaNimi;
@@ -90,6 +91,14 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await expect(page.locator('.sisalto')).toContainText('Työversio');
   });
 
+  test('Avaa julkinen peruste', async ({ page }) => {
+    await page.goto(DEFAULT_VALUES.julkinenVarhaiskasvatusUrl);
+    await page.getByRole('button', { name: 'Hyväksy evästeet' }).click();
+    await expect(page.locator('body')).toContainText(projektiNimi);
+    await page.getByRole('link', { name: projektiNimi }).click();
+    await expect(page.locator('.content')).toContainText(projektiNimi);
+  });
+
   test('Luo OPS-pohja', async ({ page }) => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(DEFAULT_VALUES.opsPohjatUrl);
@@ -120,7 +129,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await expect(page.locator('.multiselect')).toHaveCount(1);
     await page.locator('.multiselect').first().click();
     await page.getByText(pohjaNimi + ' (' + perusteDiaari + ')').first().click();
-    const opsNimi = await createNimi(perusteProjektiNimi + ' ops');
+    opsNimi = await createNimi(perusteProjektiNimi + ' ops');
     await page.locator('div').filter({ hasText: /^Opetussuunnitelman nimi \*Tähän opetussuunnitelman nimi$/ }).getByRole('textbox').fill(opsNimi);
     await page.getByText('Lisää kunta', { exact: true }).click();
     await page.getByRole('combobox').nth(1).click();
@@ -168,6 +177,15 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await expect(page.locator('.sisalto')).toContainText('Julkaistu');
     await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
     await expect(page.locator('.sisalto').first()).toContainText('Työversio');
+  });
+
+  test('Avaa julkinen ops', async ({ page }) => {
+    await page.goto(DEFAULT_VALUES.julkinenVarhaiskasvatusUrl);
+    await page.getByRole('button', { name: 'Hyväksy evästeet' }).click();
+    await page.getByPlaceholder('Hae opetussuunnitelmaa').fill(opsNimi);
+    await expect(page.locator('body')).toContainText(opsNimi);
+    await page.getByRole('link', { name: opsNimi }).click();
+    await expect(page.locator('.content')).toContainText(opsNimi);
   });
 
   test('Arkistoi peruste', async ({ page }) => {
