@@ -149,7 +149,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByRole('button', { name: 'Lisää toteutussuunnitelma' }).click();
         await page.getByText('Tutkinnon perustetta').click();
         await page.getByRole('combobox').locator('div').filter({ hasText: 'Valitse perusteprojekti', }).click();
-        await page.getByText('TestAutomation').first().click();
+        await page.getByText(projektiNimi).first().click();
         totsuNimi = await createNimi(projektiNimi_prefix + ' totsu');
         await page.getByRole('group', { name: 'Toteutussuunnitelman nimi *' }).getByRole('textbox').fill(totsuNimi);
         await page.getByRole('button', { name: 'Luo toteutussuunnitelma' }).click();
@@ -206,6 +206,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByPlaceholder('Tutkinnon peruste tai tutkinnon osa').fill(projektiNimi);
         await expect(page.locator('body')).toContainText(projektiNimi);
         await page.getByRole('link', { name: projektiNimi }).click();
+        await expect(page.locator('body')).toContainText(totsuNimi);
         await page.getByRole('link', { name: totsuNimi }).click();
         await expect(page.locator('.content')).toContainText(totsuNimi);
     });
