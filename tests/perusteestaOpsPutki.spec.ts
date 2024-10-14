@@ -74,7 +74,6 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
 
   test('Hae määräys määräyskokoelmasta', async ({ page }) => {
     await page.goto(DEFAULT_VALUES.julkinenMaarayksetUrl);
-    await page.getByRole('button', { name: 'Hyväksy evästeet' }).click();
     await page.getByPlaceholder('Hae määräyksiä').fill(projektiNimi);
     await expect(page.locator('.maarays')).toHaveCount(1);
     await page.getByRole('link', { name: projektiNimi }).click();
@@ -93,7 +92,6 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
 
   test('Avaa julkinen peruste', async ({ page }) => {
     await page.goto(DEFAULT_VALUES.julkinenVarhaiskasvatusUrl);
-    await page.getByRole('button', { name: 'Hyväksy evästeet' }).click();
     await expect(page.locator('body')).toContainText(projektiNimi);
     await page.getByRole('link', { name: projektiNimi }).click();
     await expect(page.locator('.content')).toContainText(projektiNimi);
@@ -181,7 +179,6 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
 
   test('Avaa julkinen ops', async ({ page }) => {
     await page.goto(DEFAULT_VALUES.julkinenVarhaiskasvatusUrl);
-    await page.getByRole('button', { name: 'Hyväksy evästeet' }).click();
     await page.getByPlaceholder('Hae opetussuunnitelmaa').fill(opsNimi);
     await expect(page.locator('body')).toContainText(opsNimi);
     await page.getByRole('link', { name: opsNimi }).click();
