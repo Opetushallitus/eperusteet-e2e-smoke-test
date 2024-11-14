@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import {DEFAULT_VALUES} from "../utils/defaultvalues";
 import {createNimi, login} from "../utils/commonmethods";
 
-test.describe.configure({ mode: 'serial' });
+test.describe.configure({ mode: 'serial', retries: 0 });
 test.describe('Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
   let timeout = 10000;
@@ -182,7 +182,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.getByPlaceholder('Hae opetussuunnitelmaa').fill(opsNimi);
     await expect(page.locator('body')).toContainText(opsNimi);
     await page.getByRole('link', { name: opsNimi }).click();
-    await expect(page.locator('.content')).toContainText(opsNimi);
+    await expect(page.locator('h1')).toContainText(opsNimi);
   });
 
   test('Arkistoi peruste', async ({ page }) => {
