@@ -5,7 +5,8 @@ import {createNimi, login} from "../utils/commonmethods";
 test.describe.configure({ mode: 'serial', retries: 0 });
 test.describe('Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
-  let timeout = 10000;
+  let timeout = 10_000;
+  let smallTimeout = 2_000;
 
   let perusteProjektiUrl;
   let opetussuunnitelmaUrl;
@@ -75,6 +76,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   test('Hae määräys määräyskokoelmasta', async ({ page }) => {
     await page.goto(DEFAULT_VALUES.julkinenMaarayksetUrl);
     await page.getByPlaceholder('Hae määräyksiä').fill(projektiNimi);
+    await page.waitForTimeout(5_000);
     await expect(page.locator('.maarays')).toHaveCount(1);
     await page.getByRole('link', { name: projektiNimi }).click();
     await expect(page.locator('.url')).toContainText('Avaa määräys');
@@ -94,6 +96,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.goto(DEFAULT_VALUES.julkinenVarhaiskasvatusUrl);
     await expect(page.locator('body')).toContainText(projektiNimi);
     await page.getByRole('link', { name: projektiNimi }).click();
+    await page.waitForTimeout(timeout);
     await expect(page.locator('.content')).toContainText(projektiNimi);
   });
 
@@ -132,6 +135,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.getByText('Lisää kunta', { exact: true }).click();
     await page.getByRole('combobox').nth(1).click();
     await page.getByText('Jyväskylä').click();
+    await page.waitForTimeout(smallTimeout);
     await page.getByText('Lisää koulutuksen järjestäjä', { exact: true }).click();
     await page.getByRole('combobox').nth(2).click();
     await page.getByText('Jyväskylän kaupunki').click();
@@ -148,9 +152,9 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.getByRole('menuitem', { name: 'Tiedot' }).click();
     await page.getByRole('button', { name: 'Muokkaa' }).click();
     await page.getByRole('textbox').nth(1).fill('test');
+    await page.getByLabel('Suomi', { exact: true }).check({ force: true });
     await page.getByText('Valitse päivämäärä').click();
     await page.getByRole('button', { name: '1' }).first().click();
-    await page.getByLabel('Suomi', { exact: true }).check({ force: true });
     await page.getByRole('button', { name: 'Tallenna' }).click();
     await expect(page.locator('body')).toContainText('Tallennus onnistui');
   });
@@ -185,25 +189,22 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await expect(page.locator('h1')).toContainText(opsNimi);
   });
 
-  test('Arkistoi peruste', async ({ page }) => {
+  test.afterAll(async ({ browser }) => {
+    const page = await browser.newPage();
     await login(page, DEFAULT_VALUES.basePerusteetUrl)
     await page.goto(perusteProjektiUrl);
     await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Arkistoi peruste' }).click();
     await page.getByRole('button', { name: 'Kyllä' }).click();
     await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
-  });
 
-  test('Arkistoi OPS-pohja', async ({ page }) => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(opsPohjaUrl);
     await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Arkistoi pohja' }).click();
     await page.getByRole('button', { name: 'Kyllä' }).click();
     await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
-  });
 
-  test('Arkistoi OPS', async ({ page }) => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(opetussuunnitelmaUrl);
     await page.getByText('Lisätoiminnot').click();
