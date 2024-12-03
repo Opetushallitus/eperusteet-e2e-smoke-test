@@ -209,16 +209,15 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await expect(page.locator('.content')).toContainText(totsuNimi);
     });
 
-    test('Arkistoi ammatillinen peruste', async ({ page }) => {
+    test.afterAll(async ({ browser }) => {
+        const page = await browser.newPage();
         await login(page, DEFAULT_VALUES.basePerusteetUrl)
         await page.goto(perusteProjektiUrl);
         await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Arkistoi peruste' }).click();
         await page.getByRole('button', { name: 'Kyllä' }).click();
         await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
-    });
 
-    test('Arkistoi totsu', async ({ page }) => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
         await page.waitForTimeout(10000);
         await page.goto(totsuUrl);
