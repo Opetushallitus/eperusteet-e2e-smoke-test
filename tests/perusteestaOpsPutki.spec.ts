@@ -1,12 +1,10 @@
 import { test, expect, Page } from '@playwright/test';
 import {DEFAULT_VALUES} from "../utils/defaultvalues";
-import {createNimi, login} from "../utils/commonmethods";
+import {createNimi, login, waitMedium, waitSmall} from "../utils/commonmethods";
 
 test.describe.configure({ mode: 'serial', retries: 0 });
 test.describe('Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
-  let timeout = 10_000;
-  let smallTimeout = 2_000;
 
   let perusteProjektiUrl;
   let opetussuunnitelmaUrl;
@@ -56,7 +54,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.locator('.ProseMirror').fill("Kuvausteksti");
     await page.setInputFiles('input[type="file"]', './files/testpdf.pdf');
     // odotetaan, että pdf ladataan selaimeen
-    await page.waitForTimeout(timeout);
+    await waitMedium(page);
     await page.getByRole('button', { name: 'Tallenna' }).click();
     await expect(page.locator('body')).toContainText('Tallennus onnistui');
   });
@@ -75,8 +73,9 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
 
   test('Hae määräys määräyskokoelmasta', async ({ page }) => {
     await page.goto(DEFAULT_VALUES.julkinenMaarayksetUrl);
+    await waitSmall(page);
     await page.getByPlaceholder('Hae määräyksiä').fill(projektiNimi);
-    await page.waitForTimeout(5_000);
+    await waitSmall(page);
     await expect(page.locator('.maarays')).toHaveCount(1);
     await page.getByRole('link', { name: projektiNimi }).click();
     await expect(page.locator('.url')).toContainText('Avaa määräys');
@@ -96,7 +95,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.goto(DEFAULT_VALUES.julkinenVarhaiskasvatusUrl);
     await expect(page.locator('body')).toContainText(projektiNimi);
     await page.getByRole('link', { name: projektiNimi }).click();
-    await page.waitForTimeout(timeout);
+    await waitMedium(page);
     await expect(page.locator('.content')).toContainText(projektiNimi);
   });
 
@@ -106,7 +105,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await expect(page.locator('.uusi')).toContainText('Luo uusi');
     await page.getByRole('link', { name: 'Luo uusi' }).click();
     // odotetaan, että perustelistaus ladataan
-    await page.waitForTimeout(timeout);
+    await waitMedium(page);
     await page.getByRole('combobox').selectOption({ label: projektiNimi + ' (' + perusteDiaari + ')' });
     await page.getByRole('textbox').click();
     pohjaNimi = await createNimi(perusteProjektiNimi + ' pohja');
@@ -135,7 +134,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.getByText('Lisää kunta', { exact: true }).click();
     await page.getByRole('combobox').nth(1).click();
     await page.getByText('Jyväskylä').click();
-    await page.waitForTimeout(smallTimeout);
+    await waitSmall(page);
     await page.getByText('Lisää koulutuksen järjestäjä', { exact: true }).click();
     await page.getByRole('combobox').nth(2).click();
     await page.getByText('Jyväskylän kaupunki').click();

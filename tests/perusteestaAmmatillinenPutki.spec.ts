@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import {DEFAULT_VALUES} from "../utils/defaultvalues";
-import {createNimi, login} from "../utils/commonmethods";
+import {createNimi, login, waitLong, waitMedium, waitSmall} from "../utils/commonmethods";
 
 test.describe.configure({ mode: 'serial' });
 test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
@@ -63,6 +63,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.goto(perusteProjektiUrl);
         await page.getByRole('link', { name: 'Tutkinnon osat' }).click();
         await page.getByRole('button', { name: 'Lisää tutkinnon osa' }).click();
+        await waitSmall(page);
         // Koodistosta haun listaus ei jostain syystä renderöidy testissä, joten lisätään manuaalisesti
         await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill('Testiosa');
         await page.locator('input[type="number"]').fill('10');
@@ -142,7 +143,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
 
     test('Luo totsu', async ({ page }) => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl);
-        await page.waitForTimeout(10000);
+        await waitMedium(page);
         await page.goto(DEFAULT_VALUES.totsuUrl);
         await expect(page.locator('body')).toContainText('Nimi tai koulutuskoodi');
         await page.getByRole('button', { name: 'Lisää toteutussuunnitelma' }).click();
@@ -158,7 +159,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
 
     test('Päivitä totsu', async ({ page }) => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
-        await page.waitForTimeout(10000);
+        await waitMedium(page);
         await page.goto(totsuUrl);
         await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Toteutussuunnitelman tiedot' }).click();
@@ -174,7 +175,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
 
     test('Julkaise totsu', async ({ page }) => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
-        await page.waitForTimeout(10000);
+        await waitMedium(page);
         await page.goto(totsuUrl);
         await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
         await page.hover('.ep-valid-popover')
@@ -183,14 +184,14 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByRole('button', { name: 'Julkaise' }).click();
         await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
         // Manuaalinen odotus, että elementin teksti muuttuu kun julkaistu. Muuten playwright ei huomaa muutosta.
-        await page.waitForTimeout(60000);
+        await waitLong(page);
         await page.reload();
         await expect(page.locator('.julkaistu')).toContainText('Julkaistu versio');
     });
 
     test('Tarkista totsun PDF ja luo uusi PDF', async ({ page }) => {
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
-        await page.waitForTimeout(10000);
+        await waitMedium(page);
         await page.goto(totsuUrl);
         await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
@@ -201,7 +202,9 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
 
     test('Avaa julkinen totsu', async ({ page }) => {
         await page.goto(DEFAULT_VALUES.julkinenAmmatillinenUrl);
+        await waitSmall(page);
         await page.getByPlaceholder('Tutkinnon peruste tai tutkinnon osa').fill(projektiNimi);
+        await waitSmall(page);
         await expect(page.locator('body')).toContainText(projektiNimi);
         await page.getByRole('link', { name: projektiNimi }).click();
         await expect(page.locator('body')).toContainText(totsuNimi);
@@ -219,7 +222,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
 
         await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
-        await page.waitForTimeout(10000);
+        await waitMedium(page);
         await page.goto(totsuUrl);
         await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Arkistoi toteutussuunnitelma' }).click();

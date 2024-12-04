@@ -16,3 +16,15 @@ export const createNimi = async (nimi: string) => {
   const currentDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000);
   return  nimi + ' ' + currentDate.toISOString().slice(0, 16).replace(/[T]/g, ' ');
 };
+
+export const waitSmall = async (page) => {
+  await page.waitForTimeout(3_000);
+}
+
+export const waitMedium = async (page) => {
+  await page.waitForTimeout(15_000);
+}
+
+export const waitLong = async (page) => {
+  await page.waitForTimeout(60_000);
+}
