@@ -202,9 +202,9 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
 
     test('Avaa julkinen totsu', async ({ page }) => {
         await page.goto(DEFAULT_VALUES.julkinenAmmatillinenUrl);
-        await waitSmall(page);
+        await waitMedium(page);
         await page.getByPlaceholder('Tutkinnon peruste tai tutkinnon osa').fill(projektiNimi);
-        await waitSmall(page);
+        await waitMedium(page);
         await expect(page.locator('body')).toContainText(projektiNimi);
         await page.getByRole('link', { name: projektiNimi }).click();
         await expect(page.locator('body')).toContainText(totsuNimi);
