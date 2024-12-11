@@ -197,14 +197,12 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.getByRole('button', { name: 'Kyllä' }).click();
     await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
 
-    await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(opsPohjaUrl);
     await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Arkistoi pohja' }).click();
     await page.getByRole('button', { name: 'Kyllä' }).click();
     await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
 
-    await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(opetussuunnitelmaUrl);
     await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Arkistoi opetussuunnitelma' }).click();

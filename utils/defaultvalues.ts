@@ -3,9 +3,9 @@ export const julkinenBaseUrl = 'https://eperusteet.testiopintopolku.fi';
 export const koulutustoimija = process.env.CI ? '98278' : process.env.test_koulutustoimija;
 
 export const CI_VALUES = {
-  basePerusteetUrl: CI_baseUrl,
-  baseAmosaaUrl: CI_baseUrl,
-  baseYlopsUrl: CI_baseUrl,
+  basePerusteetUrl: `${CI_baseUrl}/eperusteet-service/ui`,
+  baseAmosaaUrl: `${CI_baseUrl}/eperusteet-amosaa-service/ui`,
+  baseYlopsUrl: `${CI_baseUrl}/eperusteet-ylops-service/ui`,
   baseJulkinenUrl: julkinenBaseUrl,
   eperusteUrl: `${CI_baseUrl}/eperusteet-service/ui`,
   amosaaUrl: `${CI_baseUrl}/eperusteet-amosaa-service/ui`,
@@ -27,7 +27,6 @@ export const ENVIRONMENT_VALUES = process.env.CI ? CI_VALUES : LOCAL_VALUES;
 export const DEFAULT_VALUES = {
   ...ENVIRONMENT_VALUES,
   loginPerusteetUrl: `${ENVIRONMENT_VALUES.basePerusteetUrl}`,
-  loginAmosaaUrl: `${ENVIRONMENT_VALUES.baseAmosaaUrl}`,
   loginAmmatillinenUrl: `${ENVIRONMENT_VALUES.baseAmosaaUrl}/#/ammatillinen`,
   loginYlopsUrl: `${ENVIRONMENT_VALUES.baseYlopsUrl}`,
   loginTitleExpect: 'Perusteprojektit - ePerusteet',
