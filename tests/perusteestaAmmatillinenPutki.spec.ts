@@ -221,8 +221,6 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByRole('button', { name: 'Kyllä' }).click();
         await expect(page.locator('body').first()).toContainText('Arkistoitu onnistuneesti');
 
-        await login(page, DEFAULT_VALUES.loginAmmatillinenUrl)
-        await waitMedium(page);
         await page.goto(totsuUrl);
         await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Arkistoi toteutussuunnitelma' }).click();
