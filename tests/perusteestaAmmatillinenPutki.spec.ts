@@ -82,6 +82,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.getByRole('button', { name: 'Sisällön kieli' }).click();
         await page.getByRole('menuitem', { name: 'Svenska' }).click();
         await page.getByRole('button', { name: 'Muokkaa' }).click();
+        await waitSmall(page);
         await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill('Testiosa sv');
         await page.getByRole('button', { name: 'Tallenna' }).click();
         await expect(page.locator('body')).toContainText('Tallennus onnistui');
