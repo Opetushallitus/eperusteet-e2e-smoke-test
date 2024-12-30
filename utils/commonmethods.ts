@@ -11,7 +11,7 @@ export const login = async (page: Page, url) => {
   }
 };
 
-export const createNimi = async (nimi: string) => {
+export const createNimi = (nimi: string) => {
   // korjataan timezonea
   const currentDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000);
   return  nimi + ' ' + currentDate.toISOString().slice(0, 16).replace(/[T]/g, ' ');
@@ -22,7 +22,7 @@ export const waitSmall = async (page) => {
 }
 
 export const waitMedium = async (page) => {
-  await page.waitForTimeout(15_000);
+  await page.waitForTimeout(10_000);
 }
 
 export const waitLong = async (page) => {
