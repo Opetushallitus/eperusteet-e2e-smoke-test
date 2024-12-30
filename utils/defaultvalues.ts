@@ -39,5 +39,5 @@ export const DEFAULT_VALUES = {
   totsuUrl: `${ENVIRONMENT_VALUES.amosaaUrl}/#/ammatillinen/fi/koulutustoimija/${koulutustoimija}/toteutussuunnitelmat`,
   julkinenUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}`,
   julkinenAmmatillinenUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/selaus/ammatillinen`,
-  julkinenVarhaiskasvatusUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/kooste/varhaiskasvatus`,
+  julkinenKoosteUrlUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/kooste/`,
 }
