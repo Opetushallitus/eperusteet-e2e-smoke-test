@@ -105,7 +105,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       await expect(page.locator('body')).toContainText(projektiNimi);
       await page.getByRole('link', { name: projektiNimi }).click();
       await waitMedium(page);
-      await expect(page.locator('.content')).toContainText(projektiNimi);
+      await expect(page.locator('h1')).toContainText(projektiNimi);
     });
   });
 
