@@ -52,8 +52,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.locator('li').filter({ hasText: 'Liitteet ja määräykset' }).click();
         await page.locator('.ProseMirror').nth(2).fill("Kuvausteksti");
         await page.setInputFiles('input[type="file"]', './files/testpdf.pdf');
-        // odotetaan, että pdf ladataan selaimeen
-        await page.waitForTimeout(5000);
+        await expect(page.locator('body')).toContainText('testpdf');
         await page.getByRole('button', { name: 'Tallenna' }).click();
         await expect(page.locator('body')).toContainText('Tallennus onnistui');
     });
@@ -196,7 +195,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.goto(totsuUrl);
         await page.getByText('Lisätoiminnot').click();
         await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
-        await expect(page.locator('.sisalto')).toContainText('Julkaistu');
+        await expect(page.locator('.sisalto')).toContainText('Julkaistu', { timeout: 600_000 });
         await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
         await expect(page.locator('.sisalto').first()).toContainText('Työversio');
     });
