@@ -87,13 +87,8 @@ export async function perusopetusOpsLuonti(page: Page) {
 }
 
 export async function perusopetusOpsSisallot(page: Page) {
-  await page.getByRole('link', { name: 'Vuosiluokkakokonaisuus 1' }).click();
-  await page.getByRole('link', { name: 'A1-kieli' }).click();
-  await page.getByRole('button', { name: 'Vuosiluokkaista tavoitteet' }).click();
-  await page.getByRole('button', { name: 'Tuo kaikki' }).click();
-  await page.getByRole('button', { name: 'Tallenna' }).click();
-  await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
-  await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
+  await opsOppiaineenVuosiluokanMuokkaus(page);
+
   await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
 
   await perusopetusValinnainenOppiaine(page, 'Valinnainen oppiaine 1');
@@ -101,6 +96,29 @@ export async function perusopetusOpsSisallot(page: Page) {
   await perusopetusValinnainenOppiaine(page, 'Valinnainen oppiaine 3');
   await perusopetusValinnainenOppiaine(page, 'Valinnainen oppiaine 4');
   await perusopetusValinnainenOppiaine(page, 'Valinnainen oppiaine 5');
+}
+
+export async function opsOppiaineenVuosiluokanMuokkaus(page: Page) {
+  await page.getByRole('link', { name: 'Vuosiluokkakokonaisuus 1' }).click();
+  await page.getByRole('link', { name: 'A1-kieli' }).click();
+  await page.getByRole('button', { name: 'Vuosiluokkaista tavoitteet' }).click();
+  await page.getByRole('button', { name: 'Tuo kaikki' }).click();
+  await page.getByRole('button', { name: 'Tallenna' }).click();
+  await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
+  await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
+  await expect(page.locator('.navigation')).toContainText('Vuosiluokka 1');
+  await page.locator('.navigation').getByRole('link', { name: 'Vuosiluokka 1' }).click();
+  await expect(page.locator('.tavoite')).toContainText('tavoite 1');
+  await expect(page.locator('.tavoite')).toContainText('sisältöalue 1');
+  await expect(page.locator('.tavoite')).toContainText('sisältöalueen kuvaus');
+  await expect(page.locator('.tavoite')).toContainText('Laaja-alainen osaaminen 1');
+  await page.getByRole('button', { name: 'Laaja-alainen osaaminen 1' }).click();
+  await expect(page.locator('.tavoite')).toContainText('Laaja-alainen osaaminen 1 Kuvausteksti');
+  await page.getByRole('button', { name: 'Muokkaa' }).click();
+  await page.locator('.ProseMirror').nth(0).fill('tavoite 1 paikallinen tarkennus');
+  await page.getByRole('button', { name: 'Tallenna' }).click();
+  await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
+  await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
 }
 
 export async function perusopetusValinnainenOppiaine(page: Page, oppiaineNimi: string) {
