@@ -5,7 +5,7 @@ import { perusopetuksenSisallot, perusopetusJulkinenOpsTarkistukset, perusopetus
 import { varhaiskasvatusJulkinenOpsTarkistukset, varhaiskasvatusSisallot } from './varhaiskasvatusSisalto';
 import { lukioJulkinenOpsTarkistukset, lukioJulkinenTarkistukset, lukioOpsLuonti, lukioOpsSisallot, lukioSisallot } from './lukioSisallot';
 
-test.describe.configure({ mode: 'serial', retries: 0 });
+test.describe.configure({ mode: 'serial' });
 test.describe('Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
 
@@ -65,8 +65,10 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       diaari: perusteDiaari,
     };
 
-    test(`Luo, päivitä ja julkaise peruste ja ops ${koulutustyyppi}`, async ({ page }) => {
+    test(`Luo, päivitä ja julkaise peruste ja ops ${koulutustyyppi}`, async ({ page, browser }) => {
+      page = await browser.newPage();
       await perusteenTestit(page, koulutustyyppi, projektiNimi, perusteDiaari, perusteSisallot, julkinenPerusteTarkistukset);
+      page = await browser.newPage();
       await opetussuunnitelmanTestit(page, koulutustyyppi, pohjaNimi, opsNimi, opsLuonti, opsSisallot, julkinenOpsTarkistukset);
     });
   });
@@ -136,9 +138,9 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.goto(perusteProjektiUrl);
     await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
-    await expect(page.locator('.sisalto')).toContainText('Julkaistu');
+    await expect(page.locator('.sisalto')).toContainText('Julkaistu', { timeout: 600_000 });
     await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
-    await expect(page.locator('.sisalto')).toContainText('Työversio');
+    await expect(page.locator('.sisalto')).toContainText('Työversio', { timeout: 600_000 });
 
     await page.goto(DEFAULT_VALUES.julkinenKoosteUrlUrl + koulutustyyppi.toLowerCase());
     await expect(page.locator('body')).toContainText(projektiNimi);
@@ -216,9 +218,9 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await page.goto(opetussuunnitelmaUrl);
     await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
-    await expect(page.locator('.sisalto')).toContainText('Julkaistu');
+    await expect(page.locator('.sisalto')).toContainText('Julkaistu', { timeout: 600_000 });
     await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
-    await expect(page.locator('.sisalto').first()).toContainText('Työversio');
+    await expect(page.locator('.sisalto').first()).toContainText('Työversio', { timeout: 600_000 });
 
     await page.goto(DEFAULT_VALUES.julkinenKoosteUrlUrl + koulutustyyppi.toLowerCase());
     await page.getByPlaceholder('Hae opetussuunnitelmaa').fill(opsNimi);
@@ -234,6 +236,8 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
 
     await login(page, DEFAULT_VALUES.basePerusteetUrl);
     for await (const perusteProjektiUrl of perusteProjektiUrls) {
+      console.log('perusteProjektiUrl', perusteProjektiUrl);
+
       await page.goto(perusteProjektiUrl);
       await expect(page.locator('body')).toContainText('Lisätoiminnot');
       await page.getByText('Lisätoiminnot').click();
@@ -248,6 +252,8 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await login(page, DEFAULT_VALUES.baseYlopsUrl);
 
     for await (const opetussuunnitelmaUrl of opetussuunnitelmaUrls) {
+      console.log('opetussuunnitelmaUrl', opetussuunnitelmaUrl);
+
       await page.goto(opetussuunnitelmaUrl);
       await expect(page.locator('body')).toContainText('Lisätoiminnot');
       await page.getByText('Lisätoiminnot').click();

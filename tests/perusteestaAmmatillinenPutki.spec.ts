@@ -52,7 +52,8 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.locator('li').filter({ hasText: 'Liitteet ja määräykset' }).click();
         await page.locator('.ProseMirror').nth(2).fill("Kuvausteksti");
         await page.setInputFiles('input[type="file"]', './files/testpdf.pdf');
-        await expect(page.locator('body')).toContainText('testpdf');
+        await expect(page.locator('body')).toContainText('testpdf.pdf');
+        await expect(page.locator('.perustiedot-container')).toContainText('poista');
         await page.getByRole('button', { name: 'Tallenna' }).click();
         await expect(page.locator('body')).toContainText('Tallennus onnistui');
     });
@@ -183,7 +184,6 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
         await page.getByRole('button', { name: 'Julkaise' }).click();
         await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
-        // Manuaalinen odotus, että elementin teksti muuttuu kun julkaistu. Muuten playwright ei huomaa muutosta.
         await waitLong(page);
         await page.reload();
         await expect(page.locator('.julkaistu')).toContainText('Julkaistu versio');
@@ -213,6 +213,9 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
     });
 
     test.afterAll(async ({ browser }) => {
+        console.log('perusteprojektin url', perusteProjektiUrl);
+        console.log('totteutussuunnitelman url', totsuUrl);
+
         const page = await browser.newPage();
         await login(page, DEFAULT_VALUES.basePerusteetUrl)
         await page.goto(perusteProjektiUrl);

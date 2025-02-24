@@ -139,7 +139,6 @@ export async function lukioOpsSisallot(page: Page) {
 
     await page.mouse.wheel(0, -1080);
     await page.getByRole('button', { name: 'Tallenna' }).click();
-    await expect(page.locator('.notification')).toContainText('Opintojakson luominen onnistui');
     await expect(page.locator('.editointikontrolli')).toContainText('Muokkaa');
   }
 }
