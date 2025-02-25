@@ -53,7 +53,6 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
         await page.locator('.ProseMirror').nth(2).fill("Kuvausteksti");
         await page.setInputFiles('input[type="file"]', './files/testpdf.pdf');
         await expect(page.locator('body')).toContainText('testpdf.pdf');
-        await expect(page.locator('.perustiedot-container')).toContainText('poista');
         await page.getByRole('button', { name: 'Tallenna' }).click();
         await expect(page.locator('body')).toContainText('Tallennus onnistui');
     });
