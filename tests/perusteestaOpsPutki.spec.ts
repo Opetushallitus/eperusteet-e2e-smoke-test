@@ -129,7 +129,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
 
     await page.goto(DEFAULT_VALUES.julkinenMaarayksetUrl);
     await waitSmall(page);
-    await page.getByPlaceholder('Hae määräyksiä').fill(projektiNimi);
+    await page.getByLabel('Hae määräyksiä').fill(projektiNimi);
     await waitSmall(page);
     await expect(page.locator('.maarays')).toHaveCount(1);
     await page.getByRole('link', { name: projektiNimi }).click();
@@ -223,7 +223,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     await expect(page.locator('.sisalto').first()).toContainText('Työversio', { timeout: 600_000 });
 
     await page.goto(DEFAULT_VALUES.julkinenKoosteUrlUrl + koulutustyyppi.toLowerCase());
-    await page.getByPlaceholder('Hae opetussuunnitelmaa').fill(opsNimi);
+    await page.getByLabel('Hae opetussuunnitelmaa').fill(opsNimi);
     await expect(page.locator('body')).toContainText(opsNimi);
     await page.getByRole('link', { name: opsNimi }).click();
     await expect(page.locator('h1')).toContainText(opsNimi);

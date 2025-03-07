@@ -134,7 +134,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
 
     test('Avaa julkinen ammatillinen peruste', async ({ page }) => {
         await page.goto(DEFAULT_VALUES.julkinenAmmatillinenUrl);
-        await page.getByPlaceholder('Tutkinnon peruste tai tutkinnon osa').fill(projektiNimi);
+        await page.getByLabel('Tutkinnon peruste tai tutkinnon osa', { exact: true }).fill(projektiNimi);
         await expect(page.locator('body')).toContainText(projektiNimi);
         await page.getByRole('link', { name: projektiNimi }).click();
         await page.getByRole('link', { name: 'Voimaantulo:' }).click();
@@ -202,7 +202,7 @@ test.describe('Uusi peruste ja perusteesta ammatillinen', async () => {
     test('Avaa julkinen totsu', async ({ page }) => {
         await page.goto(DEFAULT_VALUES.julkinenAmmatillinenUrl);
         await waitMedium(page);
-        await page.getByPlaceholder('Tutkinnon peruste tai tutkinnon osa').fill(projektiNimi);
+        await page.getByLabel('Tutkinnon peruste tai tutkinnon osa', { exact: true }).fill(projektiNimi);
         await waitMedium(page);
         await expect(page.locator('body')).toContainText(projektiNimi);
         await page.getByRole('link', { name: projektiNimi }).click();
