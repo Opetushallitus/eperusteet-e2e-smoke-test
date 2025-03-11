@@ -50,8 +50,8 @@ async function lisaaOppiaine(page: Page, nimi: string, moduuliNimi: string, oppi
   await page.locator('.ProseMirror').nth(3).fill(nimi + ' osaamisen arviointi');
   await page.locator('.ProseMirror').nth(4).fill(nimi + ' pakollinen moduuli');
   await page.locator('.ProseMirror').nth(5).fill(nimi + ' valinnainen moduuli');
-  await page.getByRole('button', { name: 'Lisää tavoitealue', exact: true }).click();
-  await page.getByRole('button', { name: 'Lisää tavoite', exact: true }).click();
+  await page.getByRole('button', { name: 'add Lisää tavoitealue', exact: true }).click();
+  await page.getByRole('button', { name: 'add Lisää tavoite', exact: true }).click();
   await page.locator('.tavoitealue').nth(0).getByRole('textbox').nth(0).fill(nimi + ' tavoitealue');
   await page.locator('.tavoitealue').nth(0).getByRole('textbox').nth(1).fill(nimi + ' kohde');
   await page.locator('.tavoitealue').nth(0).getByRole('textbox').nth(2).fill(nimi + ' tavoite');
