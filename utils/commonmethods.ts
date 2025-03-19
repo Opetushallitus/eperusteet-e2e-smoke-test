@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 
 export const login = async (page: Page, url) => {
   if (process.env.CI) {
@@ -27,4 +27,10 @@ export const waitMedium = async (page) => {
 
 export const waitLong = async (page) => {
   await page.waitForTimeout(60_000);
+}
+
+export async function saveAndCheck(page: Page) {
+  await page.getByRole('button', { name: 'Tallenna' }).click();
+  await expect(page.locator('body')).toContainText('Tallennus onnistui');
+  await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
 }
