@@ -1,6 +1,8 @@
 import { expect, Page } from "@playwright/test";
-import { waitMedium } from "../utils/commonmethods";
-import { DEFAULT_VALUES } from "../utils/defaultvalues";
+import { waitMedium } from "../../utils/commonmethods";
+import { DEFAULT_VALUES } from "../../utils/defaultvalues";
+import { yleissivistavatJulkinenTarkistukset } from "./yleissivistavat";
+import { TestData } from "../perusteJaPaikalliset.spec";
 
 const oppiaineet = [
   {nimi: 'Historia', moduuliNimi: 'Antiikin elämää', oppimaaraNimi: 'Biologia'},
@@ -13,7 +15,9 @@ const laot = [
   {nimi: 'Yhteiskunnallinen osaaminen'},
 ];
 
-export async function lukioSisallot(page: Page, url: string) {
+export async function lukioSisallot(testData: TestData) {
+  let page = testData.page;
+  let url = testData.url;
 
   for (const oppiaine of oppiaineet) {
     await page.goto(url + 'lukio/oppiaineet');
@@ -82,7 +86,10 @@ async function lisaaOppiaine(page: Page, nimi: string, moduuliNimi: string, oppi
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
 }
 
-export async function lukioJulkinenTarkistukset(page: Page) {
+export async function lukioJulkinenTarkistukset(testData: TestData) {
+  let page = testData.page;
+  await yleissivistavatJulkinenTarkistukset(testData)
+
   await page.locator('.navigation-tree').getByText('Laaja-alaisen osaamisen osa-alueet').click();
   for (const lao of laot) {
     await expect(page.locator('.navigation-tree')).toContainText(lao.nimi);
@@ -110,12 +117,15 @@ export async function lukioJulkinenTarkistukset(page: Page) {
   }
 }
 
-export async function lukioOpsLuonti(page: Page) {
+export async function lukioOpsLuonti(testData: TestData) {
+  let page = testData.page;
   await page.getByLabel("Ei", { exact: true }).nth(0).click({ force: true});
   await page.getByLabel("Ei", { exact: true }).nth(1).click({ force: true});
 }
 
-export async function lukioOpsSisallot(page: Page) {
+export async function lukioOpsSisallot(testData: TestData) {
+  let page = testData.page;
+
   for (const oppiaine of oppiaineet) {
     await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
     await page.getByRole('link', { name: 'Oppiaineet' }).click();
@@ -143,7 +153,10 @@ export async function lukioOpsSisallot(page: Page) {
   }
 }
 
-export async function lukioJulkinenOpsTarkistukset(page: Page) {
+export async function lukioJulkinenOpsTarkistukset(testData: TestData) {
+  let page = testData.page;
+
+
   await page.locator('.navigation-tree').getByText('Oppiaineet').click();
   for (const oppiaine of oppiaineet) {
     await page.locator('.navigation-tree').getByText(oppiaine.nimi).click();

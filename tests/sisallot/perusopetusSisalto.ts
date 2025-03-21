@@ -1,8 +1,12 @@
 import { expect, Page } from '@playwright/test';
-import { waitMedium, waitSmall } from '../utils/commonmethods';
+import { waitMedium, waitSmall } from '../../utils/commonmethods';
 import { perusteenTekstikappale } from './perusteSisalto';
+import { TestData } from '../perusteJaPaikalliset.spec';
 
-export async function perusopetuksenSisallot(page: Page, url: string) {
+export async function perusopetuksenSisallot(testData: TestData) {
+  let page = testData.page;
+  let url = testData.url!;
+
   await perusteenTekstikappale(page);
   await perusopetusLaajaAlaisetOsaamiset(page, url);
   await perusopetusVuosiluokkakokonaisuus(page, url, '1');
@@ -81,12 +85,14 @@ export async function perusopetusOppiaine(page: Page, url: string) {
   await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
 }
 
-export async function perusopetusOpsLuonti(page: Page) {
+export async function perusopetusOpsLuonti(testData: TestData) {
+  let page = testData.page;
   await page.getByText('Vuosiluokkakokonaisuus 1').click();
   await page.getByText('Vuosiluokkakokonaisuus 2').click();
 }
 
-export async function perusopetusOpsSisallot(page: Page) {
+export async function perusopetusOpsSisallot(testData: TestData) {
+  let page = testData.page;
   await opsOppiaineenVuosiluokanMuokkaus(page);
 
   await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
@@ -137,7 +143,8 @@ export async function perusopetusValinnainenOppiaine(page: Page, oppiaineNimi: s
   await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
 }
 
-export async function perusopetusJulkinenOpsTarkistukset(page: Page) {
+export async function perusopetusJulkinenOpsTarkistukset(testData: TestData) {
+  let page = testData.page;
   await expect(page.locator('.navigation-tree')).toContainText('Vuosiluokkakokonaisuus 1');
   await expect(page.locator('.navigation-tree')).toContainText('Vuosiluokkakokonaisuus 2');
   await expect(page.locator('.navigation-tree')).toContainText('Oppiaineet');
