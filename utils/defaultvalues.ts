@@ -40,4 +40,6 @@ export const DEFAULT_VALUES = {
   julkinenUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}`,
   julkinenAmmatillinenUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/selaus/ammatillinen`,
   julkinenKoosteUrlUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/kooste/`,
+  osaamismerkitUrl: `${ENVIRONMENT_VALUES.basePerusteetUrl}/#/fi/osaamismerkit`,
+  osaamismerkkiTeematUrl: `${ENVIRONMENT_VALUES.basePerusteetUrl}/#/fi/osaamismerkit/kategoriat`,
 }
