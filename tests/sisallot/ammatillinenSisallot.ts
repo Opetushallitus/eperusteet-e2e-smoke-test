@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { saveAndCheck, waitSmall } from "../../utils/commonmethods";
+import { login, saveAndCheck, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { TestData } from '../perusteJaPaikalliset.spec';
 
@@ -91,5 +91,32 @@ export async function ammatillinenPerusteJulkinenTarkastukset(testData: TestData
 }
 
 export async function ammatillinenToteutussuunnitelmaJulkinenTarkastukset(testData: TestData) {
+  let page = testData.page;
+  let projektiNimi = testData.projektiNimi;
 
+  await page.goto(DEFAULT_VALUES.julkinenAmmatillinenUrl);
+  await waitMedium(page);
+  await page.getByLabel('Tutkinnon peruste tai tutkinnon osa', { exact: true }).fill(projektiNimi);
+  await waitMedium(page);
+  await expect(page.locator('body')).toContainText(projektiNimi);
+  await page.getByRole('link', { name: projektiNimi }).click();
+  await expect(page.locator('body')).toContainText(testData.opsNimi);
+  await page.getByRole('link', { name: testData.opsNimi }).click();
+  await expect(page.locator('.content')).toContainText(testData.opsNimi);
+}
+
+export async function createToteutussuunnitelma(testData: TestData) {
+  let page = testData.page;
+  let projektiNimi = testData.projektiNimi;
+
+  await login(page, DEFAULT_VALUES.loginAmmatillinenUrl);
+  await waitMedium(page);
+  await page.goto(DEFAULT_VALUES.totsuUrl);
+  await expect(page.locator('body')).toContainText('Nimi tai koulutuskoodi');
+  await page.getByRole('button', { name: 'Lisää toteutussuunnitelma' }).click();
+  await page.getByText('Tutkinnon perustetta').click();
+  await page.getByRole('combobox').locator('div').filter({ hasText: 'Valitse perusteprojekti', }).click();
+  await page.getByText(projektiNimi).first().click();
+  await page.getByRole('group', { name: 'Toteutussuunnitelman nimi *' }).getByRole('textbox').fill(testData.opsNimi);
+  await page.getByRole('button', { name: 'Luo toteutussuunnitelma' }).click();
 }

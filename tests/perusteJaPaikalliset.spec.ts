@@ -5,10 +5,11 @@ import { perusopetuksenSisallot, perusopetusJulkinenOpsTarkistukset, perusopetus
 import { varhaiskasvatusJulkinenOpsTarkistukset, varhaiskasvatusSisallot } from './sisallot/varhaiskasvatusSisalto';
 import { lukioJulkinenOpsTarkistukset, lukioJulkinenTarkistukset, lukioOpsLuonti, lukioOpsSisallot, lukioSisallot } from './sisallot/lukioSisallot';
 import { perusteenLuontiJaTestit } from './sisallot/perusteSisalto';
-import { ammatillinenLisaTarkistukset, ammatillinenPerusteJulkinenTarkastukset, ammatillinenPerusteSisallot, ammatillinenToteutussuunnitelmaJulkinenTarkastukset } from './sisallot/ammatillinenSisallot';
-import { opetussuunnitelmanLuontiJaTestit } from './sisallot/opstyokalu';
+import { ammatillinenLisaTarkistukset, ammatillinenPerusteJulkinenTarkastukset, ammatillinenPerusteSisallot, ammatillinenToteutussuunnitelmaJulkinenTarkastukset, createToteutussuunnitelma } from './sisallot/ammatillinenSisallot';
+import { opsTyokaluOpetussuunnitelmanLuontiJaTestit } from './sisallot/opstyokalu';
 import { yleissivistavatJulkinenTarkistukset, yleissivistavatLisaTarkastukset } from './sisallot/yleissivistavat';
-import { toteutussuunnitelmaLuontiJaTestit } from './sisallot/totsutyokalu';
+import { amosaaOpetussuunnitelmaLuonti } from './sisallot/totsutyokalu';
+import { createVstOpetussuunnitelma, vstOpetussuunnitelmaJulkinenTarkistukset, vstOpetussuunnitelmaSisallot, vstPerusteJulkisetTarkistukset, vstPerusteSisallot } from './sisallot/vstSisallot';
 
 export interface TestData {
   page: Page;
@@ -41,58 +42,72 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       perusteDiaari: `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`,
       projektiNimi: createNimi('TestAutomation Varhaiskasvatus'),
       perusteSisallot: async (testData: TestData) => await varhaiskasvatusSisallot(testData),
+      lisaTarkistukset: async (testData: TestData) => await yleissivistavatLisaTarkastukset(testData),
       julkinenPerusteTarkistukset: async (testData: TestData) => await yleissivistavatJulkinenTarkistukset(testData),
-      pohjaNimi: createNimi('Testautomation varhaiskasvatus pohja'),
       opsNimi: createNimi('Testautomation varhaiskasvatus ops'),
+      pohjaNimi: createNimi('Testautomation varhaiskasvatus pohja'),
       opsLuonti: async (testData: TestData) => {},
       opsSisallot: async (testData: TestData) => {},
-      lisaTarkistukset: async (testData: TestData) => await yleissivistavatLisaTarkastukset(testData),
+      paikallinenLuontiJaTestit: opsTyokaluOpetussuunnitelmanLuontiJaTestit,
       julkinenOpsTarkistukset: async (testData: TestData) => varhaiskasvatusJulkinenOpsTarkistukset(testData),
-      paikallinentyokalu: 'opstyokalu',
     },
     {
       koulutustyyppi: 'Perusopetus',
       perusteDiaari: `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`,
       projektiNimi: createNimi('TestAutomation Perusopetus'),
       perusteSisallot: async (testData: TestData) => await perusopetuksenSisallot(testData),
+      lisaTarkistukset: async (testData: TestData) => await yleissivistavatLisaTarkastukset(testData),
       julkinenPerusteTarkistukset: async (testData: TestData) => await yleissivistavatJulkinenTarkistukset(testData),
       pohjaNimi: createNimi('Testautomation perusopetus pohja'),
       opsNimi: createNimi('Testautomation perusopetus ops'),
       opsLuonti: async (testData: TestData) => await perusopetusOpsLuonti(testData),
       opsSisallot: async (testData: TestData) => await perusopetusOpsSisallot(testData),
-      lisaTarkistukset: async (testData: TestData) => await yleissivistavatLisaTarkastukset(testData),
+      paikallinenLuontiJaTestit: opsTyokaluOpetussuunnitelmanLuontiJaTestit,
       julkinenOpsTarkistukset: async (testData: TestData) => await perusopetusJulkinenOpsTarkistukset(testData),
-      paikallinentyokalu: 'opstyokalu',
     },
     {
       koulutustyyppi: 'Lukiokoulutus',
       perusteDiaari: `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`,
       projektiNimi: createNimi('TestAutomation Lukiokoulutus'),
       perusteSisallot: async (testData: TestData) => await lukioSisallot(testData),
+      lisaTarkistukset: async (testData: TestData) => await yleissivistavatLisaTarkastukset(testData),
       julkinenPerusteTarkistukset: async (testData: TestData) => await lukioJulkinenTarkistukset(testData),
-      pohjaNimi: createNimi('Testautomation Lukiokoulutus pohja'),
       opsNimi: createNimi('Testautomation Lukiokoulutus ops'),
+      pohjaNimi: createNimi('Testautomation Lukiokoulutus pohja'),
       opsLuonti: async (testData: TestData) => await lukioOpsLuonti(testData),
       opsSisallot: async (testData: TestData) => await lukioOpsSisallot(testData),
-      lisaTarkistukset: async (testData: TestData) => await yleissivistavatLisaTarkastukset(testData),
+      paikallinenLuontiJaTestit: opsTyokaluOpetussuunnitelmanLuontiJaTestit,
       julkinenOpsTarkistukset: async (testData: TestData) => await lukioJulkinenOpsTarkistukset(testData),
-      paikallinentyokalu: 'opstyokalu',
     },
     {
       koulutustyyppi: 'Ammatillinen perustutkinto',
       perusteDiaari: `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`,
       projektiNimi: createNimi('TestAutomation ammatillinen'),
       perusteSisallot: async (testData: TestData) => await ammatillinenPerusteSisallot(testData),
-      julkinenPerusteTarkistukset: async (testData: TestData) => await ammatillinenPerusteJulkinenTarkastukset(testData),
-      pohjaNimi: undefined,
-      opsNimi: createNimi('Testautomation ammatillinen totsu'),
-      opsLuonti: async (testData: TestData) => {},
-      opsSisallot: async (testData: TestData) => {},
       lisaTarkistukset: async (testData: TestData) => await ammatillinenLisaTarkistukset(testData),
+      julkinenPerusteTarkistukset: async (testData: TestData) => await ammatillinenPerusteJulkinenTarkastukset(testData),
+      opsNimi: createNimi('Testautomation ammatillinen totsu'),
+      pohjaNimi: undefined,
+      opsLuonti: async (testData: TestData) => await createToteutussuunnitelma(testData),
+      opsSisallot: async (testData: TestData) => {},
+      paikallinenLuontiJaTestit: amosaaOpetussuunnitelmaLuonti,
       julkinenOpsTarkistukset: async (testData: TestData) => ammatillinenToteutussuunnitelmaJulkinenTarkastukset(testData),
-      paikallinentyokalu: 'totsutyokalu',
     },
-  ].forEach(({ koulutustyyppi, projektiNimi, perusteDiaari, perusteSisallot, pohjaNimi, opsNimi, opsLuonti, opsSisallot, lisaTarkistukset, julkinenPerusteTarkistukset, julkinenOpsTarkistukset, paikallinentyokalu }) => {
+    {
+      koulutustyyppi: 'Vapaa sivistystyö',
+      perusteDiaari: `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`,
+      projektiNimi: createNimi('TestAutomation vst'),
+      perusteSisallot: async (testData: TestData) => await vstPerusteSisallot(testData),
+      julkinenPerusteTarkistukset: async (testData: TestData) => await vstPerusteJulkisetTarkistukset(testData),
+      lisaTarkistukset: async (testData: TestData) => {},
+      opsNimi: createNimi('Testautomation vst ops'),
+      pohjaNimi: undefined,
+      opsLuonti: async (testData: TestData) => await createVstOpetussuunnitelma(testData),
+      opsSisallot: async (testData: TestData) => await vstOpetussuunnitelmaSisallot(testData),
+      paikallinenLuontiJaTestit: amosaaOpetussuunnitelmaLuonti,
+      julkinenOpsTarkistukset: async (testData: TestData) => await vstOpetussuunnitelmaJulkinenTarkistukset(testData),
+    },
+  ].forEach(({ koulutustyyppi, projektiNimi, perusteDiaari, perusteSisallot, pohjaNimi, opsNimi, opsLuonti, opsSisallot, lisaTarkistukset, julkinenPerusteTarkistukset, julkinenOpsTarkistukset, paikallinenLuontiJaTestit }) => {
 
     const testData: TestData = {
       page,
@@ -114,26 +129,13 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       );
 
       testData.page = await browser.newPage();
-      if (paikallinentyokalu === 'opstyokalu') {
-        await opetussuunnitelmanLuontiJaTestit(
+      await paikallinenLuontiJaTestit(
           testData,
           opsLuonti,
           opsSisallot,
           julkinenOpsTarkistukset,
           (url: string) => opetussuunnitelmaUrls.push(url),
-        );
-      }
-
-      if (paikallinentyokalu === 'totsutyokalu') {
-        await toteutussuunnitelmaLuontiJaTestit(
-          testData,
-          opsLuonti,
-          opsSisallot,
-          julkinenOpsTarkistukset,
-          (url: string) => opetussuunnitelmaUrls.push(url),
-        )
-      }
-
+      )
     });
   });
 
@@ -165,7 +167,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       await page.getByText('Lisätoiminnot').click();
       await page.getByRole('menuitem', { name: 'Arkistoi' }).click();
       await page.getByRole('button', { name: 'Kyllä' }).click();
-      await expect(page.locator('body')).toContainText('Arkistoitu');
+      await expect(page.locator('body')).toContainText('arkistoitu');
       await waitMedium(page);
     }
 

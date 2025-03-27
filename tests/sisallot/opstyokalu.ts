@@ -3,7 +3,7 @@ import { login, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { TestData } from "../perusteJaPaikalliset.spec";
 
-export async function opetussuunnitelmanLuontiJaTestit(
+export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
   testData: TestData,
   opsLuonti: (testData: TestData) => Promise<void>,
   opsSisallot: (testData: TestData) => Promise<void>,
