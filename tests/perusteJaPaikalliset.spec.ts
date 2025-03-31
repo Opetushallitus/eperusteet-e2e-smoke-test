@@ -1,5 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
-import {DEFAULT_VALUES} from "../utils/defaultvalues";
+import {CI_baseUrl, DEFAULT_VALUES} from "../utils/defaultvalues";
 import {createNimi, login, waitMedium, waitSmall} from "../utils/commonmethods";
 import { perusopetuksenSisallot, perusopetusJulkinenOpsTarkistukset, perusopetusOpsLuonti, perusopetusOpsSisallot } from './sisallot/perusopetusSisalto';
 import { varhaiskasvatusJulkinenOpsTarkistukset, varhaiskasvatusSisallot } from './sisallot/varhaiskasvatusSisalto';
@@ -140,37 +140,34 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
   });
 
   test.afterAll(async ({ browser }) => {
-    let page = await browser.newPage();
-
-    await login(page, DEFAULT_VALUES.basePerusteetUrl);
     for await (const perusteProjektiUrl of perusteProjektiUrls) {
       console.log('perusteProjektiUrl', perusteProjektiUrl);
 
+      let page = await browser.newPage();
+      await login(page, CI_baseUrl);
       await page.goto(perusteProjektiUrl);
       await expect(page.locator('body')).toContainText('Lisätoiminnot');
       await page.getByText('Lisätoiminnot').click();
       await page.getByRole('menuitem', { name: 'Arkistoi peruste' }).click();
       await page.getByRole('button', { name: 'Kyllä' }).click();
-      await expect(page.locator('body')).toContainText('Arkistoitu onnistuneesti');
-      await waitMedium(page);
+      await expect(page.locator('body')).toContainText('Arkistoitu');
+      await page.close();
     }
 
-    await page.close();
-    page = await browser.newPage();
-    await login(page, DEFAULT_VALUES.baseYlopsUrl);
 
     for await (const opetussuunnitelmaUrl of opetussuunnitelmaUrls) {
       console.log('opetussuunnitelmaUrl', opetussuunnitelmaUrl);
 
+      let page = await browser.newPage();
+      await login(page, CI_baseUrl);
       await page.goto(opetussuunnitelmaUrl);
       await expect(page.locator('body')).toContainText('Lisätoiminnot');
       await page.getByText('Lisätoiminnot').click();
       await page.getByRole('menuitem', { name: 'Arkistoi' }).click();
       await page.getByRole('button', { name: 'Kyllä' }).click();
-      await expect(page.locator('body')).toContainText('arkistoitu');
-      await waitMedium(page);
+      await expect(page.locator('body')).toContainText('Arkistoitu');
+      await page.close();
     }
 
-    await page.close();
   });
 });
