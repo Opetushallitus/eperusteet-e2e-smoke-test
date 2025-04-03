@@ -21,8 +21,8 @@ export async function perusteenLuontiJaTestit(
 ) {
 
   let page = testData.page;
-  let projektiNimi = testData.projektiNimi;
-  let perusteDiaari = testData.perusteDiaari;
+  let projektiNimi = testData.projektiNimi!;
+  let perusteDiaari = testData.perusteDiaari!;
   let koulutustyyppi = testData.koulutustyyppi;
 
   await login(page, DEFAULT_VALUES.basePerusteetUrl)
@@ -76,6 +76,12 @@ export async function perusteenLuontiJaTestit(
   await page.getByRole('button', { name: 'Julkaise' }).click();
   await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
   await expect(page.locator('.julkaisu')).toContainText('Uusin versio');
+
+  await page.getByText('Lisätoiminnot').click();
+  await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
+  await expect(page.locator('.sisalto')).toContainText('Julkaistu');
+  await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).nth(0).click();
+  await expect(page.locator('.sisalto')).toContainText('Työversio');
 
   await lisaTarkistukset(testData);
 

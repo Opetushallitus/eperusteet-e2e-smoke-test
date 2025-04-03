@@ -68,10 +68,6 @@ export async function ammatillinenLisaTarkistukset(testData: TestData) {
   await page.goto(url);
   await page.getByText('Lisätoiminnot').click();
   await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
-  await expect(page.locator('.sisalto')).toContainText('Julkaistu');
-  // Työversio
-  await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).nth(0).click();
-  await expect(page.locator('.sisalto')).toContainText('Työversio');
   // KV-liite
   await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).nth(1).click();
   await expect(page.locator('.sisalto')).toContainText('kvliite.pdf');
@@ -79,7 +75,7 @@ export async function ammatillinenLisaTarkistukset(testData: TestData) {
 
 export async function ammatillinenPerusteJulkinenTarkastukset(testData: TestData) {
   let page = testData.page;
-  let projektiNimi = testData.projektiNimi;
+  let projektiNimi = testData.projektiNimi!;
 
   await page.goto(DEFAULT_VALUES.julkinenAmmatillinenUrl);
   await page.getByLabel('Tutkinnon peruste tai tutkinnon osa', { exact: true }).fill(projektiNimi);
@@ -92,7 +88,7 @@ export async function ammatillinenPerusteJulkinenTarkastukset(testData: TestData
 
 export async function ammatillinenToteutussuunnitelmaJulkinenTarkastukset(testData: TestData) {
   let page = testData.page;
-  let projektiNimi = testData.projektiNimi;
+  let projektiNimi = testData.projektiNimi!;
 
   await page.goto(DEFAULT_VALUES.julkinenAmmatillinenUrl);
   await waitMedium(page);
@@ -107,7 +103,7 @@ export async function ammatillinenToteutussuunnitelmaJulkinenTarkastukset(testDa
 
 export async function createToteutussuunnitelma(testData: TestData) {
   let page = testData.page;
-  let projektiNimi = testData.projektiNimi;
+  let projektiNimi = testData.projektiNimi!;
 
   await login(page, DEFAULT_VALUES.loginAmmatillinenUrl);
   await waitMedium(page);

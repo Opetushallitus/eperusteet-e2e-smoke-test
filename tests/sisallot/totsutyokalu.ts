@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { createNimi, login, waitLong, waitMedium } from "../../utils/commonmethods";
+import { createNimi, login, saveAndCheck, waitLong, waitMedium } from "../../utils/commonmethods";
 import { TestData } from "../perusteJaPaikalliset.spec";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 
@@ -9,12 +9,18 @@ export async function amosaaOpetussuunnitelmaLuonti(
   opsSisallot: (testData: TestData) => Promise<void>,
   julkinenOpsTarkistukset: (testData: TestData) => Promise<void>,
   opetussuunnitelmaUrlCallBack: (url: string) => void,
+  opsPohjaLuonti?: (testData: TestData) => Promise<void>,
 ) {
 
   let page = testData.page;
 
-  await opsLuonti(testData);
+  if (opsPohjaLuonti) {
+    await opsPohjaLuonti(testData);
+    await expect(page.locator('body')).toContainText('Yleisnäkymä');
+    opetussuunnitelmaUrlCallBack(page.url());
+  }
 
+  await opsLuonti(testData);
   await expect(page.locator('body')).toContainText('Yleisnäkymä');
   const totsuUrl = page.url();
   opetussuunnitelmaUrlCallBack(page.url());
@@ -33,8 +39,7 @@ export async function amosaaOpetussuunnitelmaLuonti(
 
   await page.getByRole('group', { name: 'Hyväksyjä' }).getByRole('textbox').fill('Tester');
   await page.getByLabel('Suomi', { exact: true }).check({ force: true });
-  await page.getByRole('button', { name: 'Tallenna' }).click();
-  await expect(page.locator('body')).toContainText('Tallennus onnistui');
+  await saveAndCheck(page);
 
   await page.goto(totsuUrl);
   await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
@@ -50,8 +55,12 @@ export async function amosaaOpetussuunnitelmaLuonti(
   await page.getByText('Lisätoiminnot').click();
   await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
   await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
-  await expect(page.locator('.pdf-box').nth(0)).toContainText('Julkaistu', { timeout: 600_000 });
-  await expect(page.locator('.pdf-box').nth(1)).toContainText('Työversio', { timeout: 600_000 });
+  await expect(page.getByRole('button').locator('.oph-spinner')).toBeVisible();
+  await expect(page.getByRole('button').locator('.oph-spinner')).not.toBeVisible();
+
+  await expect(page.locator('.pdf-box')).toHaveCount(2);
+  await expect(page.locator('.pdf-box').first()).toContainText('Julkaistu', { timeout: 600_000 });
+  await expect(page.locator('.pdf-box').last()).toContainText('Työversio', { timeout: 600_000 });
 
   await julkinenOpsTarkistukset(testData);
 }

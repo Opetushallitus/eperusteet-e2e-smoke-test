@@ -13,7 +13,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     let page = testData.page;
     let koulutustyyppi = testData.koulutustyyppi;
     let pohjaNimi = testData.pohjaNimi!;
-    let opsNimi = testData.opsNimi;
+    let opsNimi = testData.opsNimi!;
 
     await login(page, DEFAULT_VALUES.baseYlopsUrl)
     await page.goto(DEFAULT_VALUES.opsPohjatUrl);
