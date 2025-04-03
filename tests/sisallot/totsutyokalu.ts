@@ -12,11 +12,10 @@ export async function amosaaOpetussuunnitelmaLuonti(
 ) {
 
   let page = testData.page;
-  let projektiNimi = testData.projektiNimi;
 
   await opsLuonti(testData);
 
-  await expect(page.locator('body')).toContainText('Tiedotteet');
+  await expect(page.locator('body')).toContainText('Yleisnäkymä');
   const totsuUrl = page.url();
   opetussuunnitelmaUrlCallBack(page.url());
 
