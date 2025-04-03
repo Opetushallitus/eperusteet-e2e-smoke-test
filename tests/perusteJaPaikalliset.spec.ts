@@ -9,14 +9,14 @@ import { ammatillinenLisaTarkistukset, ammatillinenPerusteJulkinenTarkastukset, 
 import { opsTyokaluOpetussuunnitelmanLuontiJaTestit } from './sisallot/opstyokalu';
 import { yleissivistavatJulkinenTarkistukset, yleissivistavatLisaTarkastukset } from './sisallot/yleissivistavat';
 import { amosaaOpetussuunnitelmaLuonti } from './sisallot/totsutyokalu';
-import { createVstOpetussuunnitelma, vstOpetussuunnitelmaJulkinenTarkistukset, vstOpetussuunnitelmaSisallot, vstPerusteJulkisetTarkistukset, vstPerusteSisallot } from './sisallot/vstSisallot';
+import { createJotpaOpetussuunnitelma, createVstOpetussuunnitelma, jotpaOpetussuunnitelmaJulkinenTarkistukset, vstOpetussuunnitelmaJulkinenTarkistukset, vstOpetussuunnitelmaSisallot, vstPerusteJulkisetTarkistukset, vstPerusteSisallot } from './sisallot/vstSisallot';
 
 export interface TestData {
   page: Page;
-  projektiNimi: string;
+  projektiNimi?: string;
   opsNimi: string;
   pohjaNimi?: string;
-  perusteDiaari: string;
+  perusteDiaari?: string;
   koulutustyyppi: string;
   url?: string;
 };
@@ -107,6 +107,15 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       paikallinenLuontiJaTestit: amosaaOpetussuunnitelmaLuonti,
       julkinenOpsTarkistukset: async (testData: TestData) => await vstOpetussuunnitelmaJulkinenTarkistukset(testData),
     },
+    {
+      koulutustyyppi: 'Vapaa sivistystyö - jotpa',
+      opsNimi: createNimi('Testautomation vst ops'),
+      pohjaNimi: undefined,
+      opsLuonti: async (testData: TestData) => await createJotpaOpetussuunnitelma(testData),
+      opsSisallot: async (testData: TestData) => await vstOpetussuunnitelmaSisallot(testData),
+      paikallinenLuontiJaTestit: amosaaOpetussuunnitelmaLuonti,
+      julkinenOpsTarkistukset: async (testData: TestData) => await jotpaOpetussuunnitelmaJulkinenTarkistukset(testData),
+    },
   ].forEach(({ koulutustyyppi, projektiNimi, perusteDiaari, perusteSisallot, pohjaNimi, opsNimi, opsLuonti, opsSisallot, lisaTarkistukset, julkinenPerusteTarkistukset, julkinenOpsTarkistukset, paikallinenLuontiJaTestit }) => {
 
     const testData: TestData = {
@@ -120,13 +129,16 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
 
     test(`Luo, päivitä ja julkaise peruste ja ops ${koulutustyyppi}`, async ({ page, browser }) => {
       testData.page = await browser.newPage();
-      await perusteenLuontiJaTestit(
-        testData,
-        perusteSisallot,
-        lisaTarkistukset,
-        julkinenPerusteTarkistukset,
-        (url: string) => perusteProjektiUrls.push(url)
-      );
+
+      if (projektiNimi) {
+        await perusteenLuontiJaTestit(
+          testData,
+          perusteSisallot,
+          lisaTarkistukset,
+          julkinenPerusteTarkistukset,
+          (url: string) => perusteProjektiUrls.push(url)
+        );
+      }
 
       testData.page = await browser.newPage();
       await paikallinenLuontiJaTestit(
@@ -150,7 +162,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       await page.getByText('Lisätoiminnot').click();
       await page.getByRole('menuitem', { name: 'Arkistoi peruste' }).click();
       await page.getByRole('button', { name: 'Kyllä' }).click();
-      await expect(page.locator('body')).toContainText('Arkistoitu');
+      await expect(page.locator('body')).toContainText('arkistoitu', { ignoreCase: true });
       await page.close();
     }
 
@@ -165,7 +177,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       await page.getByText('Lisätoiminnot').click();
       await page.getByRole('menuitem', { name: 'Arkistoi' }).click();
       await page.getByRole('button', { name: 'Kyllä' }).click();
-      await expect(page.locator('body')).toContainText('Arkistoitu');
+      await expect(page.locator('body')).toContainText('arkistoitu', { ignoreCase: true });
       await page.close();
     }
 

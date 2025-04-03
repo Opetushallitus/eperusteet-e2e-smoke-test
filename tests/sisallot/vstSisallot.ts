@@ -29,7 +29,7 @@ export async function vstPerusteSisallot(testData: TestData) {
 
 export async function vstPerusteJulkisetTarkistukset(testData: TestData) {
   let page = testData.page;
-  let projektiNimi = testData.projektiNimi;
+  let projektiNimi = testData.projektiNimi!;
 
   await page.goto(DEFAULT_VALUES.julkinenKoosteUrlUrl + 'vapaasivistystyo');
   await expect(page.locator('body')).toContainText(projektiNimi);
@@ -56,8 +56,8 @@ export async function createVstOpetussuunnitelma(testData: TestData) {
 
   await expect(page.locator('.multiselect')).toBeVisible();
   await page.locator('.multiselect').click();
-  await expect(page.locator('.multiselect')).toContainText(testData.projektiNimi);
-  await page.getByText(testData.projektiNimi).click();
+  await expect(page.locator('.multiselect')).toContainText(testData.projektiNimi!);
+  await page.getByText(testData.projektiNimi!).click();
 
   await page.getByRole('textbox').last().fill(testData.opsNimi);
   await page.getByRole('button', { name: 'Luo opetussuunnitelma' }).click();
@@ -106,6 +106,46 @@ export async function vstOpetussuunnitelmaJulkinenTarkistukset(testData: TestDat
   let opsNimi = testData.opsNimi;
 
   await page.goto(DEFAULT_VALUES.julkinenVstKoosteUrlUrl);
+  await waitMedium(page);
+
+  await page.getByLabel('Hae opetussuunnitelmaa', { exact: true }).fill(opsNimi);
+  await expect(page.locator('.opetussuunnitelma-container')).toContainText(opsNimi);
+  await page.getByRole('link', { name: opsNimi }).click();
+  await expect(page.locator('h1')).toContainText(opsNimi);
+  await expect(page.locator('.navigation-tree')).toContainText('paikallinen opintokokonaisuus');
+  await page.locator('.navigation-tree').getByText('paikallinen opintokokonaisuus').click();
+  await expect(page.locator('.content').last()).toContainText('88 op');
+  await expect(page.locator('.content').last()).toContainText('opintokokonaisuus kuvaus');
+  await expect(page.locator('.content').last()).toContainText('opintokokonaisuus tavoitteet');
+  await expect(page.locator('.content').last()).toContainText('tavoitteiden kuvaus teksti');
+  await expect(page.locator('.content').last()).toContainText('opintokokonaisuus tavoite 1');
+  await expect(page.locator('.content').last()).toContainText('keskeinen sisältö teksti');
+  await expect(page.locator('.content').last()).toContainText('arvioinnin kuvaus teksti');
+  await expect(page.locator('.content').last()).toContainText('opintokokonaisuus arvioinnin kriteeri 1');
+  await expect(page.locator('.content').last()).toContainText('osaamismerkkikappale teksti');
+  await expect(page.locator('.content').last().locator('a[href*="osaamismerkit"]')).toBeVisible();
+}
+
+export async function createJotpaOpetussuunnitelma(testData: TestData) {
+  let page = testData.page;
+  await login(page, DEFAULT_VALUES.loginVapaasivistystyo);
+  await waitMedium(page);
+  await page.goto(DEFAULT_VALUES.vstOpsUrl);
+  await page.getByText('Luo uusi').click();
+
+  await page.getByText('Luo uusi ilman pohjaa', { exact: true }).click();
+  await page.getByText('Koulutus on JOTPA-rahoitteinen', { exact: true }).click();
+  await page.locator('.form-group').last().getByText('Ei', { exact: true }).click();
+
+  await page.getByRole('textbox').last().fill(testData.opsNimi);
+  await page.getByRole('button', { name: 'Luo opetussuunnitelma' }).click();
+}
+
+export async function jotpaOpetussuunnitelmaJulkinenTarkistukset(testData: TestData) {
+  let page = testData.page;
+  let opsNimi = testData.opsNimi;
+
+  await page.goto(DEFAULT_VALUES.julkinenJotpaKoosteUrlUrl);
   await waitMedium(page);
 
   await page.getByLabel('Hae opetussuunnitelmaa', { exact: true }).fill(opsNimi);

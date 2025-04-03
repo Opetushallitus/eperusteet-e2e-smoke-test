@@ -43,6 +43,7 @@ export const DEFAULT_VALUES = {
   julkinenAmmatillinenUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/selaus/ammatillinen`,
   julkinenKoosteUrlUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/kooste/`,
   julkinenVstKoosteUrlUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/kooste/vapaasivistystyo`,
+  julkinenJotpaKoosteUrlUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/kooste/muukoulutus`,
   osaamismerkitUrl: `${ENVIRONMENT_VALUES.basePerusteetUrl}/#/fi/osaamismerkit`,
   osaamismerkkiTeematUrl: `${ENVIRONMENT_VALUES.basePerusteetUrl}/#/fi/osaamismerkit/kategoriat`,
 }
