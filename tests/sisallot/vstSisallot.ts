@@ -59,7 +59,7 @@ export async function createVstOpetussuunnitelma(testData: TestData) {
   await expect(page.locator('.multiselect')).toContainText(testData.projektiNimi!);
   await page.getByText(testData.projektiNimi!).click();
 
-  await page.getByRole('textbox').last().fill(testData.opsNimi);
+  await page.getByRole('textbox').last().fill(testData.opsNimi!);
   await page.getByRole('button', { name: 'Luo opetussuunnitelma' }).click();
 }
 
