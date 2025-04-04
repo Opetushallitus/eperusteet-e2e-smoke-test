@@ -5,10 +5,10 @@ import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 
 export async function amosaaOpetussuunnitelmaLuonti(
   testData: TestData,
-  opsLuonti: (testData: TestData) => Promise<void>,
-  opsSisallot: (testData: TestData) => Promise<void>,
   julkinenOpsTarkistukset: (testData: TestData) => Promise<void>,
   opetussuunnitelmaUrlCallBack: (url: string) => void,
+  opsLuonti?: (testData: TestData) => Promise<void>,
+  opsSisallot?: (testData: TestData) => Promise<void>,
   opsPohjaLuonti?: (testData: TestData) => Promise<void>,
 ) {
 
@@ -20,12 +20,12 @@ export async function amosaaOpetussuunnitelmaLuonti(
     opetussuunnitelmaUrlCallBack(page.url());
   }
 
-  await opsLuonti(testData);
+  await opsLuonti?.(testData);
   await expect(page.locator('body')).toContainText('Yleisnäkymä');
   const totsuUrl = page.url();
   opetussuunnitelmaUrlCallBack(page.url());
 
-  await opsSisallot(testData);
+  await opsSisallot?.(testData);
 
   await page.getByText('Lisätoiminnot').click();
   await page.getByRole('menuitem').first().click();

@@ -15,9 +15,9 @@ export async function perusteenTekstikappale(page: Page) {
 export async function perusteenLuontiJaTestit(
   testData: TestData,
   perusteSisallot: (testData: TestData) => Promise<void>,
-  lisaTarkistukset: (testData: TestData) => Promise<void>,
   julkinenPerusteTarkistukset: (testData: TestData) => Promise<void>,
   perusteprojektiUrlCallBack: (url: string) => void,
+  lisaTarkistukset?: (testData: TestData) => Promise<void>,
 ) {
 
   let page = testData.page;
@@ -83,7 +83,7 @@ export async function perusteenLuontiJaTestit(
   await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).nth(0).click();
   await expect(page.locator('.sisalto')).toContainText('Työversio');
 
-  await lisaTarkistukset(testData);
+  await lisaTarkistukset?.(testData);
 
   await page.goto(DEFAULT_VALUES.julkinenMaarayksetUrl);
   await waitSmall(page);

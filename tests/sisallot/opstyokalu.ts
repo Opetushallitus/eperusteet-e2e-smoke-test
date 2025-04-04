@@ -5,10 +5,10 @@ import { TestData } from "../perusteJaPaikalliset.spec";
 
 export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
   testData: TestData,
-  opsLuonti: (testData: TestData) => Promise<void>,
-  opsSisallot: (testData: TestData) => Promise<void>,
   julkinenOpsTarkistukset: (testData: TestData) => Promise<void>,
   opetussuunnitelmaUrlCallBack: (url: string) => void,
+  opsLuonti?: (testData: TestData) => Promise<void>,
+  opsSisallot?: (testData: TestData) => Promise<void>,
 ) {
     let page = testData.page;
     let koulutustyyppi = testData.koulutustyyppi;
@@ -49,7 +49,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await page.getByText('Lisää koulutuksen järjestäjä', { exact: true }).click();
     await page.getByRole('combobox').nth(2).click();
     await page.getByText('Jyväskylän kaupunki').click();
-    await opsLuonti(testData);
+    await opsLuonti?.(testData);
     await page.getByRole('button', { name: 'Luo opetussuunnitelma' }).click();
     await expect(page.locator('body')).toContainText('Opetussuunnitelma luotu onnistuneesti');
     // otetaan opsin url talteen, jonka avulla testataan loput opsiin liittyvät.
@@ -67,7 +67,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await page.getByRole('button', { name: 'Tallenna' }).click();
     await expect(page.locator('body')).toContainText('Tallennus onnistui');
 
-    await opsSisallot(testData);
+    await opsSisallot?.(testData);
 
     await page.goto(opetussuunnitelmaUrl);
     await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
