@@ -11,6 +11,7 @@ import { yleissivistavatJulkinenTarkistukset, yleissivistavatLisaTarkastukset } 
 import { amosaaOpetussuunnitelmaLuonti } from './sisallot/totsutyokalu';
 import { createJotpaOpetussuunnitelma, createVstOpetussuunnitelma, jotpaOpetussuunnitelmaJulkinenTarkistukset, vstOpetussuunnitelmaJulkinenTarkistukset, vstOpetussuunnitelmaSisallot, vstPerusteJulkisetTarkistukset, vstPerusteSisallot } from './sisallot/vstSisallot';
 import { createTuvaOpetussuunnitelma, createTuvaOpetussuunnitelmaPohja, tuvaOpetussuunnitelmaJulkinenTarkistukset, tuvaOpetussuunnitelmaSisallot, tuvaPerusteJulkisetTarkistukset, tuvaPerusteSisallot } from './sisallot/tuvaSisalto';
+import { createKotoOpetussuunnitelma, kotoOpetussuunnitelmaJulkinenTarkistukset, kotoOpetussuunnitelmaSisallot, kotoPerusteJulkisetTarkistukset, kotoPerusteSisallot } from './sisallot/kotoSisalto';
 
 export interface TestData {
   page: Page;
@@ -100,9 +101,8 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       projektiNimi: createNimi('TestAutomation vst'),
       perusteSisallot: vstPerusteSisallot,
       julkinenPerusteTarkistukset: vstPerusteJulkisetTarkistukset,
-      lisaTarkistukset: async (testData: TestData) => {},
+      // lisaTarkistukset: async (testData: TestData) => {},
       opsNimi: createNimi('Testautomation vst ops'),
-      pohjaNimi: undefined,
       opsLuonti: createVstOpetussuunnitelma,
       opsSisallot: vstOpetussuunnitelmaSisallot,
       paikallinenLuontiJaTestit: amosaaOpetussuunnitelmaLuonti,
@@ -111,7 +111,6 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
     {
       koulutustyyppi: 'Vapaa sivistystyö - jotpa',
       opsNimi: createNimi('Testautomation vst ops'),
-      pohjaNimi: undefined,
       opsLuonti: createJotpaOpetussuunnitelma,
       opsSisallot: vstOpetussuunnitelmaSisallot,
       paikallinenLuontiJaTestit: amosaaOpetussuunnitelmaLuonti,
@@ -123,7 +122,7 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       projektiNimi: createNimi('TestAutomation tuva'),
       perusteSisallot: tuvaPerusteSisallot,
       julkinenPerusteTarkistukset: tuvaPerusteJulkisetTarkistukset,
-      lisaTarkistukset: async (testData: TestData) => {},
+      // lisaTarkistukset: async (testData: TestData) => {},
       opsNimi: createNimi('Testautomation tuva ops'),
       pohjaNimi: createNimi('Testautomation tuva oph pohja'),
       paikallinenLuontiJaTestit: amosaaOpetussuunnitelmaLuonti,
@@ -131,6 +130,18 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       opsLuonti: createTuvaOpetussuunnitelma,
       opsSisallot: tuvaOpetussuunnitelmaSisallot,
       julkinenOpsTarkistukset: tuvaOpetussuunnitelmaJulkinenTarkistukset,
+    },
+    {
+      koulutustyyppi: 'Kotoutumiskoulutuksen opetussuunnitelman perusteet',
+      perusteDiaari: `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`,
+      projektiNimi: createNimi('TestAutomation koto'),
+      perusteSisallot: kotoPerusteSisallot,
+      julkinenPerusteTarkistukset: kotoPerusteJulkisetTarkistukset,
+      opsNimi: createNimi('Testautomation koto ops'),
+      paikallinenLuontiJaTestit: amosaaOpetussuunnitelmaLuonti,
+      opsLuonti: createKotoOpetussuunnitelma,
+      opsSisallot: kotoOpetussuunnitelmaSisallot,
+      julkinenOpsTarkistukset: kotoOpetussuunnitelmaJulkinenTarkistukset,
     },
   ].forEach(({
     koulutustyyppi,
@@ -163,9 +174,9 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
         await perusteenLuontiJaTestit(
           testData,
           perusteSisallot,
-          lisaTarkistukset,
           julkinenPerusteTarkistukset,
-          (url: string) => perusteProjektiUrls.push(url)
+          (url: string) => perusteProjektiUrls.push(url),
+          lisaTarkistukset,
         );
       }
 
@@ -173,10 +184,10 @@ test.describe('Uusi peruste ja perusteesta OPS', async () => {
       if (paikallinenLuontiJaTestit) {
         await paikallinenLuontiJaTestit(
             testData,
-            opsLuonti,
-            opsSisallot,
             julkinenOpsTarkistukset,
             (url: string) => opetussuunnitelmaUrls.push(url),
+            opsLuonti,
+            opsSisallot,
             opsPohjaLuonti,
         )
       }
