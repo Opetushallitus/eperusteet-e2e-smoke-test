@@ -79,7 +79,11 @@ export async function perusteenLuontiJaTestit(
 
   await page.getByText('Lisätoiminnot').click();
   await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
-  await expect(page.locator('.sisalto')).toContainText('Julkaistu');
+
+  await expect(async () => {
+    await expect(page.locator('.sisalto')).toContainText('Julkaistu', { timeout: 3_000 })
+  }).toPass({ timeout: 600_000 });
+
   await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).nth(0).click();
   await expect(page.locator('.sisalto')).toContainText('Työversio');
 

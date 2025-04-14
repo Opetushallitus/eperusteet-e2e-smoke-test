@@ -1,5 +1,6 @@
-export const CI_baseUrl = 'https://virkailija.testiopintopolku.fi';
-export const julkinenBaseUrl = 'https://eperusteet.testiopintopolku.fi';
+
+export const CI_baseUrl = `https://virkailija.${process.env.CI}.fi`;
+export const julkinenBaseUrl = `https://eperusteet.${process.env.CI}.fi`;
 export const koulutustoimija = process.env.CI ? '98278' : process.env.test_koulutustoimija;
 export const amosaaOphKoulutustoimija = process.env.CI ? '10' : process.env.test_amosaa_oph_koulutustoimija;
 
