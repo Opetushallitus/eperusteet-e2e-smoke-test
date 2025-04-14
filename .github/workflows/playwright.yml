@@ -8,7 +8,7 @@ on:
 env:
   TEST_AUTOMATION_USERNAME: ${{ secrets.TEST_AUTOMATION_USERNAME }}
   TEST_AUTOMATION_PASSWORD: ${{ secrets.TEST_AUTOMATION_PASSWORD }}
-  CI: true
+  CI: testiopintopolku
 
 jobs:
   test:

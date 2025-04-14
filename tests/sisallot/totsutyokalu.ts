@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { createNimi, login, saveAndCheck, waitLong, waitMedium } from "../../utils/commonmethods";
+import { createNimi, login, saveAndCheck, waitLong, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { TestData } from "../perusteJaPaikalliset.spec";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 
@@ -59,7 +59,9 @@ export async function amosaaOpetussuunnitelmaLuonti(
   await expect(page.getByRole('button').locator('.oph-spinner')).not.toBeVisible();
 
   await expect(page.locator('.pdf-box')).toHaveCount(2);
-  await expect(page.locator('.pdf-box').first()).toContainText('Julkaistu', { timeout: 600_000 });
+  await expect(async () => {
+    await expect(page.locator('.pdf-box').first()).toContainText('Julkaistu', { timeout: 3_000 })
+  }).toPass({ timeout: 600_000 });
   await expect(page.locator('.pdf-box').last()).toContainText('Työversio', { timeout: 600_000 });
 
   await julkinenOpsTarkistukset(testData);
