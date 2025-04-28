@@ -100,7 +100,8 @@ test.describe('Uusi osaamismerkki', async () => {
   async function tarkistaJulkisivuNakyvyys(page) {
     await page.goto(DEFAULT_VALUES.julkinenUrl);
     await page.getByRole('link', { name: 'Osaamismerkit Kansalliset' }).click();
-    await expect(page.locator('body')).toContainText(osaamismerkkiNimi);
+    await page.getByLabel('Hae osaamismerkkejä').fill(osaamismerkkiNimi);
+    await expect(page.locator('body .tile')).toContainText(osaamismerkkiNimi);
     await page.click('text=' + osaamismerkkiNimi);
     await expect(page.locator('body')).toContainText(osaamismerkkiNimi + ' kuvaus');
   }
