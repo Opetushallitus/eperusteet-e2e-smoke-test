@@ -29,10 +29,10 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
-  maxFailures: process.env.CI ? 10 : undefined,
-  timeout: 60_000 * 10,
+  maxFailures: process.env.CI ? 3 : undefined,
+  timeout: 60_000 * 3,
   expect: {
-    timeout: process.env.CI ? 60_000 * 3 : 30_000,
+    timeout: process.env.CI ? 60_000 * 2 : 30_000,
   },
 
   /* Configure projects for major browsers */
