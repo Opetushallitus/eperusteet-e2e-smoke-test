@@ -100,7 +100,11 @@ export async function createTuvaOpetussuunnitelma(testData: TestData){
   await page.getByText('Luo uusi').click();
   await page.getByText('Oletuspohjaa').click();
 
-  await expect(page.locator('.multiselect')).toBeVisible();
+  await expect.poll(async () => {
+    return page.locator('.multiselect').count();
+  }).toBe(1);
+
+  // await expect(page.locator('.multiselect')).toBeVisible();
   await page.locator('.multiselect').click();
   await expect(page.locator('.multiselect')).toContainText(testData.pohjaNimi!);
   await page.getByText(testData.pohjaNimi!).click();
@@ -144,7 +148,7 @@ export async function tuvaOpetussuunnitelmaSisallot(testData: TestData) {
   await page.getByRole('button', { name: 'Lisää koulutuksen järjestäjä' }).click();
   await page.getByRole('button', { name: 'Hae organisaatio' }).click();
   await expect(page.locator('.modal')).toContainText('Valitse koulutuksen järjestäjä');
-  await page.getByText('Aitoon Emäntäkoulu Oy').click();
+  await page.getByText('Aalto-korkeakoulusäätiö sr').click();
   await page.getByRole('group', { name: 'Linkki toteutussuunnitelmaan tai koulutuksen järjestäjän kotisivulle' }).getByRole('textbox').fill('www.google.com');
   await page.locator('.ProseMirror.form-control').last().fill('käytännön toteutus paikallinen tarkennus');
 
@@ -181,7 +185,7 @@ export async function tuvaOpetussuunnitelmaJulkinenTarkistukset(testData: TestDa
   await expect(page.locator('.content').last()).toContainText('keskeisen sisällön kuvaus');
   await expect(page.locator('.content').last()).toContainText('osaamisen arvioinnin kuvaus');
   await expect(page.locator('.content').last()).toContainText('arvioinninen paikallinen tarkennus');
-  await expect(page.locator('.content').last()).toContainText('Aitoon Emäntäkoulu Oy');
+  await expect(page.locator('.content').last()).toContainText('Aalto-korkeakoulusäätiö sr');
   await expect(page.locator('.content').last()).toContainText('www.google.com');
   await expect(page.locator('.content').last()).toContainText('käytännön toteutus paikallinen tarkennus');
 

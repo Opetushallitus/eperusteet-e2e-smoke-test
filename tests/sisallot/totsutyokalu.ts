@@ -50,19 +50,30 @@ export async function amosaaOpetussuunnitelmaLuonti(
   await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
   await waitLong(page);
   await page.reload();
-  await expect(page.locator('.julkaistu')).toContainText('Julkaistu versio');
+
+  await expect.poll(async () => {
+    return page.locator('.julkaistu').textContent();
+  }).toContain('Julkaistu versio');
 
   await page.getByText('Lisätoiminnot').click();
   await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
   await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
   await expect(page.getByRole('button').locator('.oph-spinner')).toBeVisible();
   await expect(page.getByRole('button').locator('.oph-spinner')).not.toBeVisible();
-
   await expect(page.locator('.pdf-box')).toHaveCount(2);
-  await expect(async () => {
-    await expect(page.locator('.pdf-box').first()).toContainText('Julkaistu', { timeout: 3_000 })
-  }).toPass({ timeout: 600_000 });
-  await expect(page.locator('.pdf-box').last()).toContainText('Työversio', { timeout: 600_000 });
+
+  await expect.poll(async () => {
+    return page.locator('.pdf-box').first().textContent();
+  }, {
+      timeout: 300_000,
+    }).toContain('Julkaistu');
+
+  await expect.poll(async () => {
+    return page.locator('.pdf-box').last().textContent();
+  }, {
+      timeout: 300_000,
+    }).toContain('Työversio');
+
 
   await julkinenOpsTarkistukset(testData);
 }

@@ -33,8 +33,8 @@ async function perusteenSisallot(testData: TestData) {
   await page.locator('input[type="number"]').fill('10');
   await saveAndCheck(page);
 
-  await page.getByRole('link', { name: 'Tutkinnon osat' }).click();
-  await page.getByRole('link', { name: 'Testiosa' }).click();
+  await page.locator('.navigation').getByRole('link', { name: 'Tutkinnon osat' }).click();
+  await page.locator('.navigation').getByRole('link', { name: 'Testiosa' }).click();
   await expect(page.locator('body')).toContainText('Tutkinnon osan nimi');
   await page.getByRole('button', { name: 'Sisällön kieli' }).click();
   await page.getByRole('menuitem', { name: 'Svenska' }).click();

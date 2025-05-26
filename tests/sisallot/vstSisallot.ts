@@ -54,7 +54,11 @@ export async function createVstOpetussuunnitelma(testData: TestData) {
 
   await page.getByText('Perusteprojektia', { exact: true }).click();
 
-  await expect(page.locator('.multiselect')).toBeVisible();
+  await expect.poll(async () => {
+    return page.locator('.multiselect').count();
+  }).toBe(1);
+
+  // await expect(page.locator('.multiselect')).toBeVisible();
   await page.locator('.multiselect').click();
   await expect(page.locator('.multiselect')).toContainText(testData.projektiNimi!);
   await page.getByText(testData.projektiNimi!).click();
