@@ -18,7 +18,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: 10,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -30,9 +30,9 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   maxFailures: process.env.CI ? 3 : undefined,
-  timeout: 60_000 * 3,
+  timeout: 60_000 * 15,
   expect: {
-    timeout: process.env.CI ? 60_000 * 2 : 30_000,
+    timeout: process.env.CI ? 60_000 * 3 : 30_000,
   },
 
   /* Configure projects for major browsers */

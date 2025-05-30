@@ -73,16 +73,24 @@ export async function perusteenLuontiJaTestit(
   await page.hover('.ep-valid-popover')
   await page.getByRole('tooltip', { name: 'Siirry julkaisunäkymään' }).getByRole('link').click();
   await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
+
+  await expect.poll(async () => {
+    return page.getByRole('button', { name: 'Julkaise' });
+  }).toBeTruthy();
+
   await page.getByRole('button', { name: 'Julkaise' }).click();
   await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
-  await expect(page.locator('.julkaisu')).toContainText('Uusin versio');
+
+  await expect.poll(async () => {
+    return page.locator('.julkaisu').first().textContent();
+  }).toContain('Uusin versio');
 
   await page.getByText('Lisätoiminnot').click();
   await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
 
-  await expect(async () => {
-    await expect(page.locator('.sisalto')).toContainText('Julkaistu', { timeout: 3_000 })
-  }).toPass({ timeout: 300_000 });
+  await expect.poll(async () => {
+    return page.locator('.sisalto').textContent();
+  }).toContain('Julkaistu');
 
   await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).nth(0).click();
   await expect(page.locator('.sisalto')).toContainText('Työversio');
@@ -92,8 +100,13 @@ export async function perusteenLuontiJaTestit(
   await page.goto(DEFAULT_VALUES.julkinenMaarayksetUrl);
   await waitSmall(page);
   await page.getByLabel('Hae määräyksiä').fill(projektiNimi);
-  await waitSmall(page);
-  await expect(page.locator('.maarays')).toHaveCount(1);
+
+  await expect.poll(async () => {
+    return page.locator('.maarays').count();
+  }).toBe(1);
+
+  // await waitSmall(page);
+  // await expect(page.locator('.maarays')).toHaveCount(1);
   await page.getByRole('link', { name: projektiNimi }).click();
   await expect(page.locator('.url')).toContainText('Avaa määräys');
 

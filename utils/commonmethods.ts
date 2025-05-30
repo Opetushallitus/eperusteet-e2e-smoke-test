@@ -31,6 +31,16 @@ export const waitLong = async (page) => {
 
 export async function saveAndCheck(page: Page) {
   await page.getByRole('button', { name: 'Tallenna' }).click();
+
+  // await expect.poll(async () => {
+  //   return page.locator('.body').textContent();
+  // }).toContain('Tallennus onnistui');
+
+  // await expect.poll(async () => {
+  //   return page.locator('.editointi-container').textContent();
+  // }).toContain('Muokkaa');
+
+
   await expect(page.locator('body')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
 }

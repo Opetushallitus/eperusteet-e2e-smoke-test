@@ -76,14 +76,30 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
     await page.getByRole('button', { name: 'Julkaise' }).click();
     await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
-    await expect(page.locator('.julkaisu').first()).toContainText('Julkaistu versio');
+
+    await expect.poll(async () => {
+      return page.locator('.julkaisuhistoria').textContent();
+    }, {
+      timeout: 300_000,
+    }).toContain('Julkaistu versio');
 
     await page.goto(opetussuunnitelmaUrl);
     await page.getByText('Lisätoiminnot').click();
     await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
-    await expect(page.locator('.sisalto')).toContainText('Julkaistu', { timeout: 600_000 });
+
+    await expect.poll(async () => {
+      return page.locator('.sisalto').textContent();
+    }, {
+      timeout: 300_000,
+    }).toContain('Julkaistu');
+
     await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
-    await expect(page.locator('.sisalto').first()).toContainText('Työversio', { timeout: 600_000 });
+
+    await expect.poll(async () => {
+      return page.locator('.sisalto').textContent();
+    }, {
+      timeout: 300_000,
+    }).toContain('Työversio');
 
     await page.goto(DEFAULT_VALUES.julkinenKoosteUrlUrl + koulutustyyppi.toLowerCase());
     await page.getByLabel('Hae opetussuunnitelmaa').fill(opsNimi);
