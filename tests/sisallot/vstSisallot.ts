@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { TestData } from "../perusteJaPaikalliset.spec";
+import { TestData } from "../utils/testUtils";
 import { login, saveAndCheck, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 

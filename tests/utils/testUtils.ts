@@ -10,6 +10,7 @@ export interface TestData {
   perusteDiaari?: string;
   koulutustyyppi: string;
   url?: string;
+  julkinenKoosteUrl?: string;
 };
 
 export async function archiveFoundation(browser: any, url: string) {

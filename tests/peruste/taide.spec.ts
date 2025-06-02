@@ -1,13 +1,15 @@
 import { test, expect, Page } from '@playwright/test';
 import { createNimi } from "../../utils/commonmethods";
 import { TestData, archiveFoundation, archiveCurriculum } from "../utils/testUtils";
-import { perusopetuksenSisallot, perusopetusJulkinenOpsTarkistukset, perusopetusOpsLuonti, perusopetusOpsSisallot } from '../sisallot/perusopetusSisalto';
+import { varhaiskasvatusSisallot } from '../sisallot/varhaiskasvatusSisalto';
 import { yleissivistavatLisaTarkastukset, yleissivistavatJulkinenTarkistukset } from '../sisallot/yleissivistavat';
+import { varhaiskasvatusJulkinenOpsTarkistukset } from '../sisallot/varhaiskasvatusSisalto';
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { opsTyokaluOpetussuunnitelmanLuontiJaTestit } from '../sisallot/opstyokalu';
+import { taideJulkinenOpsTarkistukset, taideJulkinenPerusteTarkistukset, taideOpsSisallot, taideSisallot } from '../sisallot/taideSisallot';
 import { DEFAULT_VALUES } from '../../utils/defaultvalues';
 
-test.describe('Perusopetus - Uusi peruste ja perusteesta OPS', async () => {
+test.describe('Taiteen perusopetus - Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
   let perusteProjektiUrls: string[] = [];
   let opetussuunnitelmaUrls: string[] = [];
@@ -20,11 +22,12 @@ test.describe('Perusopetus - Uusi peruste ja perusteesta OPS', async () => {
     page = await browser.newPage();
   });
 
-  const koulutustyyppi = 'Perusopetus';
+  const koulutustyyppi = 'Taiteen perusopetus';
   const perusteDiaari = `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`;
-  const projektiNimi = createNimi('TestAutomation Perusopetus');
-  const opsNimi = createNimi('Testautomation perusopetus ops');
-  const pohjaNimi = createNimi('Testautomation perusopetus pohja');
+  const projektiNimi = createNimi('TestAutomation Taiteen perusopetus');
+  const opsNimi = createNimi('Testautomation Taiteen perusopetus ops');
+  const pohjaNimi = createNimi('Testautomation Taiteen perusopetus pohja');
+  const julkinenKoosteUrl = DEFAULT_VALUES.julkinenTaideKoosteUrlUrl;
 
   const testData: TestData = {
     page,
@@ -33,6 +36,7 @@ test.describe('Perusopetus - Uusi peruste ja perusteesta OPS', async () => {
     pohjaNimi,
     perusteDiaari,
     koulutustyyppi,
+    julkinenKoosteUrl,
   };
 
   test(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
@@ -40,8 +44,8 @@ test.describe('Perusopetus - Uusi peruste ja perusteesta OPS', async () => {
 
     await perusteenLuontiJaTestit(
       testData,
-      perusopetuksenSisallot,
-      yleissivistavatJulkinenTarkistukset,
+      taideSisallot,
+      taideJulkinenPerusteTarkistukset,
       (url: string) => perusteProjektiUrls.push(url),
       yleissivistavatLisaTarkastukset,
     );
@@ -49,10 +53,10 @@ test.describe('Perusopetus - Uusi peruste ja perusteesta OPS', async () => {
     testData.page = await browser.newPage();
     await opsTyokaluOpetussuunnitelmanLuontiJaTestit(
       testData,
-      perusopetusJulkinenOpsTarkistukset,
+      taideJulkinenOpsTarkistukset,
       (url: string) => opetussuunnitelmaUrls.push(url),
-      perusopetusOpsLuonti,
-      perusopetusOpsSisallot,
+      async (testData: TestData) => {},
+      taideOpsSisallot,
     );
   });
 

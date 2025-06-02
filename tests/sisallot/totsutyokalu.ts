@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { createNimi, login, saveAndCheck, waitLong, waitMedium, waitSmall } from "../../utils/commonmethods";
-import { TestData } from "../perusteJaPaikalliset.spec";
+import { TestData } from "../utils/testUtils";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 
 export async function amosaaOpetussuunnitelmaLuonti(

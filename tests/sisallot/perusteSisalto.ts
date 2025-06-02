@@ -1,8 +1,7 @@
 import { expect, Page } from "@playwright/test";
 import { login, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
-import { TestData } from "../perusteJaPaikalliset.spec";
-import test from "node:test";
+import { TestData } from "../utils/testUtils";
 
 export async function perusteenTekstikappale(page: Page) {
   await page.getByRole('button', { name: 'Uusi tekstikappale' }).first().click();
@@ -105,8 +104,6 @@ export async function perusteenLuontiJaTestit(
     return page.locator('.maarays').count();
   }).toBe(1);
 
-  // await waitSmall(page);
-  // await expect(page.locator('.maarays')).toHaveCount(1);
   await page.getByRole('link', { name: projektiNimi }).click();
   await expect(page.locator('.url')).toContainText('Avaa määräys');
 

@@ -1,7 +1,7 @@
 import { expect, Page } from '@playwright/test';
 import { waitMedium, waitSmall } from '../../utils/commonmethods';
 import { perusteenTekstikappale } from './perusteSisalto';
-import { TestData } from '../perusteJaPaikalliset.spec';
+import { TestData } from "../utils/testUtils";
 
 export async function perusopetuksenSisallot(testData: TestData) {
   let page = testData.page;
