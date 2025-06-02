@@ -55,4 +55,5 @@ export const DEFAULT_VALUES = {
   julkinenKotoKoosteUrlUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/kooste/kotoutumiskoulutus`,
   osaamismerkitUrl: `${ENVIRONMENT_VALUES.basePerusteetUrl}/#/fi/osaamismerkit`,
   osaamismerkkiTeematUrl: `${ENVIRONMENT_VALUES.basePerusteetUrl}/#/fi/osaamismerkit/kategoriat`,
+  julkinenTaideKoosteUrlUrl: `${ENVIRONMENT_VALUES.baseJulkinenUrl}#/fi/kooste/taiteenperusopetus`,
 }

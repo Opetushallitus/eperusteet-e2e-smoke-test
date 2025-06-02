@@ -1,7 +1,7 @@
 import { expect, Page, test } from '@playwright/test';
 import { login, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
-import { TestData } from "../perusteJaPaikalliset.spec";
+import { TestData } from "../utils/testUtils";
 
 export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
   testData: TestData,
@@ -101,7 +101,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
       timeout: 300_000,
     }).toContain('Työversio');
 
-    await page.goto(DEFAULT_VALUES.julkinenKoosteUrlUrl + koulutustyyppi.toLowerCase());
+    await page.goto(testData.julkinenKoosteUrl ?? DEFAULT_VALUES.julkinenKoosteUrlUrl + koulutustyyppi.toLowerCase());
     await page.getByLabel('Hae opetussuunnitelmaa').fill(opsNimi);
     await expect(page.locator('body')).toContainText(opsNimi);
     await page.getByRole('link', { name: opsNimi }).click();

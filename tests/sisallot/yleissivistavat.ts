@@ -1,7 +1,7 @@
 import { expect, Page } from "@playwright/test";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { waitMedium } from "../../utils/commonmethods";
-import { TestData } from "../perusteJaPaikalliset.spec";
+import { TestData } from "../utils/testUtils";
 
 export async function yleissivistavatLisaTarkastukset(testData: TestData) {
   let page = testData.page;

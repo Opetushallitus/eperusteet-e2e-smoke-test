@@ -2,7 +2,7 @@ import { expect, Page } from "@playwright/test";
 import { waitMedium } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { yleissivistavatJulkinenTarkistukset } from "./yleissivistavat";
-import { TestData } from "../perusteJaPaikalliset.spec";
+import { TestData } from "../utils/testUtils";
 
 const oppiaineet = [
   {nimi: 'Historia', moduuliNimi: 'Antiikin elämää', oppimaaraNimi: 'Biologia'},
