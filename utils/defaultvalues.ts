@@ -1,4 +1,3 @@
-
 export const CI_baseUrl = `https://virkailija.${process.env.CI}.fi`;
 export const julkinenBaseUrl = `https://eperusteet.${process.env.CI}.fi`;
 export const koulutustoimija = process.env.CI ? '98278' : process.env.test_koulutustoimija;
