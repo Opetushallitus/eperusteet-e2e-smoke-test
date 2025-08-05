@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Playwright Tests - untuva environment
 on:
   workflow_dispatch
 
