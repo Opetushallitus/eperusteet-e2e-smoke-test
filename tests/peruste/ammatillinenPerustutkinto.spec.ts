@@ -33,6 +33,7 @@ test.describe('Ammatillinen perustutkinto - Uusi peruste ja perusteesta OPS', as
   };
 
   test(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
+    console.log('perusteenLuontiJaTestit - Ammatillinen perustutkinto');
     testData.page = await browser.newPage();
 
     await perusteenLuontiJaTestit(
@@ -43,6 +44,7 @@ test.describe('Ammatillinen perustutkinto - Uusi peruste ja perusteesta OPS', as
       ammatillinenLisaTarkistukset,
     );
 
+    console.log('amosaaOpetussuunnitelmaLuonti - Ammatillinen perustutkinto');
     testData.page = await browser.newPage();
     await amosaaOpetussuunnitelmaLuonti(
       testData,
@@ -54,6 +56,7 @@ test.describe('Ammatillinen perustutkinto - Uusi peruste ja perusteesta OPS', as
   });
 
   test.afterAll(async ({ browser }) => {
+    console.log('Archive peruste ja ops - Ammatillinen perustutkinto');
     for await (const url of perusteProjektiUrls) {
       await archiveFoundation(browser, url);
     }

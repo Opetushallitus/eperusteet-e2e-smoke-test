@@ -36,8 +36,8 @@ export async function kotoPerusteSisallot(testData: TestData) {
 
   await page.locator('.ProseMirror').nth(0).fill('työelämätaidot kuvaus');
 
-  await page.getByRole('button', { name: 'Lisää kielitaitotaso' }).click();
-  await page.getByRole('button', { name: 'Hae koodistosta' }).last().click();
+  await page.locator('button').filter({ hasText: 'Lisää kielitaitotaso' }).click();
+  await page.locator('button').filter({ hasText: 'Hae koodistosta' }).last().click();
   await expect(page.locator('.modal')).toBeVisible();
   await expect(page.locator('.modal')).toContainText('Työelämäjakso');
   await page.getByText('Työelämäjakso').click();
@@ -49,7 +49,7 @@ export async function kotoPerusteSisallot(testData: TestData) {
 
   await saveAndCheck(page);
 
-  await page.getByRole('button', { name: 'Tavoitteet ja keskeiset sisällöt' }).first().click();
+  await page.locator('button').filter({ hasText: 'Tavoitteet ja keskeiset sisällöt' }).first().click();
   await page.getByText('Työelämä- ja yhteiskuntataitojen opinnot').click();
   await page.locator('.modal').getByRole('button').last().click();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
@@ -63,8 +63,8 @@ export async function kotoPerusteSisallot(testData: TestData) {
 
   await page.locator('.ProseMirror').nth(0).fill('yhteiskuntaosaaminen kuvaus');
 
-  await page.getByRole('button', { name: 'Lisää opintokokonaisuus' }).click();
-  await page.getByRole('button', { name: 'Hae koodistosta' }).last().click();
+  await page.locator('button').filter({ hasText: 'Lisää opintokokonaisuus' }).click();
+  await page.locator('button').filter({ hasText: 'Hae koodistosta' }).last().click();
   await expect(page.locator('.modal')).toBeVisible();
   await expect(page.locator('.modal')).toContainText('Ammatin valinta ja ohjaus');
   await page.getByText('Ammatin valinta ja ohjaus').click();

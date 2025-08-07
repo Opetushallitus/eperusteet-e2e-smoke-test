@@ -1,5 +1,5 @@
 import { Page, test, expect } from '@playwright/test';
-import { CI_baseUrl } from "../../utils/defaultvalues";
+import { CI_baseUrl, DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { login } from "../../utils/commonmethods";
 
 export interface TestData {
@@ -15,7 +15,7 @@ export interface TestData {
 
 export async function archiveFoundation(browser: any, url: string) {
   let page = await browser.newPage();
-  await login(page, CI_baseUrl);
+  await login(page, DEFAULT_VALUES.basePerusteetUrl)
   await page.goto(url);
   await expect(page.locator('body')).toContainText('Lisätoiminnot');
   await page.getByText('Lisätoiminnot').click();
@@ -27,7 +27,7 @@ export async function archiveFoundation(browser: any, url: string) {
 
 export async function archiveCurriculum(browser: any, url: string) {
   let page = await browser.newPage();
-  await login(page, CI_baseUrl);
+  await login(page, DEFAULT_VALUES.basePerusteetUrl)
   await page.goto(url);
   await expect(page.locator('body')).toContainText('Lisätoiminnot');
   await page.getByText('Lisätoiminnot').click();

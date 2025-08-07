@@ -34,7 +34,7 @@ export async function perusteenLuontiJaTestit(
   await page.getByText('Seuraava').click();
   await page.getByRole('button', { name: 'Luo perusteprojekti' }).click();
   await expect(page.locator('h1').locator('span').first()).toHaveText(projektiNimi);
-  const perusteProjektiUrl = page.url();
+  const perusteProjektiUrl = page.url() + (page.url().endsWith('/') ? '' : '/');
   testData.url = perusteProjektiUrl;
   perusteprojektiUrlCallBack(perusteProjektiUrl);
 
@@ -69,8 +69,7 @@ export async function perusteenLuontiJaTestit(
 
   await page.goto(perusteProjektiUrl);
   await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
-  await page.hover('.ep-valid-popover')
-  await page.getByRole('tooltip', { name: 'Siirry julkaisunäkymään' }).getByRole('link').click();
+  await page.locator('button').filter({ hasText: 'Siirry julkaisunäkymään' }).click();
   await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
 
   await expect.poll(async () => {

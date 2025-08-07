@@ -8,20 +8,20 @@ export async function vstPerusteSisallot(testData: TestData) {
   let url = testData.url;
 
   await page.goto(url!);
-  await page.getByRole('button', { name: 'Uusi opintokokonaisuus' }).first().click();
-  await page.getByRole('button', { name: 'Lisää opintokokonaisuus' }).click();
+  await page.locator('button').filter({ hasText: 'Uusi opintokokonaisuus' }).first().click();
+  await page.locator('button').filter({ hasText: 'Lisää opintokokonaisuus' }).click();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
-  await page.getByRole('button', { name: 'Hae koodistosta' }).click();
+  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
+  await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
   await waitSmall(page);
   await page.getByText('Aktiivinen kansalaisuus').click();
   await waitSmall(page);
   await page.getByRole('spinbutton').fill('77');
   await page.locator('.ProseMirror').nth(0).fill('opintokokonaisuus kuvaus');
   await page.getByRole('group', { name: 'Tavoitteiden otsikko *' }).getByRole('textbox').fill('opintokokonaisuus tavoitteet');
-  await page.getByRole('button', { name: 'Lisää tavoite' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää tavoite' }).click();
   await page.getByRole('textbox').nth(2).fill('opintokokonaisuus tavoite 1');
-  await page.getByRole('button', { name: 'Lisää arvioinnin kriteeri' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää arvioinnin kriteeri' }).click();
   await page.getByRole('textbox').nth(3).fill('opintokokonaisuus arvioinnin kriteeri 1');
 
   await saveAndCheck(page);
@@ -64,17 +64,17 @@ export async function createVstOpetussuunnitelma(testData: TestData) {
   await page.getByText(testData.projektiNimi!).click();
 
   await page.getByRole('textbox').last().fill(testData.opsNimi!);
-  await page.getByRole('button', { name: 'Luo opetussuunnitelma' }).click();
+  await page.locator('button').filter({ hasText: 'Luo opetussuunnitelma' }).click();
 }
 
 export async function vstOpetussuunnitelmaSisallot(testData: TestData) {
   let page = testData.page;
 
-  await page.getByRole('button', { name: 'Uusi opintokokonaisuus' }).first().click();
+  await page.locator('button').filter({ hasText: 'Uusi opintokokonaisuus' }).first().click();
   await page.locator('.modal-content').getByRole('textbox').first().fill('paikallinen opintokokonaisuus');
-  await page.getByRole('button', { name: 'Lisää opintokokonaisuus' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää opintokokonaisuus' }).click();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
+  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
 
   await page.getByRole('spinbutton').fill('88');
   await page.getByText('Valitse laajuusyksikkö').click();
@@ -84,22 +84,22 @@ export async function vstOpetussuunnitelmaSisallot(testData: TestData) {
   await page.getByRole('group', { name: 'Tavoitteiden otsikko *' }).getByRole('textbox').fill('opintokokonaisuus tavoitteet');
   await page.locator('.ProseMirror').nth(1).fill('tavoitteiden kuvaus teksti');
 
-  await page.getByRole('button', { name: 'Lisää tavoite' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää tavoite' }).click();
   await page.getByRole('textbox').nth(3).fill('opintokokonaisuus tavoite 1');
 
   await page.locator('.ProseMirror').nth(2).fill('keskeinen sisältö teksti');
   await page.locator('.ProseMirror').nth(3).fill('arvioinnin kuvaus teksti');
 
-  await page.getByRole('button', { name: 'Lisää arvioinnin kriteeri' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää arvioinnin kriteeri' }).click();
   await page.getByRole('textbox').nth(4).fill('opintokokonaisuus arvioinnin kriteeri 1');
 
-  await page.getByRole('button', { name: 'Lisää osaamismerkkikappale' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää osaamismerkkikappale' }).click();
   await page.locator('.ProseMirror').nth(4).fill('osaamismerkkikappale teksti');
 
-  await page.getByRole('button', { name: 'Lisää osaamismerkkejä' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää osaamismerkkejä' }).click();
   await waitSmall(page);
   await page.locator('.modal-content table tr .btn-link').first().click();
-  await page.locator('.modal-content').getByRole('button', { name: 'Lisää valitut' }).click();
+  await page.locator('.modal-content').locator('button').filter({ hasText: 'Lisää valitut' }).click();
   await waitSmall(page);
 
   await saveAndCheck(page);
@@ -142,7 +142,7 @@ export async function createJotpaOpetussuunnitelma(testData: TestData) {
   await page.locator('.form-group').last().getByText('Ei', { exact: true }).click();
 
   await page.getByRole('textbox').last().fill(testData.opsNimi);
-  await page.getByRole('button', { name: 'Luo opetussuunnitelma' }).click();
+  await page.locator('button').filter({ hasText: 'Luo opetussuunnitelma' }).click();
 }
 
 export async function jotpaOpetussuunnitelmaJulkinenTarkistukset(testData: TestData) {

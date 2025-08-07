@@ -30,7 +30,7 @@ export const waitLong = async (page) => {
 }
 
 export async function saveAndCheck(page: Page) {
-  await page.getByRole('button', { name: 'Tallenna' }).click();
+  await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('body')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
 }
