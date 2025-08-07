@@ -36,6 +36,7 @@ test.describe('Tutkintokoulutukseen valmentava koulutus - Uusi peruste ja perust
   test(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
     testData.page = await browser.newPage();
 
+    console.log('perusteenLuontiJaTestit - Tutkintokoulutukseen valmentava koulutus');
     await perusteenLuontiJaTestit(
       testData,
       tuvaPerusteSisallot,
@@ -44,6 +45,7 @@ test.describe('Tutkintokoulutukseen valmentava koulutus - Uusi peruste ja perust
     );
 
     testData.page = await browser.newPage();
+    console.log('amosaaOpetussuunnitelmaLuonti - Tutkintokoulutukseen valmentava koulutus');
     await amosaaOpetussuunnitelmaLuonti(
       testData,
       tuvaOpetussuunnitelmaJulkinenTarkistukset,
@@ -55,12 +57,13 @@ test.describe('Tutkintokoulutukseen valmentava koulutus - Uusi peruste ja perust
   });
 
   test.afterAll(async ({ browser }) => {
+    console.log('Archive peruste ja ops - Tutkintokoulutukseen valmentava koulutus');
     for await (const url of perusteProjektiUrls) {
-      await archiveFoundation(browser, url);
+      await archiveFoundation(browser, url, projektiNimi);
     }
 
     for await (const url of opetussuunnitelmaUrls) {
-      await archiveCurriculum(browser, url);
+      await archiveCurriculum(browser, url, opsNimi);
     }
   });
 });

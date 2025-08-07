@@ -31,21 +31,21 @@ export async function lukioSisallot(testData: TestData) {
 }
 
 async function lisaaLaajaAlainenOsaaminen(page: Page, nimi: string, index: number) {
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
-  await page.getByRole('button', { name: 'Uusi laaja-alainen' }).click();
-  await page.getByRole('button', { name: 'Hae koodistosta' }).nth(index).click();
+  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
+  await page.locator('button').filter({ hasText: 'Uusi laaja-alainen' }).click();
+  await page.locator('button').filter({ hasText: 'Hae koodistosta' }).nth(index).click();
   await expect(page.locator('.modal-content')).toContainText('Hyvinvointiosaaminen');
   await page.locator('.modal-content').getByText(nimi).click();
   await page.locator('.ProseMirror').nth(index).fill(nimi + ' kuvaus');
 
-  await page.getByRole('button', { name: 'Tallenna' }).click();
+  await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
 }
 
 async function lisaaOppiaine(page: Page, nimi: string, moduuliNimi: string, oppimaaraNimi: string) {
-  await page.getByRole('button', { name: 'Uusi oppiaine' }).click();
-  await page.getByRole('button', { name: 'Hae koodistosta' }).click();
+  await page.locator('button').filter({ hasText: 'Uusi oppiaine' }).click();
+  await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
   await expect(page.locator('.modal-content')).toContainText(nimi);
   await page.locator('.modal-content').getByText(nimi).click();
   await page.locator('.ProseMirror').nth(0).fill(nimi + ' tehtava');
@@ -54,34 +54,34 @@ async function lisaaOppiaine(page: Page, nimi: string, moduuliNimi: string, oppi
   await page.locator('.ProseMirror').nth(3).fill(nimi + ' osaamisen arviointi');
   await page.locator('.ProseMirror').nth(4).fill(nimi + ' pakollinen moduuli');
   await page.locator('.ProseMirror').nth(5).fill(nimi + ' valinnainen moduuli');
-  await page.getByRole('button', { name: 'add Lisää tavoitealue', exact: true }).click();
-  await page.getByRole('button', { name: 'add Lisää tavoite', exact: true }).click();
+  await page.locator('button').filter({ hasText: 'Lisää tavoitealue', }).click();
+  await page.locator('button').filter({ hasText: 'Lisää tavoite', hasNotText: 'tavoitealue' }).click();
   await page.locator('.tavoitealue').nth(0).getByRole('textbox').nth(0).fill(nimi + ' tavoitealue');
   await page.locator('.tavoitealue').nth(0).getByRole('textbox').nth(1).fill(nimi + ' kohde');
   await page.locator('.tavoitealue').nth(0).getByRole('textbox').nth(2).fill(nimi + ' tavoite');
 
-  await page.getByRole('button', { name: 'Tallenna' }).click();
+  await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
 
-  await page.getByRole('button', { name: 'Uusi oppimäärä' }).click();
-  await page.getByRole('button', { name: 'Hae koodistosta' }).click();
+  await page.locator('button').filter({ hasText: 'Uusi oppimäärä' }).click();
+  await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
   await expect(page.locator('.modal-content')).toContainText(oppimaaraNimi);
   await page.locator('.modal-content').getByText(oppimaaraNimi).click();
 
-  await page.getByRole('button', { name: 'Tallenna' }).click();
+  await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
 
-  await page.getByRole('button', { name: 'Lisää pakollinen moduuli' }).click();
-  await page.getByRole('button', { name: 'Hae koodistosta' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää pakollinen moduuli' }).click();
+  await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
   await expect(page.locator('.modal-content')).toContainText(moduuliNimi);
   await page.locator('.modal-content').getByText(moduuliNimi).click();
   await page.getByText('Pakollinen').check();
   await page.getByRole('spinbutton').nth(0).fill('5');
   await page.locator('.ProseMirror').nth(0).fill(moduuliNimi + ' kuvaus');
 
-  await page.getByRole('button', { name: 'Tallenna' }).click();
+  await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
 }
@@ -111,7 +111,7 @@ export async function lukioJulkinenTarkistukset(testData: TestData) {
     await expect(page.locator('.navigation-tree')).toContainText(oppiaine.moduuliNimi);
     await expect(page.locator('.content')).toContainText(oppiaine.moduuliNimi);
     await expect(page.locator('.content')).toContainText('5 op');
-    await page.locator('.content').getByRole('button', { name: oppiaine.moduuliNimi } ).click();
+    await page.locator('.content').locator('a').filter({ hasText: oppiaine.moduuliNimi }).last().click();
     await expect(page.locator('.content')).toContainText("Pakollinen");
     await expect(page.locator('.content')).toContainText("5 op");
   }
@@ -140,15 +140,15 @@ export async function lukioOpsSisallot(testData: TestData) {
     await expect(page.locator('.content')).toContainText(oppiaine.oppimaaraNimi);
 
     await page.locator('.navigation').getByRole('link', { name: oppiaine.oppimaaraNimi }).click();
-    await page.locator('.content').getByRole('button', { name: 'Uusi opintojakso' }).click();
+    await page.locator('.content').locator('button').filter({ hasText: 'Uusi opintojakso' }).click();
     await expect(page.locator('.editointikontrolli')).toContainText('Peruuta');
     await expect(page.locator('.editointikontrolli')).toContainText('Tallenna');
     await page.locator('.content').getByRole('textbox').nth(0).fill(oppiaine.oppimaaraNimi + ' opintojakso');
     await page.locator('.content').getByRole('textbox').nth(1).fill('opintojakso_' + oppiaineet.indexOf(oppiaine));
-    await page.locator('.moduuli').getByRole('button', { name: oppiaine.moduuliNimi }).click();
+    await page.locator('.moduuli').locator('.moduulibox').filter({ hasText: oppiaine.moduuliNimi }).click();
 
     await page.mouse.wheel(0, -1080);
-    await page.getByRole('button', { name: 'Tallenna' }).click();
+    await page.locator('button').filter({ hasText: 'Tallenna' }).click();
     await expect(page.locator('.editointikontrolli')).toContainText('Muokkaa');
   }
 }

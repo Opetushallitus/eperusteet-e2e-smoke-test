@@ -34,6 +34,7 @@ test.describe('Kotoutumiskoulutus - Uusi peruste ja perusteesta OPS', async () =
   test(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
     testData.page = await browser.newPage();
 
+    console.log('perusteenLuontiJaTestit - Kotoutumiskoulutus');
     await perusteenLuontiJaTestit(
       testData,
       kotoPerusteSisallot,
@@ -42,6 +43,7 @@ test.describe('Kotoutumiskoulutus - Uusi peruste ja perusteesta OPS', async () =
     );
 
     testData.page = await browser.newPage();
+    console.log('amosaaOpetussuunnitelmaLuonti - Kotoutumiskoulutus');
     await amosaaOpetussuunnitelmaLuonti(
       testData,
       kotoOpetussuunnitelmaJulkinenTarkistukset,
@@ -52,12 +54,13 @@ test.describe('Kotoutumiskoulutus - Uusi peruste ja perusteesta OPS', async () =
   });
 
   test.afterAll(async ({ browser }) => {
+    console.log('Archive peruste ja ops - Kotoutumiskoulutus');
     for await (const url of perusteProjektiUrls) {
-      await archiveFoundation(browser, url);
+      await archiveFoundation(browser, url, projektiNimi);
     }
 
     for await (const url of opetussuunnitelmaUrls) {
-      await archiveCurriculum(browser, url);
+      await archiveCurriculum(browser, url, opsNimi);
     }
   });
 });

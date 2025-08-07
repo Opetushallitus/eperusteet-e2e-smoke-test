@@ -38,6 +38,7 @@ test.describe('Varhaiskasvatus - Uusi peruste ja perusteesta OPS', async () => {
   test(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
     testData.page = await browser.newPage();
 
+    console.log('perusteenLuontiJaTestit - Varhaiskasvatus');
     await perusteenLuontiJaTestit(
       testData,
       varhaiskasvatusSisallot,
@@ -47,6 +48,7 @@ test.describe('Varhaiskasvatus - Uusi peruste ja perusteesta OPS', async () => {
     );
 
     testData.page = await browser.newPage();
+    console.log('opsTyokaluOpetussuunnitelmanLuontiJaTestit - Varhaiskasvatus');
     await opsTyokaluOpetussuunnitelmanLuontiJaTestit(
       testData,
       varhaiskasvatusJulkinenOpsTarkistukset,
@@ -57,12 +59,13 @@ test.describe('Varhaiskasvatus - Uusi peruste ja perusteesta OPS', async () => {
   });
 
   test.afterAll(async ({ browser }) => {
+    console.log('Archive peruste ja ops - Varhaiskasvatus');
     for await (const url of perusteProjektiUrls) {
-      await archiveFoundation(browser, url);
+      await archiveFoundation(browser, url, projektiNimi);
     }
 
     for await (const url of opetussuunnitelmaUrls) {
-      await archiveCurriculum(browser, url);
+      await archiveCurriculum(browser, url, opsNimi);
     }
   });
 });

@@ -27,7 +27,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await page.getByRole('button', { name: 'Luo pohja' }).click();
     await expect(page.locator('.done-icon')).toHaveCount(1);
     await page.hover('.ep-valid-popover')
-    await page.getByRole('tooltip', { name: 'Aseta valmiiksi' }).click();
+    await page.getByRole('button', { name: 'Aseta valmiiksi' }).click();
     await page.locator('.modal-content').getByRole('button', { name: 'Aseta valmiiksi' }).click();
     await expect(page.locator('body')).toContainText('Tilan vaihto onnistui');
     // otetaan ops-pohjan url talteen arkistointia varten.
@@ -42,17 +42,19 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await page.locator('.multiselect').first().click();
     await page.getByText(pohjaNimi).first().click();
     await page.locator('div').filter({ hasText: /^Opetussuunnitelman nimi \*Tähän opetussuunnitelman nimi$/ }).getByRole('textbox').fill(opsNimi);
-    await page.getByText('Lisää kunta', { exact: true }).click();
+    // await page.getByText('Lisää kunta', { exact: true }).click();
     await page.getByRole('combobox').nth(1).click();
     await page.getByText('Jyväskylä').click();
     await waitSmall(page);
-    await page.getByText('Lisää koulutuksen järjestäjä', { exact: true }).click();
+    // await page.getByText('Lisää koulutuksen järjestäjä', { exact: true }).click();
     await page.getByRole('combobox').nth(2).click();
+    await page.getByLabel('-searchbox').nth(2).fill('Jyväskylän kaupunki');
     await page.getByText('Jyväskylän kaupunki').click();
     await opsLuonti?.(testData);
     await page.getByRole('button', { name: 'Luo opetussuunnitelma' }).click();
     await expect(page.locator('body')).toContainText('Opetussuunnitelma luotu onnistuneesti');
     // otetaan opsin url talteen, jonka avulla testataan loput opsiin liittyvät.
+    await expect(page.locator('body')).toContainText('Yleisnäkymä');
     const opetussuunnitelmaUrl = page.url();
     await opetussuunnitelmaUrlCallBack(opetussuunnitelmaUrl);
 
@@ -71,8 +73,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
 
     await page.goto(opetussuunnitelmaUrl);
     await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
-    await page.hover('.ep-valid-popover')
-    await page.getByRole('tooltip', { name: 'Siirry julkaisunäkymään' }).getByRole('link').click();
+    await page.locator('button').filter({ hasText: 'Siirry julkaisunäkymään' }).click();
     await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
     await page.getByRole('button', { name: 'Julkaise' }).click();
     await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();

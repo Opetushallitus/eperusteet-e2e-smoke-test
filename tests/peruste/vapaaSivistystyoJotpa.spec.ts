@@ -28,6 +28,7 @@ test.describe('Vapaa sivistystyö - jotpa - Uusi OPS', async () => {
   test(`Luo, päivitä ja julkaise ops - ${koulutustyyppi}`, async ({ page, browser }) => {
     testData.page = await browser.newPage();
 
+    console.log('amosaaOpetussuunnitelmaLuonti - Vapaa sivistystyö - jotpa');
     await amosaaOpetussuunnitelmaLuonti(
       testData,
       jotpaOpetussuunnitelmaJulkinenTarkistukset,
@@ -38,8 +39,9 @@ test.describe('Vapaa sivistystyö - jotpa - Uusi OPS', async () => {
   });
 
   test.afterAll(async ({ browser }) => {
+    console.log('Archive ops - Vapaa sivistystyö - jotpa');
     for await (const url of opetussuunnitelmaUrls) {
-      await archiveCurriculum(browser, url);
+      await archiveCurriculum(browser, url, opsNimi);
     }
   });
 });

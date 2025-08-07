@@ -1,6 +1,6 @@
 import { Page, test, expect } from '@playwright/test';
-import { CI_baseUrl } from "../../utils/defaultvalues";
-import { login } from "../../utils/commonmethods";
+import { CI_baseUrl, DEFAULT_VALUES } from "../../utils/defaultvalues";
+import { login, waitMedium, waitSmall } from "../../utils/commonmethods";
 
 export interface TestData {
   page: Page;
@@ -11,12 +11,14 @@ export interface TestData {
   koulutustyyppi: string;
   url?: string;
   julkinenKoosteUrl?: string;
+  pdfLkm?: number;
 };
 
-export async function archiveFoundation(browser: any, url: string) {
+export async function archiveFoundation(browser: any, url: string, nimi: string) {
   let page = await browser.newPage();
-  await login(page, CI_baseUrl);
+  await login(page, url)
   await page.goto(url);
+  await expect(page.locator('body')).toContainText(nimi);
   await expect(page.locator('body')).toContainText('Lisätoiminnot');
   await page.getByText('Lisätoiminnot').click();
   await page.getByRole('menuitem', { name: 'Arkistoi peruste' }).click();
@@ -25,9 +27,9 @@ export async function archiveFoundation(browser: any, url: string) {
   await page.close();
 }
 
-export async function archiveCurriculum(browser: any, url: string) {
+export async function archiveCurriculum(browser: any, url: string, nimi: string) {
   let page = await browser.newPage();
-  await login(page, CI_baseUrl);
+  await login(page, url)
   await page.goto(url);
   await expect(page.locator('body')).toContainText('Lisätoiminnot');
   await page.getByText('Lisätoiminnot').click();

@@ -17,8 +17,8 @@ export async function perusopetuksenSisallot(testData: TestData) {
 export async function perusopetusLaajaAlaisetOsaamiset(page: Page, url) {
   await page.goto(url + 'perusopetus/laajaalaisetosaamiset');
   await page.getByRole('button', { name: 'Uusi laaja-alainen osaaminen' }).click();
-  await page.getByRole('textbox').click();
-  await page.getByRole('textbox').fill('Laaja-alainen osaaminen 1');
+  await page.getByRole('textbox').first().click();
+  await page.getByRole('textbox').first().fill('Laaja-alainen osaaminen 1');
   await page.locator('.ProseMirror').fill('Laaja-alainen osaaminen 1 Kuvausteksti');
   await page.getByRole('button', { name: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
@@ -53,8 +53,10 @@ export async function perusopetusOppiaine(page: Page, url: string) {
   await page.getByRole('button', { name: 'Hae koodistosta' }).click();
   await waitMedium(page);
   await page.getByText('A1-kieli').first().click();
+  await expect(page.locator('.modal-content')).not.toBeVisible();
 
-  await page.getByRole('button', { name: 'Muokkaa tavoitealueita' }).click();
+  await page.locator('button').filter({ hasText: 'Muokkaa tavoitealueita' }).click();
+  // await page.getByRole('button', { name: 'Muokkaa tavoitealueita' }).click();
   await page.locator('.modal-content').getByRole('button', { name: 'Lisää tavoitealue' }).click();
   await page.locator('.modal-content').getByRole('textbox').fill('tavoitealue 1');
   await page.locator('.modal-content').getByRole('button', { name: 'Tallenna' }).click();
@@ -77,7 +79,8 @@ export async function perusopetusOppiaine(page: Page, url: string) {
   await page.locator('.tavoite').getByRole('button', { name: 'Lisää sisältöalue' }).click();
   await page.locator('.tavoite').getByRole('menuitem', { name: 'sisältöalue' }).click();
 
-  await page.getByRole('button', { name: 'Tallenna' }).click();
+  // await page.getByRole('button', { name: 'Tallenna' }).click();
+  await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
   await page.goto(url + 'perusopetus/oppiaineet');
