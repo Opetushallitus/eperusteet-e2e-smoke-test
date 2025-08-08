@@ -119,8 +119,8 @@ export async function lukioJulkinenTarkistukset(testData: TestData) {
 
 export async function lukioOpsLuonti(testData: TestData) {
   let page = testData.page;
-  await page.getByLabel("Ei", { exact: true }).nth(0).click({ force: true});
-  await page.getByLabel("Ei", { exact: true }).nth(1).click({ force: true});
+  // await page.getByLabel("Ei", { exact: true }).nth(0).click({ force: true});
+  // await page.getByLabel("Ei", { exact: true }).nth(1).click({ force: true});
 }
 
 export async function lukioOpsSisallot(testData: TestData) {
