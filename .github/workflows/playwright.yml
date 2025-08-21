@@ -21,9 +21,12 @@ jobs:
         with:
           node-version: '21'
 
+      - name: Enable corepack for nodejs
+        run: corepack enable
+
       - name: install playwright and run tests
         run: |
-          npm install -g yarn && yarn
+          yarn install
           yarn playwright install --with-deps
           yarn playwright test
       - uses: actions/upload-artifact@v4

@@ -14,7 +14,7 @@ export const login = async (page: Page, url) => {
 export const createNimi = (nimi: string) => {
   // korjataan timezonea
   const currentDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000);
-  return  nimi + ' ' + currentDate.toISOString().slice(0, 16).replace(/[T]/g, ' ');
+  return nimi + ' ' + currentDate.toISOString().slice(0, 16).replace(/[T]/g, ' ');
 };
 
 export const waitSmall = async (page) => {

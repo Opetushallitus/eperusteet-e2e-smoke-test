@@ -40,7 +40,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await page.getByText('Vain perustetta', { exact: true }).click();
     await expect(page.locator('.multiselect')).toHaveCount(1);
     await page.locator('.multiselect').first().click();
-    await page.getByText(pohjaNimi + ' (' + testData.perusteDiaari + ')').first().click();
+    await page.getByText(pohjaNimi).first().click();
     await page.locator('div').filter({ hasText: /^Opetussuunnitelman nimi \*Tähän opetussuunnitelman nimi$/ }).getByRole('textbox').fill(opsNimi);
     await page.getByText('Lisää kunta', { exact: true }).click();
     await page.getByRole('combobox').nth(1).click();
