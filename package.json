@@ -10,5 +10,6 @@
   "scripts": {
     "test": "playwright test",
     "test:dev": "playwright test --ui"
-  }
+  },
+  "packageManager": "yarn@4.9.2"
 }
