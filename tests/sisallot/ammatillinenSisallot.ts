@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { login, saveAndCheck, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { login, saveAndCheck, startModification, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { TestData } from '../perusteJaPaikalliset.spec';
 
@@ -31,20 +31,15 @@ async function perusteenSisallot(testData: TestData) {
   // Koodistosta haun listaus ei jostain syystä renderöidy testissä, joten lisätään manuaalisesti
   await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill('Testiosa');
   await page.locator('input[type="number"]').fill('10');
-  await saveAndCheck(page);
-
-  await page.locator('.navigation').getByRole('link', { name: 'Tutkinnon osat' }).click();
-  await page.locator('.navigation').getByRole('link', { name: 'Testiosa' }).click();
-  await expect(page.locator('body')).toContainText('Tutkinnon osan nimi');
   await page.getByRole('button', { name: 'Sisällön kieli' }).click();
   await page.getByRole('menuitem', { name: 'Svenska' }).click();
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
-  await waitSmall(page);
   await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill('Testiosa sv');
-  await saveAndCheck(page);
   await page.getByRole('button', { name: 'Sisällön kieli' }).click();
   await page.getByRole('menuitem', { name: 'Suomi' }).click();
-  await page.getByRole('link', { name: 'Tutkinnon muodostuminen' }).click();
+  await saveAndCheck(page);
+  await waitSmall(page);
+  await page.goto(url + 'rakenne');
+  await expect(page.locator('body')).toContainText('Tutkinnon rakenteen kuvaus');
   await page.getByRole('button', { name: 'Muokkaa' }).click();
   await page.getByRole('button', { name: 'Lisää ryhmä rakenteeseen' }).click();
   await page.getByLabel('Valinnaiset tutkinnon osat', { exact: true }).check({ force: true });
