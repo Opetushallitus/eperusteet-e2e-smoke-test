@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { TestData } from "../utils/testUtils";
-import { login, saveAndCheck, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { login, saveAndCheck, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 
 export async function tuvaPerusteSisallot(testData: TestData) {
@@ -8,11 +8,11 @@ export async function tuvaPerusteSisallot(testData: TestData) {
   let url = testData.url;
 
   await page.goto(url!);
-  await page.getByRole('button', { name: 'Uusi laaja-alainen osaaminen' }).first().click();
-  await page.getByRole('button', { name: 'Lisää laaja-alainen osaaminen' }).click();
+  await page.locator('button').filter({ hasText: 'Uusi laaja-alainen osaaminen' }).first().click();
+  await page.locator('button').filter({ hasText: 'Lisää laaja-alainen osaaminen' }).click();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
-  await page.getByRole('button', { name: 'Hae koodistosta' }).click();
+  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
+  await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
   await waitSmall(page);
   await page.getByText('Digiosaaminen').click();
   await waitSmall(page);
@@ -21,14 +21,14 @@ export async function tuvaPerusteSisallot(testData: TestData) {
   await saveAndCheck(page);
 
   await page.goto(url!);
-  await page.getByRole('button', { name: 'Uusi koulutuksen osa' }).first().click();
-  await page.getByRole('button', { name: 'Lisää koulutuksen osa' }).click();
+  await page.locator('button').filter({ hasText: 'Uusi koulutuksen osa' }).first().click();
+  await page.locator('button').filter({ hasText: 'Lisää koulutuksen osa' }).click();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
+  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
 
   await page.getByText('Perusopetus', { exact: true}).click();
 
-  await page.getByRole('button', { name: 'Hae koodistosta' }).click();
+  await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
   await waitSmall(page);
   await page.getByText('Perustaitojen vahvistaminen').click();
   await waitSmall(page);
@@ -40,7 +40,7 @@ export async function tuvaPerusteSisallot(testData: TestData) {
 
   await page.locator('.ProseMirror').nth(0).fill('koulutuksen osan kuvaus');
 
-  await page.getByRole('button', { name: 'Lisää tavoite' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää tavoite' }).click();
   await page.getByRole('group', { name: 'Opiskelija' }).getByRole('textbox').fill('koulutuksen osa tavoite 1');
 
   await page.locator('.ProseMirror').nth(1).fill('laaja-alaisen osaamisen kuvaus');
@@ -85,11 +85,11 @@ export async function createTuvaOpetussuunnitelmaPohja(testData: TestData){
   await page.locator('.multiselect').click();
   await expect(page.locator('.multiselect')).toContainText(testData.projektiNimi!);
   await page.getByText(testData.projektiNimi!).click();
-  await page.getByRole('button', { name: 'Luo pohja' }).click();
+  await page.locator('button').filter({ hasText: 'Luo pohja' }).click();
   await expect(page.locator('body')).toContainText('Yleisnäkymä');
 
-  await page.getByRole('button', { name: 'Aseta valmiiksi' }).click();
-  await page.locator('.modal-content').getByRole('button', { name: 'Kyllä' }).click();
+  await page.locator('button').filter({ hasText: 'Aseta valmiiksi' }).click();
+  await page.locator('.modal-content').locator('button').filter({ hasText: 'Kyllä' }).click();
   await expect(page.locator('body')).toContainText('Tilan vaihto onnistui');
 }
 
@@ -110,7 +110,7 @@ export async function createTuvaOpetussuunnitelma(testData: TestData){
   await page.getByText(testData.pohjaNimi!).click();
 
   await page.getByRole('textbox').last().fill(testData.opsNimi!);
-  await page.getByRole('button', { name: 'Luo toteutussuunnitelma' }).click();
+  await page.locator('button').filter({ hasText: 'Luo toteutussuunnitelma' }).click();
 }
 
 export async function tuvaOpetussuunnitelmaSisallot(testData: TestData) {
@@ -118,10 +118,10 @@ export async function tuvaOpetussuunnitelmaSisallot(testData: TestData) {
 
   await expect(page.locator('.navigation')).toContainText('Digiosaaminen');
   await page.locator('.navigation').getByText('Digiosaaminen').click();
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
-
-  await expect(page.locator('.editointikontrolli .ProseMirror')).toContainText('laaja-alaisen osaamisen kuvaus');
-  await page.locator('.ProseMirror.form-control').fill('laaja-alaisen osaamisen kuvaus paikallinen tarkennus');
+  await startEditMode(page);
+  
+  await expect(page.locator('.editointikontrolli .ProseMirror').first()).toContainText('laaja-alaisen osaamisen kuvaus');
+  await page.locator('.editointikontrolli .ProseMirror').last().fill('laaja-alaisen osaamisen kuvaus paikallinen tarkennus');
 
   await saveAndCheck(page);
 
@@ -136,21 +136,21 @@ export async function tuvaOpetussuunnitelmaSisallot(testData: TestData) {
   await expect(page.locator('.editointikontrolli')).toContainText('keskeisen sisällön kuvaus');
   await expect(page.locator('.editointikontrolli')).toContainText('osaamisen arvioinnin kuvaus');
 
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
-  await page.locator('.ProseMirror.form-control').nth(0).fill('tavoitteen paikallinen tarkennus');
+  await startEditMode(page);
+  await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').nth(0).fill('tavoitteen paikallinen tarkennus');
 
-  await page.getByRole('button', { name: 'Lisää laaja-alaisen osaamisen kuvaus' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää laaja-alaisen osaamisen kuvaus' }).click();
   await page.getByText('Monilukutaito').click();
-  await page.locator('.ProseMirror.form-control').nth(1).fill('monilukutaito paikallinen tarkennus');
-  await page.locator('.ProseMirror.form-control').nth(2).fill('keskeisen sisällön paikallinen tarkennus');
-  await page.locator('.ProseMirror.form-control').nth(3).fill('arvioinninen paikallinen tarkennus');
+  await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').nth(1).fill('monilukutaito paikallinen tarkennus');
+  await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').nth(2).fill('keskeisen sisällön paikallinen tarkennus');
+  await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').nth(3).fill('arvioinninen paikallinen tarkennus');
 
-  await page.getByRole('button', { name: 'Lisää koulutuksen järjestäjä' }).click();
-  await page.getByRole('button', { name: 'Hae organisaatio' }).click();
+  await page.locator('button').filter({ hasText: 'Lisää koulutuksen järjestäjä' }).click();
+  await page.locator('button').filter({ hasText: 'Hae organisaatio' }).click();
   await expect(page.locator('.modal')).toContainText('Valitse koulutuksen järjestäjä');
   await page.getByText('Aalto-korkeakoulusäätiö sr').click();
   await page.getByRole('group', { name: 'Linkki toteutussuunnitelmaan tai koulutuksen järjestäjän kotisivulle' }).getByRole('textbox').fill('www.google.com');
-  await page.locator('.ProseMirror.form-control').last().fill('käytännön toteutus paikallinen tarkennus');
+  await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').last().fill('käytännön toteutus paikallinen tarkennus');
 
   await saveAndCheck(page);
 }

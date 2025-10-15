@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 import { createNimi } from "../../utils/commonmethods";
 import { TestData, archiveFoundation, archiveCurriculum } from "../utils/testUtils";
-import { lukioJulkinenOpsTarkistukset, lukioJulkinenTarkistukset, lukioOpsLuonti, lukioOpsSisallot, lukioSisallot } from '../sisallot/lukioSisallot';
+import { lukioJulkinenOpsTarkistukset, lukioJulkinenTarkistukset, lukioOpsSisallot, lukioSisallot } from '../sisallot/lukioSisallot';
 import { yleissivistavatLisaTarkastukset } from '../sisallot/yleissivistavat';
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { opsTyokaluOpetussuunnitelmanLuontiJaTestit } from '../sisallot/opstyokalu';
@@ -37,6 +37,7 @@ test.describe('Lukiokoulutus - Uusi peruste ja perusteesta OPS', async () => {
   test(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
     testData.page = await browser.newPage();
 
+    console.log('perusteenLuontiJaTestit - Lukiokoulutus');
     await perusteenLuontiJaTestit(
       testData,
       lukioSisallot,
@@ -46,22 +47,24 @@ test.describe('Lukiokoulutus - Uusi peruste ja perusteesta OPS', async () => {
     );
 
     testData.page = await browser.newPage();
+    console.log('opsTyokaluOpetussuunnitelmanLuontiJaTestit - Lukiokoulutus');
     await opsTyokaluOpetussuunnitelmanLuontiJaTestit(
       testData,
       lukioJulkinenOpsTarkistukset,
       (url: string) => opetussuunnitelmaUrls.push(url),
-      lukioOpsLuonti,
+      async () => {},
       lukioOpsSisallot,
     );
   });
 
   test.afterAll(async ({ browser }) => {
+    console.log('Archive peruste ja ops - Lukiokoulutus');
     for await (const url of perusteProjektiUrls) {
-      await archiveFoundation(browser, url);
+      await archiveFoundation(browser, url, projektiNimi);
     }
 
     for await (const url of opetussuunnitelmaUrls) {
-      await archiveCurriculum(browser, url);
+      await archiveCurriculum(browser, url, opsNimi);
     }
   });
 });

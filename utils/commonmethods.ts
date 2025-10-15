@@ -29,8 +29,14 @@ export const waitLong = async (page) => {
   await page.waitForTimeout(60_000);
 }
 
+export async function startEditMode(page: Page) {
+  await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
+  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
+  await expect(page.locator('.editointi-container')).toContainText('Tallenna');
+}
+
 export async function saveAndCheck(page: Page) {
-  await page.getByRole('button', { name: 'Tallenna' }).click();
+  await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('body')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
 }

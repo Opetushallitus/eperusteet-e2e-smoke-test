@@ -43,8 +43,7 @@ export async function amosaaOpetussuunnitelmaLuonti(
 
   await page.goto(totsuUrl);
   await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
-  await page.hover('.ep-valid-popover')
-  await page.getByRole('tooltip', { name: 'Siirry julkaisunäkymään' }).getByRole('link').click();
+  await page.locator('button').filter({ hasText: 'Siirry julkaisunäkymään' }).click();
   await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
   await page.getByRole('button', { name: 'Julkaise' }).click();
   await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
@@ -62,17 +61,23 @@ export async function amosaaOpetussuunnitelmaLuonti(
   await expect(page.getByRole('button').locator('.oph-spinner')).not.toBeVisible();
   await expect(page.locator('.pdf-box')).toHaveCount(2);
 
-  await expect.poll(async () => {
-    return page.locator('.pdf-box').first().textContent();
-  }, {
-      timeout: 300_000,
-    }).toContain('Julkaistu');
+  await waitMedium(page);
+  await page.reload();
+  await waitMedium(page);
+  await expect(page.locator('.pdf-box').first()).toContainText('Julkaistu');
+  await expect(page.locator('.pdf-box').last()).toContainText('Työversio');
 
-  await expect.poll(async () => {
-    return page.locator('.pdf-box').last().textContent();
-  }, {
-      timeout: 300_000,
-    }).toContain('Työversio');
+  // await expect.poll(async () => {
+  //   return page.locator('.pdf-box').first().textContent();
+  // }, {
+  //     timeout: 300_000,
+  //   }).toContain('Julkaistu');
+
+  // await expect.poll(async () => {
+  //   return page.locator('.pdf-box').last().textContent();
+  // }, {
+  //     timeout: 300_000,
+  //   }).toContain('Työversio');
 
 
   await julkinenOpsTarkistukset(testData);

@@ -9,9 +9,9 @@ export async function taideSisallot(testData: TestData) {
   let page = testData.page;
   await perusteenTekstikappale(page);
 
-  await page.getByRole('button', { name: 'Uusi taiteenala' }).first().click();
-  await expect(page.getByRole('button', { name: 'Hae koodistosta' })).toBeVisible();
-  await page.getByRole('button', { name: 'Hae koodistosta' }).click();
+  await page.locator('button').filter({ hasText: 'Uusi taiteenala' }).first().click();
+  await expect(page.locator('button').filter({ hasText: 'Hae koodistosta' })).toBeVisible();
+  await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
   await expect(page.locator('.modal')).toBeVisible();
   await expect(page.locator('.modal')).toContainText('Alkuvaihe');
   await page.getByText('Alkuvaihe').click();
@@ -19,9 +19,10 @@ export async function taideSisallot(testData: TestData) {
 
   await page.locator('.ProseMirror').nth(0).fill('alkuvaihe kuvaus');
 
-  await page.getByRole('button', { name: 'Lisää tekstikappale' }).click();
-  await page.getByRole('textbox').nth(1).fill('alkuvaiheteksti 1');
-  await page.locator('.ProseMirror').nth(1).fill('alkuvaiheteksti 1 kuvaus');
+  await page.locator('button').filter({ hasText: 'Lisää tekstikappale' }).click();
+  await expect(page.locator('.ProseMirror')).toHaveCount(2);
+  await page.locator('input[type="text"]').last().fill('alkuvaiheteksti 1');
+  await page.locator('.ProseMirror').last().fill('alkuvaiheteksti 1 kuvaus');
   await saveAndCheck(page);
 }
 
@@ -52,7 +53,7 @@ export async function taideOpsSisallot(testData: TestData) {
 
   await waitSmall(page);
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
+  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
   await waitSmall(page);
   await expect(page.locator('.ProseMirror.form-control')).toHaveCount(1);
   await page.locator('.ProseMirror.form-control').nth(0).fill('alkuvaihe paikallinen tarkennus');

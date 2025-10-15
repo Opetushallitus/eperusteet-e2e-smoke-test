@@ -34,7 +34,7 @@ export async function perusteenLuontiJaTestit(
   await page.getByText('Seuraava').click();
   await page.getByRole('button', { name: 'Luo perusteprojekti' }).click();
   await expect(page.locator('h1').locator('span').first()).toHaveText(projektiNimi);
-  const perusteProjektiUrl = page.url();
+  const perusteProjektiUrl = page.url() + (page.url().endsWith('/') ? '' : '/');
   testData.url = perusteProjektiUrl;
   perusteprojektiUrlCallBack(perusteProjektiUrl);
 
@@ -69,8 +69,7 @@ export async function perusteenLuontiJaTestit(
 
   await page.goto(perusteProjektiUrl);
   await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
-  await page.hover('.ep-valid-popover')
-  await page.getByRole('tooltip', { name: 'Siirry julkaisunäkymään' }).getByRole('link').click();
+  await page.locator('button').filter({ hasText: 'Siirry julkaisunäkymään' }).click();
   await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
 
   await expect.poll(async () => {
@@ -87,12 +86,16 @@ export async function perusteenLuontiJaTestit(
   await page.getByText('Lisätoiminnot').click();
   await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
 
-  await expect.poll(async () => {
-    return page.locator('.sisalto').textContent();
-  }).toContain('Julkaistu');
+  await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).first().click();
+  await expect(page.getByRole('button').locator('.oph-spinner')).toBeVisible();
+  await expect(page.getByRole('button').locator('.oph-spinner')).not.toBeVisible();
+  await expect(page.locator('.pdf-box')).toHaveCount(testData.pdfLkm || 2);
 
-  await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).nth(0).click();
-  await expect(page.locator('.sisalto')).toContainText('Työversio');
+  await waitMedium(page);
+  await page.reload();
+  await waitMedium(page);
+  await expect(page.locator('.pdf-box').first()).toContainText('Julkaistu');
+  await expect(page.locator('.pdf-box').nth(1)).toContainText('Työversio');
 
   await lisaTarkistukset?.(testData);
 

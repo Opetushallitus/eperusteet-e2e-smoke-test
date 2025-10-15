@@ -18,9 +18,9 @@ export const LOCAL_VALUES = {
   baseAmosaaUrl: 'http://test:test@localhost:9002',
   baseYlopsUrl: 'http://test:test@localhost:9040',
   baseJulkinenUrl: 'http://localhost:9020',
-  eperusteUrl: 'http://localhost:9001',
-  amosaaUrl: 'http://localhost:9002',
-  ylopsUrl: 'http://localhost:9040',
+  eperusteUrl: 'http://test:test@localhost:9001',
+  amosaaUrl: 'http://test:test@localhost:9002',
+  ylopsUrl: 'http://test:test@localhost:9040',
 }
 
 export const ENVIRONMENT_VALUES = process.env.CI ? CI_VALUES : LOCAL_VALUES;
