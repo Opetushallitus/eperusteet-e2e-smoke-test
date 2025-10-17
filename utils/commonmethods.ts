@@ -33,17 +33,19 @@ export async function startEditMode(page: Page) {
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
   await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
   await expect(page.locator('.editointi-container')).toContainText('Tallenna');
+  await page.waitForLoadState('networkidle');
 }
 
 export async function saveAndCheck(page: Page) {
   await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('body')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await waitSmall(page);
+  await page.waitForLoadState('networkidle');
 }
 
 export async function startModification(page: Page) {
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
   await page.locator('.editointi-container').getByRole('button', { name: 'Muokkaa' }).click();
   await expect(page.locator('.editointi-container')).toContainText('Tallenna');
+  await page.waitForLoadState('networkidle');
 }
