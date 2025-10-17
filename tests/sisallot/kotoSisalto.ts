@@ -21,6 +21,7 @@ export async function kotoPerusteSisallot(testData: TestData) {
   await page.locator('.ProseMirror').nth(1).fill('monilukutaito kuvaus');
 
   await saveAndCheck(page);
+  await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
 
   await page.getByRole('button', { name: 'Tavoitteet ja keskeiset sisällöt' }).first().click();
   await page.getByText('Kielitaitotasot').click();
