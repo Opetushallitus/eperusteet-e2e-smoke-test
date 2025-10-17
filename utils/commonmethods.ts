@@ -39,6 +39,7 @@ export async function saveAndCheck(page: Page) {
   await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('body')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
+  await waitSmall(page);
 }
 
 export async function startModification(page: Page) {
