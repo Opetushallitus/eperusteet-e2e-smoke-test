@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { waitMedium } from "../../utils/commonmethods";
+import { waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { yleissivistavatJulkinenTarkistukset } from "./yleissivistavat";
 import { TestData } from "../utils/testUtils";
@@ -130,6 +130,7 @@ export async function lukioOpsSisallot(testData: TestData) {
     await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
     await page.getByRole('link', { name: 'Oppiaineet' }).click();
     await page.locator('.navigation').getByRole('link', { name: oppiaine.nimi }).click();
+    await waitSmall(page);
     await expect(page.locator('.navigation')).toContainText(oppiaine.nimi);
     await expect(page.locator('.navigation')).toContainText(oppiaine.oppimaaraNimi);
     await expect(page.locator('.content')).toContainText(oppiaine.nimi + ' tehtava');

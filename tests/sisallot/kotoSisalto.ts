@@ -25,6 +25,7 @@ export async function kotoPerusteSisallot(testData: TestData) {
   await page.getByRole('button', { name: 'Tavoitteet ja keskeiset sisällöt' }).first().click();
   await page.getByText('Kielitaitotasot').click();
   await page.getByRole('button', { name: 'Lisää kielitaitotaso' }).click();
+  await expect(page.locator('.modal')).not.toBeVisible();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
   await page.getByRole('button', { name: 'Muokkaa' }).click();
 
