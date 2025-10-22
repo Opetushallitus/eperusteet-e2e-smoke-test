@@ -106,7 +106,8 @@ export async function createToteutussuunnitelma(testData: TestData) {
   await expect(page.locator('body')).toContainText('Nimi tai koulutuskoodi');
   await page.getByRole('button', { name: 'Lisää toteutussuunnitelma' }).click();
   await page.getByText('Tutkinnon perustetta').click();
-  await page.getByRole('combobox').locator('div').filter({ hasText: 'Valitse perusteprojekti', }).click();
+  await page.getByRole('combobox').click();
+  await page.getByRole('combobox').locator('input').fill(projektiNimi);
   await page.getByText(projektiNimi).first().click();
   await page.getByRole('group', { name: 'Toteutussuunnitelman nimi *' }).getByRole('textbox').fill(testData.opsNimi);
   await page.getByRole('button', { name: 'Luo toteutussuunnitelma' }).click();
