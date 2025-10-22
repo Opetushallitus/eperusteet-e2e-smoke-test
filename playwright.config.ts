@@ -5,15 +5,15 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: false,
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 3 : 0,
-  workers: 1,
-  reporter: 'html',
+  workers: 3,
+  reporter: [['html'], ['list']],
   use: {
     trace: 'on-first-retry',
   },
-  maxFailures: process.env.CI ? 0 : 1,
+  maxFailures: process.env.CI ? 3 : 1,
   timeout: 60_000 * 15,
   expect: {
     timeout: 90_000,
