@@ -14,9 +14,9 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   maxFailures: process.env.CI ? 0 : 1,
-  timeout: 60_000 * 30,
+  timeout: 60_000 * 15,
   expect: {
-    timeout: 120_000,
+    timeout: 90_000,
   },
   projects: [
     { name: 'setup', testMatch: /.*\.setup\.ts/ },
