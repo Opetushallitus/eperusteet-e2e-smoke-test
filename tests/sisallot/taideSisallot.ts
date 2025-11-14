@@ -55,7 +55,7 @@ export async function taideOpsSisallot(testData: TestData) {
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
   await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
   await waitSmall(page);
-  await expect(page.locator('.editointikontrolli .ProseMirror')).toHaveCount(3);
+  await expect(page.locator('.editointikontrolli .ProseMirror')).toHaveCount(2);
   await page.locator('.editointikontrolli .ProseMirror').last().fill('alkuvaihe paikallinen tarkennus');
 
   await saveAndCheck(page);

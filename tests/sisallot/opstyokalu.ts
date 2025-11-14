@@ -106,6 +106,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await page.getByLabel('Hae opetussuunnitelmaa').fill(opsNimi);
     await expect(page.locator('.opetussuunnitelma-container a')).toHaveCount(1);
     await page.locator('.opetussuunnitelma-container a').click();
+    await waitSmall(page);
     await expect(page.locator('h1')).toContainText(opsNimi);
 
     await julkinenOpsTarkistukset(testData);
