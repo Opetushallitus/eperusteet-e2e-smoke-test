@@ -45,14 +45,36 @@ export async function amosaaOpetussuunnitelmaLuonti(
   await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
   await page.locator('button').filter({ hasText: 'Siirry julkaisunäkymään' }).click();
   await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
-  await page.getByRole('button', { name: 'Julkaise' }).click();
-  await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
-  await waitLong(page);
-  await page.reload();
+  
+  // Yritetään julkaisua 3 kertaa, koska koodistopalvelu saattaa heittää virhettä.
+  let publishSuccess = false;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    await page.getByRole('button', { name: 'Julkaise' }).click();
+    await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
 
-  await expect.poll(async () => {
-    return page.locator('.julkaistu').textContent();
-  }).toContain('Julkaistu versio');
+    const startTime = Date.now();
+    const timeout = 10000;
+    
+    while (Date.now() - startTime < timeout) {
+      const julkaistuText = await page.locator('.julkaistu').textContent();
+      if (julkaistuText?.includes('Julkaistu versio')) {
+        publishSuccess = true;
+        break;
+      }
+      await page.waitForTimeout(500);
+    }
+    
+    if (publishSuccess) {
+      break;
+    } else {
+      if (attempt < 3) {
+        await waitSmall(page);
+      }
+    }
+  }
+  
+  // Final assertion - will fail the test if all attempts failed
+  await expect(page.locator('.julkaistu')).toContainText('Julkaistu versio');
 
   await page.getByText('Lisätoiminnot').click();
   await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
