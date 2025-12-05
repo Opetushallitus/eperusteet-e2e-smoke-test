@@ -46,6 +46,9 @@ export async function amosaaOpetussuunnitelmaLuonti(
   await page.locator('button').filter({ hasText: 'Siirry julkaisunäkymään' }).click();
   await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
   
+  await page.getByRole('button', { name: 'Julkaise' }).click();
+  await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
+
   // Yritetään julkaisua 3 kertaa, koska koodistopalvelu saattaa heittää virhettä.
   let publishSuccess = false;
   for (let attempt = 1; attempt <= 3; attempt++) {
@@ -62,15 +65,12 @@ export async function amosaaOpetussuunnitelmaLuonti(
         break;
       }
       await page.waitForTimeout(500);
+      await page.reload();
     }
     
     if (publishSuccess) {
       break;
-    } else {
-      if (attempt < 3) {
-        await waitSmall(page);
-      }
-    }
+    } 
   }
   
   // Final assertion - will fail the test if all attempts failed
