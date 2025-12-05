@@ -10,8 +10,8 @@ export async function kotoPerusteSisallot(testData: TestData) {
   await page.goto(url!);
   await page.getByRole('button', { name: 'Uusi laaja-alainen osaaminen' }).first().click();
   await page.getByRole('button', { name: 'Lisää laaja-alainen osaaminen' }).click();
-  await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
+
+  await startEditMode(page);
 
   await page.getByRole('group', { name: 'Otsikko' }).getByRole('textbox').fill('opinto 1');
   await page.locator('.ProseMirror').nth(0).fill('opinnon kuvaus');

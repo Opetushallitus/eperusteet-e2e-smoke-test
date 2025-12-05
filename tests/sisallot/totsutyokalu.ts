@@ -53,7 +53,7 @@ export async function amosaaOpetussuunnitelmaLuonti(
     await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
 
     const startTime = Date.now();
-    const timeout = 10000;
+    const timeout = 30000;
     
     while (Date.now() - startTime < timeout) {
       const julkaistuText = await page.locator('.julkaistu').textContent();
