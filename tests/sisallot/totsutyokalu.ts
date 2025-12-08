@@ -78,14 +78,12 @@ export async function amosaaOpetussuunnitelmaLuonti(
 
   await page.getByText('Lisätoiminnot').click();
   await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
+  await expect(page.getByRole('button', { name: 'Luo PDF-tiedosto' })).toBeVisible({ timeout: 30_000 });
   await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).click();
   await expect(page.getByRole('button').locator('.oph-spinner')).toBeVisible();
   await expect(page.getByRole('button').locator('.oph-spinner')).not.toBeVisible();
   await expect(page.locator('.pdf-box')).toHaveCount(2);
-
-  await waitMedium(page);
   await page.reload();
-  await waitMedium(page);
   await expect(page.locator('.pdf-box').first()).toContainText('Julkaistu');
   await expect(page.locator('.pdf-box').last()).toContainText('Työversio');
 
