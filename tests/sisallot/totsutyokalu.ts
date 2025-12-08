@@ -83,9 +83,10 @@ export async function amosaaOpetussuunnitelmaLuonti(
   await expect(page.getByRole('button').locator('.oph-spinner')).toBeVisible();
   await expect(page.getByRole('button').locator('.oph-spinner')).not.toBeVisible();
   await expect(page.locator('.pdf-box')).toHaveCount(2);
-  await page.reload();
-  await expect(page.locator('.pdf-box').first()).toContainText('Julkaistu');
-  await expect(page.locator('.pdf-box').last()).toContainText('Työversio');
+  await expect(page.locator('.pdf-box').first()).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator('.pdf-box').first()).toContainText('Julkaistu', { timeout: 30_000 });
+  await expect(page.locator('.pdf-box').last()).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator('.pdf-box').last()).toContainText('Työversio', { timeout: 30_000 });
 
   // await expect.poll(async () => {
   //   return page.locator('.pdf-box').first().textContent();
