@@ -85,6 +85,7 @@ export async function vstOpetussuunnitelmaSisallot(testData: TestData) {
   await page.locator('.ProseMirror').nth(1).fill('tavoitteiden kuvaus teksti');
 
   await page.locator('button').filter({ hasText: 'Lisää tavoite' }).click();
+  await page.locator('.modal-content').locator('button').filter({ hasText: 'Sulje' }).click();
   await page.getByRole('textbox').nth(3).fill('opintokokonaisuus tavoite 1');
 
   await page.locator('.ProseMirror').nth(2).fill('keskeinen sisältö teksti');
