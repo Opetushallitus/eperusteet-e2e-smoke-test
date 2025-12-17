@@ -104,9 +104,13 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
 
     await page.goto(testData.julkinenKoosteUrl ?? DEFAULT_VALUES.julkinenKoosteUrlUrl + koulutustyyppi.toLowerCase());
     await page.getByLabel('Hae opetussuunnitelmaa').fill(opsNimi);
-    await expect(page.locator('.opetussuunnitelma-container a')).toHaveCount(1);
-    await page.locator('.opetussuunnitelma-container a').click();
-    await waitSmall(page);
+    // Wait for search results to load
+    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('link', { name: opsNimi })).toBeVisible();
+    await page.getByRole('link', { name: opsNimi }).click();
+    await page.waitForURL(/\/opetussuunnitelma\//);
+    await expect(page.locator('.navigation-tree')).toBeVisible({ timeout: 300_000 });
+    await expect(page.locator('.navigation-tree')).toContainText('Opetussuunnitelman tiedot');
     await expect(page.locator('h1')).toContainText(opsNimi);
 
     await julkinenOpsTarkistukset(testData);
