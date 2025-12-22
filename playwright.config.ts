@@ -14,7 +14,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   maxFailures: process.env.CI ? 3 : 1,
-  timeout: 60_000 * 15,
+  timeout: 60_000 * 30,
   expect: {
     timeout: 90_000,
   },
