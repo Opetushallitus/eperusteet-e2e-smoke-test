@@ -56,15 +56,15 @@ export async function amosaaOpetussuunnitelmaLuonti(
     await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
 
     const startTime = Date.now();
-    const timeout = 30000;
+    const timeout = 60000;
     
-    while (Date.now() - startTime < timeout) {
-      const julkaistuText = await page.locator('.julkaistu').textContent();
+    while (Date.now() - startTime < timeout || (await page.locator('.julkaisu').first().textContent())?.includes('Julkaisu kesken')) {
+      const julkaistuText = await page.locator('.julkaisu').first().textContent();
       if (julkaistuText?.includes('Julkaistu versio')) {
         publishSuccess = true;
         break;
       }
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(3000);
       await page.reload();
     }
     
