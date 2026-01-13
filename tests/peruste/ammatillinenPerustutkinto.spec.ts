@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 import { createNimi } from "../../utils/commonmethods";
 import { TestData, archiveFoundation, archiveCurriculum } from "../utils/testUtils";
-import { ammatillinenLisaTarkistukset, ammatillinenPerusteJulkinenTarkastukset, ammatillinenPerusteSisallot, ammatillinenToteutussuunnitelmaJulkinenTarkastukset, createToteutussuunnitelma } from '../sisallot/ammatillinenSisallot';
+import { ammatillinenLisaTarkistukset, ammatillinenPerusteJulkinenTarkastukset, ammatillinenPerusteSisallot, ammatillinenToteutussuunnitelmaJulkinenTarkastukset, ammatillinenToteutussuunnitelmaSisallot, createToteutussuunnitelma } from '../sisallot/ammatillinenSisallot';
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { amosaaOpetussuunnitelmaLuonti } from '../sisallot/totsutyokalu';
 
@@ -52,7 +52,7 @@ test.describe('Ammatillinen perustutkinto - Uusi peruste ja perusteesta OPS', as
       ammatillinenToteutussuunnitelmaJulkinenTarkastukset,
       (url: string) => opetussuunnitelmaUrls.push(url),
       createToteutussuunnitelma,
-      async (testData: TestData) => {},
+      ammatillinenToteutussuunnitelmaSisallot,
     );
   });
 
