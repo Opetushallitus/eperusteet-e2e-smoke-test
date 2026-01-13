@@ -33,8 +33,8 @@ export async function tuvaPerusteSisallot(testData: TestData) {
   await page.getByText('Perustaitojen vahvistaminen').click();
   await waitSmall(page);
 
-  await page.getByRole('spinbutton').first().fill('1');
-  await page.getByRole('spinbutton').last().fill('2');
+  await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').first().fill('1');
+  await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').last().fill('2');
 
   await page.getByText('Yhteinen', { exact: true}).click();
 

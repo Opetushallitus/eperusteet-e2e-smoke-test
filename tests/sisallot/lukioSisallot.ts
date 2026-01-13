@@ -78,7 +78,7 @@ async function lisaaOppiaine(page: Page, nimi: string, moduuliNimi: string, oppi
   await expect(page.locator('.modal-content')).toContainText(moduuliNimi);
   await page.locator('.modal-content').getByText(moduuliNimi).click();
   await page.getByText('Pakollinen').check();
-  await page.getByRole('spinbutton').nth(0).fill('5');
+  await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').fill('4');
   await page.locator('.ProseMirror').nth(0).fill(moduuliNimi + ' kuvaus');
 
   await page.locator('button').filter({ hasText: 'Tallenna' }).click();
@@ -110,17 +110,15 @@ export async function lukioJulkinenTarkistukset(testData: TestData) {
     await page.locator('.navigation-tree').getByText(oppiaine.oppimaaraNimi).click();
     await expect(page.locator('.navigation-tree')).toContainText(oppiaine.moduuliNimi);
     await expect(page.locator('.content')).toContainText(oppiaine.moduuliNimi);
-    await expect(page.locator('.content')).toContainText('5 op');
+    await expect(page.locator('.content')).toContainText('4 op');
     await page.locator('.content').locator('a').filter({ hasText: oppiaine.moduuliNimi }).last().click();
-    await expect(page.locator('.content')).toContainText("Pakollinen");
-    await expect(page.locator('.content')).toContainText("5 op");
+    await expect(page.locator('.content')).toContainText('Pakollinen');
+    await expect(page.locator('.content')).toContainText('4 op');
   }
 }
 
 export async function lukioOpsLuonti(testData: TestData) {
   let page = testData.page;
-  // await page.getByLabel("Ei", { exact: true }).nth(0).click({ force: true});
-  // await page.getByLabel("Ei", { exact: true }).nth(1).click({ force: true});
 }
 
 export async function lukioOpsSisallot(testData: TestData) {
@@ -174,7 +172,7 @@ export async function lukioJulkinenOpsTarkistukset(testData: TestData) {
     await expect(page.locator('.navigation-tree')).toContainText(oppiaine.moduuliNimi);
 
     await page.locator('.navigation-tree').getByText(oppiaine.moduuliNimi).click();
-    await expect(page.locator('.content')).toContainText("Pakollinen");
-    await expect(page.locator('.content')).toContainText("5 op");
+    await expect(page.locator('.content')).toContainText('Pakollinen');
+    await expect(page.locator('.content')).toContainText('4 op');
   }
 }

@@ -16,13 +16,13 @@ export async function vstPerusteSisallot(testData: TestData) {
   await waitSmall(page);
   await page.getByText('Aktiivinen kansalaisuus').click();
   await waitSmall(page);
-  await page.getByRole('spinbutton').fill('77');
+  await page.getByRole('group', { name: 'Minimilaajuus' }).getByRole('textbox').fill('77');
   await page.locator('.ProseMirror').nth(0).fill('opintokokonaisuus kuvaus');
   await page.getByRole('group', { name: 'Tavoitteiden otsikko *' }).getByRole('textbox').fill('opintokokonaisuus tavoitteet');
   await page.locator('button').filter({ hasText: 'Lisää tavoite' }).click();
-  await page.getByRole('textbox').nth(2).fill('opintokokonaisuus tavoite 1');
+  await page.getByRole('textbox').last().fill('opintokokonaisuus tavoite 1');
   await page.locator('button').filter({ hasText: 'Lisää arvioinnin kriteeri' }).click();
-  await page.getByRole('textbox').nth(3).fill('opintokokonaisuus arvioinnin kriteeri 1');
+  await page.getByRole('textbox').last().fill('opintokokonaisuus arvioinnin kriteeri 1');
 
   await saveAndCheck(page);
 }
@@ -76,7 +76,7 @@ export async function vstOpetussuunnitelmaSisallot(testData: TestData) {
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
   await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
 
-  await page.getByRole('spinbutton').fill('88');
+  await page.getByRole('group', { name: 'laajuus' }).getByRole('textbox').first().fill('88');
   await page.getByText('Valitse laajuusyksikkö').click();
   await page.getByText('opintopistettä' ).click();
 
@@ -86,16 +86,16 @@ export async function vstOpetussuunnitelmaSisallot(testData: TestData) {
 
   await page.locator('button').filter({ hasText: 'Lisää tavoite' }).click();
   await page.locator('.modal-content').locator('button').filter({ hasText: 'Sulje' }).click();
-  await page.getByRole('textbox').nth(3).fill('opintokokonaisuus tavoite 1');
+  await page.getByRole('textbox').last().fill('opintokokonaisuus tavoite 1');
 
   await page.locator('.ProseMirror').nth(2).fill('keskeinen sisältö teksti');
   await page.locator('.ProseMirror').nth(3).fill('arvioinnin kuvaus teksti');
 
   await page.locator('button').filter({ hasText: 'Lisää arvioinnin kriteeri' }).click();
-  await page.getByRole('textbox').nth(4).fill('opintokokonaisuus arvioinnin kriteeri 1');
+  await page.getByRole('textbox').last().fill('opintokokonaisuus arvioinnin kriteeri 1');
 
   await page.locator('button').filter({ hasText: 'Lisää osaamismerkkikappale' }).click();
-  await page.locator('.ProseMirror').nth(4).fill('osaamismerkkikappale teksti');
+  await page.locator('.ProseMirror').last().fill('osaamismerkkikappale teksti');
 
   await page.locator('button').filter({ hasText: 'Lisää osaamismerkkejä' }).click();
   await waitSmall(page);

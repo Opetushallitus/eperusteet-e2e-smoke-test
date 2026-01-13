@@ -34,7 +34,7 @@ async function perusteenSisallot(testData: TestData) {
   await page.getByRole('button', { name: 'Lisää ryhmä rakenteeseen' }).click();
   await page.getByLabel('Valinnaiset tutkinnon osat', { exact: true }).check({ force: true });
   await page.getByLabel('Pakolliset tutkinnon osat', { exact: true }).check({ force: true });
-  await page.locator('input[type="number"]').fill('10');
+  await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').fill('10');
   await page.locator('.modal-footer').getByRole('button', { name: 'Tallenna' }).click();
   await page.getByRole('button', { name: 'Muokkaa ryhmää', includeHidden: true }).click();
   await page.getByRole('button', { name: 'Liitä tutkinnon osa' }).click();
@@ -55,7 +55,7 @@ export async function lisaaTutkinnonOsa(page: Page, nimi: string, yhteinen: bool
   }
   // Koodistosta haun listaus ei jostain syystä renderöidy testissä, joten lisätään manuaalisesti
   await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill(nimi);
-  await page.locator('input[type="number"]').fill('10');
+  await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').fill('10');
   await page.getByRole('button', { name: 'Sisällön kieli' }).click();
   await page.getByRole('menuitem', { name: 'Svenska' }).click();
   await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill(nimi + ' sv');
