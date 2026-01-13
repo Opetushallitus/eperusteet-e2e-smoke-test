@@ -71,8 +71,8 @@ export async function kotoPerusteSisallot(testData: TestData) {
   await expect(page.locator('.modal')).toContainText('Ammatin valinta ja ohjaus');
   await page.getByText('Ammatin valinta ja ohjaus').click();
   await expect(page.locator('.modal')).not.toBeVisible();
-  await page.locator('.editointi-container .taitotaso').getByRole('spinbutton').first().fill('1');
-  await page.locator('.editointi-container .taitotaso').getByRole('spinbutton').last().fill('2');
+  await page.locator('.editointi-container .taitotaso').getByRole('group', { name: 'Laajuus' }).getByRole('textbox').first().fill('1');
+  await page.locator('.editointi-container .taitotaso').getByRole('group', { name: 'Laajuus' }).getByRole('textbox').last().fill('2');
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(0).fill('tavoitteet kuvaus');
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(1).fill('osaaminen kuvaus');
 
