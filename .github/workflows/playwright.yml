@@ -12,8 +12,23 @@ env:
 
 jobs:
   test:
-    timeout-minutes: 120
+    timeout-minutes: 30
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        test-file:
+          - tests/login.spec.ts
+          - tests/osaamismerkit.spec.ts
+          - tests/peruste/ammatillinenPerustutkinto.spec.ts
+          - tests/peruste/kotoutumiskoulutus.spec.ts
+          - tests/peruste/lukiokoulutus.spec.ts
+          - tests/peruste/perusopetus.spec.ts
+          - tests/peruste/taide.spec.ts
+          - tests/peruste/tuvaKoulutus.spec.ts
+          - tests/peruste/vapaaSivistystyo.spec.ts
+          - tests/peruste/vapaaSivistystyoJotpa.spec.ts
+          - tests/peruste/varhaiskasvatus.spec.ts
     steps:
       - uses: actions/checkout@v4
 
@@ -24,15 +39,17 @@ jobs:
       - name: Enable corepack for nodejs
         run: corepack enable
 
-      - name: install playwright and run tests
+      - name: Install dependencies
         run: |
           yarn install
-          yarn playwright install
-          yarn playwright install --with-deps --only-shell
-          yarn playwright test
+          yarn playwright install --with-deps
+
+      - name: Run test ${{ matrix.test-file }}
+        run: yarn playwright test ${{ matrix.test-file }}
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-report-${{ strategy.job-index }}
           path: playwright-report/
           retention-days: 7
