@@ -104,11 +104,11 @@ export async function perusteenLuontiJaTestit(
   await page.getByLabel('Hae määräyksiä').fill(projektiNimi);
 
   await expect.poll(async () => {
-    return page.locator('.maarays').count();
+    return page.locator('.ep-maarayskokoelma-maarays').count();
   }).toBe(1);
 
-  await page.getByRole('link', { name: projektiNimi }).click();
-  await expect(page.locator('.url')).toContainText('Avaa määräys');
+  await page.locator('.ep-maarayskokoelma-maarays').click();
+  await expect(page.getByRole('link', { name: 'Avaa määräys picture_as_pdf' })).toBeVisible();
 
   await julkinenPerusteTarkistukset(testData);
 }
