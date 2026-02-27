@@ -119,14 +119,8 @@ export async function createKotoOpetussuunnitelma(testData: TestData){
   await page.goto(DEFAULT_VALUES.kotoOpsUrl);
   await page.getByText('Luo uusi').click();
   await page.getByText('Perusteprojektia').click();
-
-  await expect.poll(async () => {
-    return page.locator('.multiselect').count();
-  }).toBe(1);
-
-  // await expect(page.locator('.multiselect')).toBeVisible();
-  await page.locator('.multiselect').click();
-  await expect(page.locator('.multiselect')).toContainText(testData.projektiNimi!);
+  await page.locator('.multiselect').nth(0).click();
+  await expect(page.locator('.multiselect').nth(0)).toContainText(testData.projektiNimi!);
   await page.getByText(testData.projektiNimi!).click();
 
   await page.getByRole('textbox').last().fill(testData.opsNimi!);

@@ -100,13 +100,8 @@ export async function createTuvaOpetussuunnitelma(testData: TestData){
   await page.getByText('Luo uusi').click();
   await page.getByText('Oletuspohjaa').click();
 
-  await expect.poll(async () => {
-    return page.locator('.multiselect').count();
-  }).toBe(1);
-
-  // await expect(page.locator('.multiselect')).toBeVisible();
-  await page.locator('.multiselect').click();
-  await expect(page.locator('.multiselect')).toContainText(testData.pohjaNimi!);
+  await page.locator('.multiselect').nth(1).click();
+  await expect(page.locator('.multiselect').nth(1)).toContainText(testData.pohjaNimi!);
   await page.getByText(testData.pohjaNimi!).click();
 
   await page.getByRole('textbox').last().fill(testData.opsNimi!);
