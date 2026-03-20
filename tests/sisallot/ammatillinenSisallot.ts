@@ -56,13 +56,16 @@ export async function lisaaTutkinnonOsa(page: Page, nimi: string, yhteinen: bool
   // Koodistosta haun listaus ei jostain syystä renderöidy testissä, joten lisätään manuaalisesti
   await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill(nimi);
   await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').fill('10');
-  await page.getByRole('button', { name: 'Sisällön kieli' }).click();
-  await expect(page.getByRole('menuitem', { name: 'Svenska' })).toBeVisible();
-  await page.getByRole('menuitem', { name: 'Svenska' }).click();
+  // await page.getByRole('button', { name: 'Sisällön kieli' }).click();
+  await page.getByText('Sisällön kieli').click();
+  await page.getByText('Svenska').first().click();
+  // await expect(page.getByRole('menuitem', { name: 'Svenska' })).toBeVisible();
+  // await page.getByRole('menuitem', { name: 'Svenska' }).click();
   await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill(nimi + ' sv');
-  await page.getByRole('button', { name: 'Sisällön kieli' }).click();
-  await expect(page.getByRole('menuitem', { name: 'Suomi' })).toBeVisible();
-  await page.getByRole('menuitem', { name: 'Suomi' }).click();
+  await page.getByText('Sisällön kieli').click();
+  await page.getByText('Suomi').first().click();
+  // await expect(page.getByRole('menuitem', { name: 'Suomi' })).toBeVisible();
+  // await page.getByRole('menuitem', { name: 'Suomi' }).click();
   await saveAndCheck(page);
   await waitSmall(page);
 }
