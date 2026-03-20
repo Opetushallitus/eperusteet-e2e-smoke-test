@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "playwright test",
+    "test:qa": "CI=testiopintopolku playwright test",
     "test:dev": "CI=false playwright test --ui",
     "test:dev:qa": "CI=testiopintopolku playwright test --ui"
   },
