@@ -14,8 +14,8 @@ async function perusteenTiedot(testData: TestData) {
 
   await page.goto(url!);
   await page.getByText('Lisätoiminnot').click();
-  await page.getByRole('menuitem', { name: 'Perusteen tiedot' }).click();
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
+  await page.locator('.ep-dropdown-item').filter({ hasText: 'Perusteen tiedot' }).click();
+  await startEditMode(page);
   await page.getByRole('button', { name: 'Lisää koulutuskoodi' }).click();
   await page.getByText('Agrologi', { exact: true }).first().click();
   await saveAndCheck(page);
@@ -30,14 +30,14 @@ async function perusteenSisallot(testData: TestData) {
   await waitSmall(page);
   await page.goto(url + 'rakenne');
   await expect(page.locator('body')).toContainText('Tutkinnon rakenteen kuvaus');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
+  await startEditMode(page);
   await page.getByRole('button', { name: 'Lisää ryhmä rakenteeseen' }).click();
-  await page.getByLabel('Valinnaiset tutkinnon osat', { exact: true }).check({ force: true });
-  await page.getByLabel('Pakolliset tutkinnon osat', { exact: true }).check({ force: true });
-  await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').fill('10');
-  await page.locator('.modal-footer').getByRole('button', { name: 'Tallenna' }).click();
-  await page.getByRole('button', { name: 'Muokkaa ryhmää', includeHidden: true }).click();
-  await page.getByRole('button', { name: 'Liitä tutkinnon osa' }).click();
+  await page.getByRole('radio', { name: 'Valinnaiset tutkinnon osat' }).first().click();
+  await page.locator('.ep-form-group').filter({ hasText: 'Laajuus' }).getByRole('textbox').fill('10');
+  await page.locator('.ep-modal').locator('button').filter({ hasText: 'Tallenna' }).click();
+  await page.locator('.drag-area .ep-dropdown').first().click();
+  // await page.locator('.ep-dropdown-popover .ep-dropdown-item').filter({ hasText: 'Muokkaa' }).click();
+  await page.locator('.ep-dropdown-popover').getByRole('button', { name: 'Liitä tutkinnon osa' }).click();
   await page.getByRole('cell', { name: 'Testiosa'}).first().click();
   await page.getByRole('cell', { name: 'Yhteinen osa'}).first().click();
   await page.getByRole('button', { name: 'Liitä valitut tutkinnon osat' }).click();
@@ -54,29 +54,35 @@ export async function lisaaTutkinnonOsa(page: Page, nimi: string, yhteinen: bool
     await page.getByText('Yhteinen tutkinnon osa', { exact: true }).click();
   }
   // Koodistosta haun listaus ei jostain syystä renderöidy testissä, joten lisätään manuaalisesti
-  await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill(nimi);
-  await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').fill('10');
-  await page.getByRole('button', { name: 'Sisällön kieli' }).click();
-  await expect(page.getByRole('menuitem', { name: 'Svenska' })).toBeVisible();
-  await page.getByRole('menuitem', { name: 'Svenska' }).click();
-  await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill(nimi + ' sv');
-  await page.getByRole('button', { name: 'Sisällön kieli' }).click();
-  await expect(page.getByRole('menuitem', { name: 'Suomi' })).toBeVisible();
-  await page.getByRole('menuitem', { name: 'Suomi' }).click();
+  await page.locator('.ep-form-group').filter({ hasText: 'Tutkinnon osan nimi' }).getByRole('textbox').fill(nimi);
+  await lisaaTutkinnonOsaNimiKielella(page, nimi, 'Svenska');
+  await lisaaTutkinnonOsaNimiKielella(page, nimi, 'In English');
+  await page.locator('.ep-form-group').filter({ hasText: 'Laajuus' }).getByRole('textbox').fill('10');
   await saveAndCheck(page);
   await waitSmall(page);
+}
+
+async function vaihdaKieli(page: Page, kieli: string) {
+  await page.locator('.ep-navbar .kieli-valikko').click();
+  await page.locator('.ep-dropdown-popover .ep-dropdown-item').filter({ hasText: kieli }).click();
+}
+
+async function lisaaTutkinnonOsaNimiKielella(page: Page, nimi: string, kieli: string) {
+  await vaihdaKieli(page, kieli);
+  await page.locator('.ep-form-group').filter({ hasText: 'Tutkinnon osan nimi' }).getByRole('textbox').fill(nimi + ' ' + kieli);
+  await vaihdaKieli(page, 'Suomi');
 }
 
 export async function lisaaYhteinenTutkinnonOsa(page: Page, nimi: string) {
   await lisaaTutkinnonOsa(page, nimi, true);
   await page.getByRole('button', { name: 'Lisää osa-alue' }).click();
-  await page.getByRole('group', { name: 'Osa-alueen nimi' }).getByRole('textbox').fill('osaalue');
+  await page.locator('.ep-form-group').filter({ hasText: 'Osa-alueen nimi' }).getByRole('textbox').fill('osaalue');
 
   await page.getByRole('button', { name: 'Hae koodistosta' }).first().click();
-  await expect(page.locator('.modal')).toBeVisible();
-  await expect(page.locator('.modal')).toContainText('Etiikka');
+  await expect(page.locator('.ep-modal')).toBeVisible();
+  await expect(page.locator('.ep-modal')).toContainText('Etiikka');
   await page.getByText('Etiikka').click();
-  await expect(page.locator('.modal')).not.toBeVisible();
+  await expect(page.locator('.ep-modal')).not.toBeVisible();
 
   await page.locator('input[type="radio"]').first().click();
   await saveAndCheck(page);
@@ -88,7 +94,7 @@ export async function ammatillinenLisaTarkistukset(testData: TestData) {
 
   await page.goto(url);
   await page.getByText('Lisätoiminnot').click();
-  await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
+  await page.locator('.ep-dropdown-item').filter({ hasText: 'Luo PDF' }).click();
   // KV-liite
   await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).nth(1).click();
   await expect(page.locator('.sisalto')).toContainText('kvliite.pdf');
@@ -145,7 +151,7 @@ export async function createToteutussuunnitelma(testData: TestData) {
   await page.getByRole('combobox').nth(1).click();
   await page.getByRole('combobox').nth(1).locator('input').fill(projektiNimi);
   await page.getByText(projektiNimi).first().click();
-  await page.getByRole('group', { name: 'Toteutussuunnitelman nimi *' }).getByRole('textbox').fill(testData.opsNimi);
+  await page.locator('.ep-form-group').filter({ hasText: 'Toteutussuunnitelman nimi *' }).getByRole('textbox').fill(testData.opsNimi);
   await page.getByRole('button', { name: 'Luo toteutussuunnitelma' }).click();
 }
 

@@ -13,7 +13,7 @@ export async function kotoPerusteSisallot(testData: TestData) {
 
   await startEditMode(page);
 
-  await page.getByRole('group', { name: 'Otsikko' }).getByRole('textbox').fill('opinto 1');
+  await page.locator('.ep-form-group').filter({ hasText: 'Otsikko' }).getByRole('textbox').fill('opinto 1');
   await page.locator('.ProseMirror').nth(0).fill('opinnon kuvaus');
 
   await page.getByRole('button', { name: 'Lisää laaja-alainen osaaminen' }).click();
@@ -26,53 +26,57 @@ export async function kotoPerusteSisallot(testData: TestData) {
   await page.getByRole('button', { name: 'Tavoitteet ja keskeiset sisällöt' }).first().click();
   await page.getByText('Kielitaitotasot').click();
   await page.getByRole('button', { name: 'Lisää kielitaitotaso' }).click();
-  await expect(page.locator('.modal')).not.toBeVisible();
+  await expect(page.locator('.ep-modal')).not.toBeVisible();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
+  await startEditMode(page);
 
   await page.getByRole('button', { name: 'Hae koodistosta' }).click();
-  await expect(page.locator('.modal')).toBeVisible();
-  await expect(page.locator('.modal')).toContainText('Työelämätaidot');
+  await expect(page.locator('.ep-modal')).toBeVisible();
+  await expect(page.locator('.ep-modal')).toContainText('Työelämätaidot');
   await page.getByText('Työelämätaidot').click();
-  await expect(page.locator('.modal')).not.toBeVisible();
+  await expect(page.locator('.ep-modal')).not.toBeVisible();
 
   await page.locator('.ProseMirror').nth(0).fill('työelämätaidot kuvaus');
 
   await page.locator('button').filter({ hasText: 'Lisää kielitaitotaso' }).click();
   await page.locator('button').filter({ hasText: 'Hae koodistosta' }).last().click();
-  await expect(page.locator('.modal')).toBeVisible();
-  await expect(page.locator('.modal')).toContainText('Työelämäjakso');
+  await expect(page.locator('.ep-modal')).toBeVisible();
+  await expect(page.locator('.ep-modal')).toContainText('Työelämäjakso');
   await page.getByText('Työelämäjakso').click();
-  await expect(page.locator('.modal')).not.toBeVisible();
+  await expect(page.locator('.ep-modal')).not.toBeVisible();
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(0).fill('työelämäjakso tavoitteet');
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(1).fill('vastaanottaminen kuvaus');
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(2).fill('tuottaminen kuvaus');
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(3).fill('meditaatio kuvaus');
 
   await saveAndCheck(page);
+  await page.goto(url!);
 
   await page.locator('button').filter({ hasText: 'Tavoitteet ja keskeiset sisällöt' }).first().click();
-  await page.getByText('Työelämä- ja yhteiskuntataitojen opinnot').click();
-  await page.locator('.modal').getByRole('button').last().click();
+  const työelämäJaYhteiskuntaOpinnot = page.getByText('Työelämä- ja yhteiskuntataitojen opinnot');
+  await expect(työelämäJaYhteiskuntaOpinnot).toBeVisible();
+  await työelämäJaYhteiskuntaOpinnot.click();
+  await page.locator('.ep-modal').getByRole('button').last().click();
+  await expect(page.locator('.ep-modal')).not.toBeVisible();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
+  await startEditMode(page);
 
   await page.getByRole('button', { name: 'Hae koodistosta' }).first().click();
-  await expect(page.locator('.modal')).toBeVisible();
-  await expect(page.locator('.modal')).toContainText('Yhteiskuntaosaaminen');
+  await expect(page.locator('.ep-modal')).toBeVisible();
+  await expect(page.locator('.ep-modal')).toContainText('Yhteiskuntaosaaminen');
   await page.getByText('Yhteiskuntaosaaminen').click();
-  await expect(page.locator('.modal')).not.toBeVisible();
+  await expect(page.locator('.ep-modal')).not.toBeVisible();
 
   await page.locator('.ProseMirror').nth(0).fill('yhteiskuntaosaaminen kuvaus');
 
   await page.locator('button').filter({ hasText: 'Lisää opintokokonaisuus' }).click();
   await page.locator('button').filter({ hasText: 'Hae koodistosta' }).last().click();
-  await expect(page.locator('.modal')).toBeVisible();
-  await expect(page.locator('.modal')).toContainText('Ammatin valinta ja ohjaus');
+  await expect(page.locator('.ep-modal')).toBeVisible();
+  await expect(page.locator('.ep-modal')).toContainText('Ammatin valinta ja ohjaus');
   await page.getByText('Ammatin valinta ja ohjaus').click();
-  await expect(page.locator('.modal')).not.toBeVisible();
-  await page.locator('.editointi-container .taitotaso').getByRole('group', { name: 'Laajuus' }).getByRole('textbox').first().fill('1');
-  await page.locator('.editointi-container .taitotaso').getByRole('group', { name: 'Laajuus' }).getByRole('textbox').last().fill('2');
+  await expect(page.locator('.ep-modal')).not.toBeVisible();
+  await page.locator('.editointi-container .taitotaso input').nth(1).fill('1');
+  await page.locator('.editointi-container .taitotaso input').nth(2).fill('2');
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(0).fill('tavoitteet kuvaus');
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(1).fill('osaaminen kuvaus');
 
@@ -119,8 +123,8 @@ export async function createKotoOpetussuunnitelma(testData: TestData){
   await page.goto(DEFAULT_VALUES.kotoOpsUrl);
   await page.getByText('Luo uusi').click();
   await page.getByText('Perusteprojektia').click();
-  await page.locator('.multiselect').nth(0).click();
-  await expect(page.locator('.multiselect').nth(0)).toContainText(testData.projektiNimi!);
+  await page.locator('.multiselect').last().click();
+  await expect(page.locator('.multiselect').last()).toContainText(testData.projektiNimi!);
   await page.getByText(testData.projektiNimi!).click();
 
   await page.getByRole('textbox').last().fill(testData.opsNimi!);
@@ -152,7 +156,7 @@ export async function kotoOpetussuunnitelmaSisallot(testData: TestData) {
   await expect(page.locator('.editointikontrolli')).toContainText('vastaanottaminen kuvaus');
   await expect(page.locator('.editointikontrolli')).toContainText('tuottaminen kuvaus');
   await expect(page.locator('.editointikontrolli')).toContainText('meditaatio kuvaus');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
+  await startEditMode(page);
 
   await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').nth(0).fill('työelämätaidot paikallinen tarkennus');
 

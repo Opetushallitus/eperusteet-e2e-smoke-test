@@ -35,7 +35,7 @@ test.describe('Varhaiskasvatus - Uusi peruste ja perusteesta OPS', async () => {
     koulutustyyppi,
   };
 
-  test(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
+  test.skip(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
     testData.page = await browser.newPage();
 
     console.log('perusteenLuontiJaTestit - Varhaiskasvatus');

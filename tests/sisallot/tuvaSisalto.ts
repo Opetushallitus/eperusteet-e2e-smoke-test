@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { TestData } from "../utils/testUtils";
-import { login, saveAndCheck, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { login, saveAndCheck, startEditMode, vahvistaDialogi, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 
 export async function tuvaPerusteSisallot(testData: TestData) {
@@ -11,7 +11,7 @@ export async function tuvaPerusteSisallot(testData: TestData) {
   await page.locator('button').filter({ hasText: 'Uusi laaja-alainen osaaminen' }).first().click();
   await page.locator('button').filter({ hasText: 'Lisää laaja-alainen osaaminen' }).click();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
+  await startEditMode(page);
   await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
   await waitSmall(page);
   await page.getByText('Digiosaaminen').click();
@@ -24,7 +24,7 @@ export async function tuvaPerusteSisallot(testData: TestData) {
   await page.locator('button').filter({ hasText: 'Uusi koulutuksen osa' }).first().click();
   await page.locator('button').filter({ hasText: 'Lisää koulutuksen osa' }).click();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
+  await startEditMode(page);
 
   await page.getByText('Perusopetus', { exact: true}).click();
 
@@ -33,15 +33,15 @@ export async function tuvaPerusteSisallot(testData: TestData) {
   await page.getByText('Perustaitojen vahvistaminen').click();
   await waitSmall(page);
 
-  await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').first().fill('1');
-  await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').last().fill('2');
+  await page.locator('.ep-form-group').filter({ hasText: 'Laajuus' }).getByRole('textbox').first().fill('1');
+  await page.locator('.ep-form-group').filter({ hasText: 'Laajuus' }).getByRole('textbox').last().fill('2');
 
   await page.getByText('Yhteinen', { exact: true}).click();
 
   await page.locator('.ProseMirror').nth(0).fill('koulutuksen osan kuvaus');
 
   await page.locator('button').filter({ hasText: 'Lisää tavoite' }).click();
-  await page.getByRole('group', { name: 'Opiskelija' }).getByRole('textbox').fill('koulutuksen osa tavoite 1');
+  await page.locator('.ep-form-group').filter({ hasText: 'Opiskelija' }).getByRole('textbox').fill('koulutuksen osa tavoite 1');
 
   await page.locator('.ProseMirror').nth(1).fill('laaja-alaisen osaamisen kuvaus');
   await page.locator('.ProseMirror').nth(2).fill('keskeisen sisällön kuvaus');
@@ -89,7 +89,7 @@ export async function createTuvaOpetussuunnitelmaPohja(testData: TestData){
   await expect(page.locator('body')).toContainText('Yleisnäkymä');
 
   await page.locator('button').filter({ hasText: 'Aseta valmiiksi' }).click();
-  await page.locator('.modal-content').locator('button').filter({ hasText: 'Kyllä' }).click();
+  await vahvistaDialogi(page, 'Kyllä');
   await expect(page.locator('body')).toContainText('Tilan vaihto onnistui');
 }
 
@@ -134,7 +134,7 @@ export async function tuvaOpetussuunnitelmaSisallot(testData: TestData) {
   await startEditMode(page);
   await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').nth(0).fill('tavoitteen paikallinen tarkennus');
 
-  await page.locator('button').filter({ hasText: 'Lisää laaja-alaisen osaamisen kuvaus' }).click();
+  await page.locator('.ep-dropdown').filter({ hasText: 'Lisää laaja-alaisen osaamisen kuvaus' }).click();
   await page.getByText('Monilukutaito').click();
   await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').nth(1).fill('monilukutaito paikallinen tarkennus');
   await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').nth(2).fill('keskeisen sisällön paikallinen tarkennus');
@@ -142,10 +142,10 @@ export async function tuvaOpetussuunnitelmaSisallot(testData: TestData) {
 
   await page.locator('button').filter({ hasText: 'Lisää koulutuksen järjestäjä' }).click();
   await page.locator('button').filter({ hasText: 'Hae organisaatio' }).click();
-  await expect(page.locator('.modal')).toContainText('Valitse koulutuksen järjestäjä');
+  await expect(page.locator('.ep-modal')).toContainText('Valitse koulutuksen järjestäjä');
   await page.getByText('Aalto-korkeakoulusäätiö sr').click();
-  await page.getByRole('group', { name: 'Linkki toteutussuunnitelmaan tai koulutuksen järjestäjän kotisivulle' }).getByRole('textbox').fill('www.google.com');
-  await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').last().fill('käytännön toteutus paikallinen tarkennus');
+  await page.locator('.ep-koulutuksen-jarjestaja-select .ep-form-group').nth(1).getByRole('textbox').fill('www.google.com');
+  await page.locator('.ep-koulutuksen-jarjestaja-select .ProseMirror').last().fill('käytännön toteutus paikallinen tarkennus');
 
   await saveAndCheck(page);
 }

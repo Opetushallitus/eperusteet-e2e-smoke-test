@@ -1,5 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
-import { login, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { login, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { TestData } from "../utils/testUtils";
 
@@ -28,7 +28,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await expect(page.locator('.done-icon')).toHaveCount(1);
     await page.hover('.ep-valid-popover')
     await page.getByRole('button', { name: 'Aseta valmiiksi' }).click();
-    await page.locator('.modal-content').getByRole('button', { name: 'Aseta valmiiksi' }).click();
+    await page.locator('.p-dialog-content').getByRole('button', { name: 'Aseta valmiiksi' }).click();
     await expect(page.locator('body')).toContainText('Tilan vaihto onnistui');
     // otetaan ops-pohjan url talteen arkistointia varten.
     const opsPohjaUrl = page.url()
@@ -60,8 +60,8 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
 
     await page.goto(opetussuunnitelmaUrl);
     await page.getByText('Lisätoiminnot').click();
-    await page.getByRole('menuitem', { name: 'Tiedot' }).click();
-    await page.getByRole('button', { name: 'Muokkaa' }).click();
+    await page.locator('.ep-dropdown-item').filter({ hasText: 'Tiedot' }).click();
+    await startEditMode(page);
     await page.getByRole('textbox').nth(1).fill('test');
     await page.getByText('Suomi').nth(3).click();
     await page.getByText('Valitse päivämäärä').click();
@@ -86,7 +86,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
 
     await page.goto(opetussuunnitelmaUrl);
     await page.getByText('Lisätoiminnot').click();
-    await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
+    await page.locator('.ep-dropdown-item').filter({ hasText: 'Luo PDF' }).click();
 
     await expect.poll(async () => {
       return page.locator('.sisalto').textContent();

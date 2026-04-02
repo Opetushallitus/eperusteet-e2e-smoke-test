@@ -3,7 +3,7 @@ import { perusteenTekstikappale } from "./perusteSisalto";
 import { TestData } from "../utils/testUtils";
 import { yleissivistavatJulkinenTarkistukset } from "./yleissivistavat";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
-import { saveAndCheck, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { saveAndCheck, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
 
 export async function taideSisallot(testData: TestData) {
   let page = testData.page;
@@ -12,10 +12,10 @@ export async function taideSisallot(testData: TestData) {
   await page.locator('button').filter({ hasText: 'Uusi taiteenala' }).first().click();
   await expect(page.locator('button').filter({ hasText: 'Hae koodistosta' })).toBeVisible();
   await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
-  await expect(page.locator('.modal')).toBeVisible();
-  await expect(page.locator('.modal')).toContainText('Alkuvaihe');
+  await expect(page.locator('.ep-modal')).toBeVisible();
+  await expect(page.locator('.ep-modal')).toContainText('Alkuvaihe');
   await page.getByText('Alkuvaihe').click();
-  await expect(page.locator('.modal')).not.toBeVisible();
+  await expect(page.locator('.ep-modal')).not.toBeVisible();
 
   await page.locator('.ProseMirror').nth(0).fill('alkuvaihe kuvaus');
 
@@ -53,7 +53,7 @@ export async function taideOpsSisallot(testData: TestData) {
 
   await waitSmall(page);
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
+  await startEditMode(page);
   await waitSmall(page);
   await expect(page.locator('.editointikontrolli .ProseMirror')).toHaveCount(2);
   await page.locator('.editointikontrolli .ProseMirror').last().fill('alkuvaihe paikallinen tarkennus');

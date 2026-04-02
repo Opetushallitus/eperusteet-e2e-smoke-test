@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { waitMedium, waitSmall } from "../../utils/commonmethods";
+import { startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { yleissivistavatJulkinenTarkistukset } from "./yleissivistavat";
 import { TestData } from "../utils/testUtils";
@@ -31,11 +31,11 @@ export async function lukioSisallot(testData: TestData) {
 }
 
 async function lisaaLaajaAlainenOsaaminen(page: Page, nimi: string, index: number) {
-  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
+  await startEditMode(page);
   await page.locator('button').filter({ hasText: 'Uusi laaja-alainen' }).click();
   await page.locator('button').filter({ hasText: 'Hae koodistosta' }).nth(index).click();
-  await expect(page.locator('.modal-content')).toContainText('Hyvinvointiosaaminen');
-  await page.locator('.modal-content').getByText(nimi).click();
+  await expect(page.locator('.p-dialog-content')).toContainText('Hyvinvointiosaaminen');
+  await page.locator('.p-dialog-content').getByText(nimi).click();
   await page.locator('.ProseMirror').nth(index).fill(nimi + ' kuvaus');
 
   await page.locator('button').filter({ hasText: 'Tallenna' }).click();
@@ -46,8 +46,8 @@ async function lisaaLaajaAlainenOsaaminen(page: Page, nimi: string, index: numbe
 async function lisaaOppiaine(page: Page, nimi: string, moduuliNimi: string, oppimaaraNimi: string) {
   await page.locator('button').filter({ hasText: 'Uusi oppiaine' }).click();
   await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
-  await expect(page.locator('.modal-content')).toContainText(nimi);
-  await page.locator('.modal-content').getByText(nimi).click();
+  await expect(page.locator('.p-dialog-content')).toContainText(nimi);
+  await page.locator('.p-dialog-content').getByText(nimi).click();
   await page.locator('.ProseMirror').nth(0).fill(nimi + ' tehtava');
   await page.locator('.ProseMirror').nth(1).fill(nimi + ' lao');
   await page.locator('.ProseMirror').nth(2).fill(nimi + ' tavoite');
@@ -66,8 +66,8 @@ async function lisaaOppiaine(page: Page, nimi: string, moduuliNimi: string, oppi
 
   await page.locator('button').filter({ hasText: 'Uusi oppimäärä' }).click();
   await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
-  await expect(page.locator('.modal-content')).toContainText(oppimaaraNimi);
-  await page.locator('.modal-content').getByText(oppimaaraNimi).click();
+  await expect(page.locator('.p-dialog-content')).toContainText(oppimaaraNimi);
+  await page.locator('.p-dialog-content').getByText(oppimaaraNimi).click();
 
   await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
@@ -75,10 +75,10 @@ async function lisaaOppiaine(page: Page, nimi: string, moduuliNimi: string, oppi
 
   await page.locator('button').filter({ hasText: 'Lisää pakollinen moduuli' }).click();
   await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
-  await expect(page.locator('.modal-content')).toContainText(moduuliNimi);
-  await page.locator('.modal-content').getByText(moduuliNimi).click();
+  await expect(page.locator('.p-dialog-content')).toContainText(moduuliNimi);
+  await page.locator('.p-dialog-content').getByText(moduuliNimi).click();
   await page.getByText('Pakollinen').check();
-  await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').fill('4');
+  await page.locator('.ep-form-group').filter({ hasText: 'Laajuus' }).getByRole('textbox').fill('4');
   await page.locator('.ProseMirror').nth(0).fill(moduuliNimi + ' kuvaus');
 
   await page.locator('button').filter({ hasText: 'Tallenna' }).click();
