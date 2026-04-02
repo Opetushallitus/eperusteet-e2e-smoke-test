@@ -21,7 +21,7 @@ export async function archiveFoundation(browser: any, url: string, nimi: string)
   await expect(page.locator('body')).toContainText(nimi);
   await expect(page.locator('body')).toContainText('Lisätoiminnot');
   await page.getByText('Lisätoiminnot').click();
-  await page.getByRole('menuitem', { name: 'Arkistoi peruste' }).click();
+  await page.locator('.ep-dropdown-item').filter({ hasText: 'Arkistoi peruste' }).click();
   await page.getByRole('button', { name: 'Kyllä' }).click();
   await expect(page.locator('body')).toContainText('arkistoitu', { ignoreCase: true });
   await page.close();
@@ -33,7 +33,7 @@ export async function archiveCurriculum(browser: any, url: string, nimi: string)
   await page.goto(url);
   await expect(page.locator('body')).toContainText('Lisätoiminnot');
   await page.getByText('Lisätoiminnot').click();
-  await page.getByRole('menuitem', { name: 'Arkistoi' }).click();
+  await page.locator('.ep-dropdown-item').filter({ hasText: 'Arkistoi' }).click();
   await page.getByRole('button', { name: 'Kyllä' }).click();
   await expect(page.locator('body')).toContainText('arkistoitu', { ignoreCase: true });
   await page.close();

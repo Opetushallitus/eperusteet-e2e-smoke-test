@@ -1,11 +1,11 @@
 import { expect, Page } from "@playwright/test";
-import { login, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { avaaLisatoiminto, julkaise, login, luoPDF, startEditMode, valitsePaiva, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { TestData } from "../utils/testUtils";
 
 export async function perusteenTekstikappale(page: Page) {
   await page.getByRole('button', { name: 'Uusi tekstikappale' }).first().click();
-  await page.locator('.modal-content').getByRole('textbox').fill('tekstikappale 1');
+  await page.locator('.p-dialog-content').getByRole('textbox').fill('tekstikappale 1');
   await page.getByRole('button', { name: 'Lisää tekstikappale' }).click();
   await waitSmall(page);
   await expect(page.locator('body')).toContainText('tekstikappale 1');
@@ -40,18 +40,16 @@ export async function perusteenLuontiJaTestit(
 
   await page.goto(perusteProjektiUrl);
   await page.getByText('Lisätoiminnot').click();
-  await page.getByRole('menuitem', { name: 'Perusteen tiedot' }).click();
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
-  await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').click();
-  await page.getByRole('group', { name: 'Perusteen nimi*' }).getByRole('textbox').fill(projektiNimi);
-  await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').click();
-  await page.getByRole('group', { name: 'Diaarinumero' }).getByRole('textbox').fill(perusteDiaari);
-  await page.getByRole('group', { name: 'Määräyksen päätöspäivämäärä' }).click();
-  await page.getByRole('button', { name: '2' }).first().click();
-  // Alku ja loppupäivä samassa groupissa, joten pitää kaivaa syvemmältä, jotta voi asettaa päivämäärän
-  await page.getByRole('group', { name: 'Voimassaolo' }).getByRole('button', { name: 'Valitse päivämäärä' }).first().click();
-  await page.getByRole('dialog').getByRole('group').getByRole('button', { name: '2' }).first().click();
-  await page.locator('li').filter({ hasText: 'Liitteet ja määräykset' }).click();
+  await page.locator('.ep-dropdown-item').filter({ hasText: 'Perusteen tiedot' }).click();
+  await startEditMode(page);
+  await page.locator('.ep-form-group').filter({ hasText: 'Perusteen nimi*' }).getByRole('textbox').click();
+  await page.locator('.ep-form-group').filter({ hasText: 'Perusteen nimi*' }).getByRole('textbox').fill(projektiNimi);
+  await page.locator('.ep-form-group').filter({ hasText: 'Diaarinumero' }).getByRole('textbox').click();
+  await page.locator('.ep-form-group').filter({ hasText: 'Diaarinumero' }).getByRole('textbox').fill(perusteDiaari);
+  await valitsePaiva(page, 'Voimassaolo', '1');
+  await valitsePaiva(page, 'Määräyksen päätöspäivämäärä', '1');
+
+  await page.locator('.p-tab').filter({ hasText: 'Liitteet ja määräykset' }).click();
 
   if (await page.locator('.ProseMirror').count() > 1) {
     await page.locator('.ProseMirror').nth(2).fill("Kuvausteksti");
@@ -76,27 +74,10 @@ export async function perusteenLuontiJaTestit(
     return page.getByRole('button', { name: 'Julkaise' });
   }).toBeTruthy();
 
-  await page.getByRole('button', { name: 'Julkaise' }).click();
-  await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
+  await julkaise(page, 'Uusin versio');
 
-  await expect.poll(async () => {
-    return page.locator('.julkaisu').first().textContent();
-  }).toContain('Uusin versio');
-
-  await page.getByText('Lisätoiminnot').click();
-  await page.getByRole('menuitem', { name: 'Luo PDF' }).click();
-
-  await page.getByRole('button', { name: 'Luo PDF-tiedosto' }).first().click();
-  await expect(page.getByRole('button').locator('.oph-spinner')).toBeVisible();
-  await expect(page.getByRole('button').locator('.oph-spinner')).not.toBeVisible();
-  await expect(page.locator('.pdf-box')).toHaveCount(testData.pdfLkm || 2);
-
-  await waitMedium(page);
-  await page.reload();
-  await waitMedium(page);
-  await expect(page.locator('.pdf-box').first()).toContainText('Julkaistu');
-  await expect(page.locator('.pdf-box').nth(1)).toContainText('Työversio');
-
+  await avaaLisatoiminto(page, 'Luo PDF');
+  await luoPDF(page, testData.pdfLkm);
   await lisaTarkistukset?.(testData);
 
   await page.goto(DEFAULT_VALUES.julkinenMaarayksetUrl);

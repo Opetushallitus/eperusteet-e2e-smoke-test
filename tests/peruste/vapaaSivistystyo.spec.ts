@@ -1,9 +1,11 @@
 import { test, expect, Page } from '@playwright/test';
-import { createNimi } from "../../utils/commonmethods";
+import { createNimi, login } from "../../utils/commonmethods";
 import { TestData, archiveFoundation, archiveCurriculum } from "../utils/testUtils";
 import { createVstOpetussuunnitelma, vstOpetussuunnitelmaJulkinenTarkistukset, vstOpetussuunnitelmaSisallot, vstPerusteJulkisetTarkistukset, vstPerusteSisallot } from '../sisallot/vstSisallot';
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { amosaaOpetussuunnitelmaLuonti } from '../sisallot/totsutyokalu';
+import { DEFAULT_VALUES } from '../../utils/defaultvalues';
+import { luoTeemaJaOsaamismerkki } from '../sisallot/osaamismerkit';
 
 test.describe('Vapaa sivistystyö - Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
@@ -44,6 +46,10 @@ test.describe('Vapaa sivistystyö - Uusi peruste ja perusteesta OPS', async () =
 
     testData.page = await browser.newPage();
     console.log('amosaaOpetussuunnitelmaLuonti - Vapaa sivistystyö');
+
+    await login(page, DEFAULT_VALUES.basePerusteetUrl);
+    await luoTeemaJaOsaamismerkki(page);
+
     await amosaaOpetussuunnitelmaLuonti(
       testData,
       vstOpetussuunnitelmaJulkinenTarkistukset,

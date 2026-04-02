@@ -1,7 +1,8 @@
 import { expect } from "@playwright/test";
 import { TestData } from "../utils/testUtils";
-import { login, saveAndCheck, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { login, saveAndCheck, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
+import { osaamismerkkiNimi } from "./osaamismerkit";
 
 export async function vstPerusteSisallot(testData: TestData) {
   let page = testData.page;
@@ -11,14 +12,14 @@ export async function vstPerusteSisallot(testData: TestData) {
   await page.locator('button').filter({ hasText: 'Uusi opintokokonaisuus' }).first().click();
   await page.locator('button').filter({ hasText: 'Lisää opintokokonaisuus' }).click();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
+  await startEditMode(page);
   await page.locator('button').filter({ hasText: 'Hae koodistosta' }).click();
   await waitSmall(page);
   await page.getByText('Aktiivinen kansalaisuus').click();
   await waitSmall(page);
-  await page.getByRole('group', { name: 'Minimilaajuus' }).getByRole('textbox').fill('77');
+  await page.locator('.ep-form-group').filter({ hasText: 'Minimilaajuus' }).getByRole('textbox').fill('77');
   await page.locator('.ProseMirror').nth(0).fill('opintokokonaisuus kuvaus');
-  await page.getByRole('group', { name: 'Tavoitteiden otsikko *' }).getByRole('textbox').fill('opintokokonaisuus tavoitteet');
+  await page.locator('.ep-form-group').filter({ hasText: 'Tavoitteiden otsikko' }).getByRole('textbox').fill('opintokokonaisuus tavoitteet');
   await page.locator('button').filter({ hasText: 'Lisää tavoite' }).click();
   await page.getByRole('textbox').last().fill('opintokokonaisuus tavoite 1');
   await page.locator('button').filter({ hasText: 'Lisää arvioinnin kriteeri' }).click();
@@ -65,21 +66,21 @@ export async function vstOpetussuunnitelmaSisallot(testData: TestData) {
   let page = testData.page;
 
   await page.locator('button').filter({ hasText: 'Uusi opintokokonaisuus' }).first().click();
-  await page.locator('.modal-content').getByRole('textbox').first().fill('paikallinen opintokokonaisuus');
+  await page.locator('.p-dialog-content').getByRole('textbox').first().fill('paikallinen opintokokonaisuus');
   await page.locator('button').filter({ hasText: 'Lisää opintokokonaisuus' }).click();
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
-  await page.locator('button').filter({ hasText: 'Muokkaa' }).click();
+  await startEditMode(page);
 
-  await page.getByRole('group', { name: 'laajuus' }).getByRole('textbox').first().fill('88');
+  await page.locator('.ep-form-group').filter({ hasText: 'laajuus' }).getByRole('textbox').first().fill('88');
   await page.getByText('Valitse laajuusyksikkö').click();
   await page.getByText('opintopistettä' ).click();
 
   await page.locator('.ProseMirror').nth(0).fill('opintokokonaisuus kuvaus');
-  await page.getByRole('group', { name: 'Tavoitteiden otsikko *' }).getByRole('textbox').fill('opintokokonaisuus tavoitteet');
+  await page.locator('.ep-form-group').filter({ hasText: 'Tavoitteiden otsikko' }).getByRole('textbox').fill('opintokokonaisuus tavoitteet');
   await page.locator('.ProseMirror').nth(1).fill('tavoitteiden kuvaus teksti');
 
   await page.locator('button').filter({ hasText: 'Lisää tavoite' }).click();
-  await page.locator('.modal-content').locator('button').filter({ hasText: 'Sulje' }).click();
+  await page.locator('.p-dialog-footer').locator('button').filter({ hasText: 'Sulje' }).click();
   await page.getByRole('textbox').last().fill('opintokokonaisuus tavoite 1');
 
   await page.locator('.ProseMirror').nth(2).fill('keskeinen sisältö teksti');
@@ -93,8 +94,10 @@ export async function vstOpetussuunnitelmaSisallot(testData: TestData) {
 
   await page.locator('button').filter({ hasText: 'Lisää osaamismerkkejä' }).click();
   await waitSmall(page);
-  await page.locator('.modal-content table tr .btn-link').first().click();
-  await page.locator('.modal-content').locator('button').filter({ hasText: 'Lisää valitut' }).click();
+  await page.locator('.p-dialog-content .filter input').fill(osaamismerkkiNimi);
+  await expect(page.locator('.p-dialog-content table')).toContainText(osaamismerkkiNimi);
+  await page.locator('.p-dialog-content table tr td').first().click();
+  await page.locator('.p-dialog-footer').locator('button').filter({ hasText: 'Lisää valitut' }).click();
   await waitSmall(page);
 
   await saveAndCheck(page);
@@ -134,7 +137,7 @@ export async function createJotpaOpetussuunnitelma(testData: TestData) {
 
   await page.getByText('Luo uusi ilman pohjaa', { exact: true }).click();
   await page.getByText('Koulutus on JOTPA-rahoitteinen', { exact: true }).click();
-  await page.locator('.form-group').last().getByText('Ei', { exact: true }).click();
+  await page.locator('.ep-radio').last().getByText('Ei', { exact: true }).click();
 
   await page.getByRole('textbox').last().fill(testData.opsNimi);
   await page.locator('button').filter({ hasText: 'Luo opetussuunnitelma' }).click();
