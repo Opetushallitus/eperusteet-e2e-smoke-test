@@ -119,8 +119,8 @@ export async function createKotoOpetussuunnitelma(testData: TestData){
   await page.goto(DEFAULT_VALUES.kotoOpsUrl);
   await page.getByText('Luo uusi').click();
   await page.getByText('Perusteprojektia').click();
-  await page.locator('.multiselect').nth(0).click();
-  await expect(page.locator('.multiselect').nth(0)).toContainText(testData.projektiNimi!);
+  await page.locator('.multiselect').nth(1).click();
+  await expect(page.locator('.multiselect').nth(1)).toContainText(testData.projektiNimi!);
   await page.getByText(testData.projektiNimi!).click();
 
   await page.getByRole('textbox').last().fill(testData.opsNimi!);

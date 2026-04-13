@@ -1,7 +1,7 @@
 import { expect, Page } from "@playwright/test";
 import { login, saveAndCheck, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
-import { TestData } from '../perusteJaPaikalliset.spec';
+import { TestData } from "../utils/testUtils";
 
 export async function ammatillinenPerusteSisallot(testData: TestData) {
   await perusteenTiedot(testData);
@@ -56,13 +56,11 @@ export async function lisaaTutkinnonOsa(page: Page, nimi: string, yhteinen: bool
   // Koodistosta haun listaus ei jostain syystä renderöidy testissä, joten lisätään manuaalisesti
   await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill(nimi);
   await page.getByRole('group', { name: 'Laajuus' }).getByRole('textbox').fill('10');
-  await page.getByRole('button', { name: 'Sisällön kieli' }).click();
-  await expect(page.getByRole('menuitem', { name: 'Svenska' })).toBeVisible();
-  await page.getByRole('menuitem', { name: 'Svenska' }).click();
+  await page.locator('.navbar #content-lang-selector').click();
+  await page.locator('.navbar #content-lang-selector .kielet a').nth(1).click();
   await page.getByRole('group', { name: 'Tutkinnon osan nimi' }).getByRole('textbox').fill(nimi + ' sv');
-  await page.getByRole('button', { name: 'Sisällön kieli' }).click();
-  await expect(page.getByRole('menuitem', { name: 'Suomi' })).toBeVisible();
-  await page.getByRole('menuitem', { name: 'Suomi' }).click();
+  await page.locator('.navbar #content-lang-selector').click();
+  await page.locator('.navbar #content-lang-selector .kielet a').nth(0).click();
   await saveAndCheck(page);
   await waitSmall(page);
 }
