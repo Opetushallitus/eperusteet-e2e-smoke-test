@@ -4,14 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.61.0",
     "@types/node": "^20.12.4"
   },
   "scripts": {
     "test": "playwright test",
     "test:dev": "playwright test --ui",
     "test:dev:local": "CI= playwright test --ui",
-    "test:dev:qa": "CI=testiopintopolku playwright test --ui"
+    "test:dev:qa": "CI=testiopintopolku playwright test --ui",
+    "test:dev:untuva": "CI=untuvaopintopolku playwright test --ui"
   },
-  "packageManager": "yarn@4.13.0"
+  "packageManager": "yarn@4.16.0"
 }

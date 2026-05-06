@@ -36,7 +36,6 @@ async function perusteenSisallot(testData: TestData) {
   await page.locator('.ep-form-group').filter({ hasText: 'Laajuus' }).getByRole('textbox').fill('10');
   await page.locator('.ep-modal').locator('button').filter({ hasText: 'Tallenna' }).click();
   await page.locator('.drag-area .ep-dropdown').first().click();
-  // await page.locator('.ep-dropdown-popover .ep-dropdown-item').filter({ hasText: 'Muokkaa' }).click();
   await page.locator('.ep-dropdown-popover').getByRole('button', { name: 'Liitä tutkinnon osa' }).click();
   await page.getByRole('cell', { name: 'Testiosa'}).first().click();
   await page.getByRole('cell', { name: 'Yhteinen osa'}).first().click();

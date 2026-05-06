@@ -5,7 +5,7 @@ import { createVstOpetussuunnitelma, vstOpetussuunnitelmaJulkinenTarkistukset, v
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { amosaaOpetussuunnitelmaLuonti } from '../sisallot/totsutyokalu';
 import { DEFAULT_VALUES } from '../../utils/defaultvalues';
-import { luoTeemaJaOsaamismerkki } from '../sisallot/osaamismerkit';
+import { luoTeemaJaOsaamismerkki, poistaOsaamismerkki } from '../sisallot/osaamismerkit';
 
 test.describe('Vapaa sivistystyö - Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
@@ -67,6 +67,7 @@ test.describe('Vapaa sivistystyö - Uusi peruste ja perusteesta OPS', async () =
 
     for await (const url of opetussuunnitelmaUrls) {
       await archiveCurriculum(browser, url, opsNimi);
+      await poistaOsaamismerkki(browser);
     }
   });
 });

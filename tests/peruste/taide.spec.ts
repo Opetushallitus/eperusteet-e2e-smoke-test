@@ -39,7 +39,7 @@ test.describe('Taiteen perusopetus - Uusi peruste ja perusteesta OPS', async () 
     julkinenKoosteUrl,
   };
 
-  test.skip(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
+  test(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
     testData.page = await browser.newPage();
 
     console.log('perusteenLuontiJaTestit - Taiteen perusopetus');

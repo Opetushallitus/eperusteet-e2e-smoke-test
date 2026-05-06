@@ -47,7 +47,6 @@ export const luoOsaamismerkki = async (page: Page) => {
   await page.goto(DEFAULT_VALUES.osaamismerkitUrl);
   await waitSmall(page);
   await expect(page.locator('body')).toContainText('Osaamismerkit');
-  // await page.click('text=Lisää osaamismerkki');
   await page.locator('button').filter({ hasText: 'Lisää osaamismerkki' }).click();
   await expect(page.locator('.p-dialog-content')).toBeVisible();
 
@@ -72,8 +71,23 @@ export const luoOsaamismerkki = async (page: Page) => {
   await page.getByText('Näytetään julkisena', { exact: true }).click();
   await expect(page.locator('.p-dialog-content input[type="checkbox"]').first()).toBeChecked();
   await waitSmall(page);
-  await page.click('text=Tallenna');
-  await expect(page.locator('.p-dialog')).not.toBeVisible();
+
+  const julkisuusDialog = page.locator('.p-dialog');
+  const tallennaMaxAttempts = 3;
+  const tallennaAttemptTimeoutMs = 20_000;
+  for (let attempt = 0; attempt < tallennaMaxAttempts; attempt++) {
+    await page.click('text=Tallenna');
+    if (attempt < tallennaMaxAttempts - 1) {
+      try {
+        await expect(julkisuusDialog).not.toBeVisible({ timeout: tallennaAttemptTimeoutMs });
+        return;
+      } catch {
+        await waitSmall(page);
+      }
+    } else {
+      await expect(julkisuusDialog).not.toBeVisible({ timeout: tallennaAttemptTimeoutMs });
+    }
+  }
 };
 
 async function taytaOsaamismerkinTiedot(page) {

@@ -126,6 +126,7 @@ export async function lukioOpsSisallot(testData: TestData) {
 
   for (const oppiaine of oppiaineet) {
     await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
+    await page.reload();
     await page.getByRole('link', { name: 'Oppiaineet' }).click();
     await page.locator('.navigation').getByRole('link', { name: oppiaine.nimi }).click();
     await waitSmall(page);

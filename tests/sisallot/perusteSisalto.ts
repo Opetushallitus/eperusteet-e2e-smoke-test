@@ -1,14 +1,22 @@
 import { expect, Page } from "@playwright/test";
-import { avaaLisatoiminto, julkaise, login, luoPDF, startEditMode, valitsePaiva, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { avaaLisatoiminto, julkaise, login, luoPDF, saveAndCheck, startEditMode, valitsePaiva, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { TestData } from "../utils/testUtils";
 
+export const PERUSTE_SMOKE = {
+  tekstikappaleNimi: "tekstikappale 1",
+  tekstikappaleTeksti: "tekstikappale 1 kuvaus",
+} as const;
+
 export async function perusteenTekstikappale(page: Page) {
   await page.getByRole('button', { name: 'Uusi tekstikappale' }).first().click();
-  await page.locator('.p-dialog-content').getByRole('textbox').fill('tekstikappale 1');
+  await page.locator('.p-dialog-content').getByRole('textbox').fill(PERUSTE_SMOKE.tekstikappaleNimi);
   await page.getByRole('button', { name: 'Lisää tekstikappale' }).click();
   await waitSmall(page);
-  await expect(page.locator('body')).toContainText('tekstikappale 1');
+  await expect(page.locator('body')).toContainText(PERUSTE_SMOKE.tekstikappaleNimi);
+  await startEditMode(page);
+  await page.locator('.ProseMirror').fill(PERUSTE_SMOKE.tekstikappaleTeksti);
+  await saveAndCheck(page);
 }
 
 export async function perusteenLuontiJaTestit(

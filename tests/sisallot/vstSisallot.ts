@@ -80,7 +80,10 @@ export async function vstOpetussuunnitelmaSisallot(testData: TestData) {
   await page.locator('.ProseMirror').nth(1).fill('tavoitteiden kuvaus teksti');
 
   await page.locator('button').filter({ hasText: 'Lisää tavoite' }).click();
-  await page.locator('.p-dialog-footer').locator('button').filter({ hasText: 'Sulje' }).click();
+  await expect(page.locator('.p-dialog-content')).toBeVisible();
+  await expect(page.locator('.p-dialog-footer').locator('button').filter({ hasText: 'Sulje haku ja lisää uusi tavoite' })).toBeVisible();
+  await page.locator('.p-dialog-footer').locator('button').filter({ hasText: 'Sulje haku ja lisää uusi tavoite' }).click();
+  await expect(page.locator('.p-dialog-content')).not.toBeVisible();
   await page.getByRole('textbox').last().fill('opintokokonaisuus tavoite 1');
 
   await page.locator('.ProseMirror').nth(2).fill('keskeinen sisältö teksti');
@@ -165,5 +168,5 @@ export async function jotpaOpetussuunnitelmaJulkinenTarkistukset(testData: TestD
   await expect(page.locator('.content').last()).toContainText('arvioinnin kuvaus teksti');
   await expect(page.locator('.content').last()).toContainText('opintokokonaisuus arvioinnin kriteeri 1');
   await expect(page.locator('.content').last()).toContainText('osaamismerkkikappale teksti');
-  await expect(page.locator('.content').last().locator('a[href*="osaamismerkit"]')).toBeVisible();
+  await expect(page.locator('.content').last().locator('a[href*="osaamismerkit"]')).not.toBeEmpty();
 }

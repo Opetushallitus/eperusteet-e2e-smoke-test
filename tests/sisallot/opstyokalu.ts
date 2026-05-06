@@ -1,5 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
-import { login, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { julkaise, login, startEditMode, valitsePaiva, waitMedium, waitSmall } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { TestData } from "../utils/testUtils";
 
@@ -23,12 +23,12 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await waitMedium(page);
     await page.getByRole('textbox').click();
     await page.getByRole('textbox').fill(pohjaNimi);
-    await page.getByRole('combobox').selectOption({ label: testData.projektiNimi + ' (' + testData.perusteDiaari + ')' });
+    await page.locator('.ep-select').first().click();
+    await page.locator('.p-select-overlay').getByText(testData.projektiNimi + ' (' + testData.perusteDiaari + ')').click();
     await page.getByRole('button', { name: 'Luo pohja' }).click();
     await expect(page.locator('.done-icon')).toHaveCount(1);
-    await page.hover('.ep-valid-popover')
     await page.getByRole('button', { name: 'Aseta valmiiksi' }).click();
-    await page.locator('.p-dialog-content').getByRole('button', { name: 'Aseta valmiiksi' }).click();
+    await page.locator('.p-dialog').getByRole('button', { name: 'Aseta valmiiksi' }).click();
     await expect(page.locator('body')).toContainText('Tilan vaihto onnistui');
     // otetaan ops-pohjan url talteen arkistointia varten.
     const opsPohjaUrl = page.url()
@@ -42,13 +42,8 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await page.locator('.multiselect').first().click();
     await page.getByText(pohjaNimi).first().click();
     await page.locator('div').filter({ hasText: /^Opetussuunnitelman nimi \*Tähän opetussuunnitelman nimi$/ }).getByRole('textbox').fill(opsNimi);
-    // await page.getByText('Lisää kunta', { exact: true }).click();
     await page.getByRole('combobox').nth(1).click();
-    await page.getByText('Jyväskylä').click();
-    await waitSmall(page);
-    // await page.getByText('Lisää koulutuksen järjestäjä', { exact: true }).click();
-    await page.getByRole('combobox').nth(2).click();
-    await page.getByLabel('-searchbox').nth(2).fill('Jyväskylän kaupunki');
+    await page.getByLabel('-searchbox').nth(1).fill('Jyväskylän kaupunki');
     await page.getByText('Jyväskylän kaupunki').click();
     await opsLuonti?.(testData);
     await page.getByRole('button', { name: 'Luo opetussuunnitelma' }).click();
@@ -63,9 +58,8 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await page.locator('.ep-dropdown-item').filter({ hasText: 'Tiedot' }).click();
     await startEditMode(page);
     await page.getByRole('textbox').nth(1).fill('test');
-    await page.getByText('Suomi').nth(3).click();
-    await page.getByText('Valitse päivämäärä').click();
-    await page.getByRole('button', { name: '1' }).first().click();
+    await page.getByText('Suomi').nth(1).click();
+    await valitsePaiva(page, 'Hyväksymispäivämäärä', '1', 'form-content');
     await page.getByRole('button', { name: 'Tallenna' }).click();
     await expect(page.locator('body')).toContainText('Tallennus onnistui');
 
@@ -75,14 +69,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     await expect(page.locator('body')).toContainText('Siirry julkaisunäkymään');
     await page.locator('button').filter({ hasText: 'Siirry julkaisunäkymään' }).click();
     await expect(page.locator('.validation')).toContainText('Ei julkaisua estäviä virheitä');
-    await page.getByRole('button', { name: 'Julkaise' }).click();
-    await page.getByLabel('Vahvista julkaisu').getByRole('button', { name: 'Julkaise' }).click();
-
-    await expect.poll(async () => {
-      return page.locator('.julkaisuhistoria').textContent();
-    }, {
-      timeout: 300_000,
-    }).toContain('Julkaistu versio');
+    await julkaise(page, 'Julkaistu versio');
 
     await page.goto(opetussuunnitelmaUrl);
     await page.getByText('Lisätoiminnot').click();
@@ -104,9 +91,7 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
 
     const julkinenKoosteUrl = testData.julkinenKoosteUrl ?? DEFAULT_VALUES.julkinenKoosteUrlUrl + koulutustyyppi.toLowerCase();
     await page.goto(`${julkinenKoosteUrl}?haku=${opsNimi}`);
-    // await page.getByLabel('Hae opetussuunnitelmaa').fill(opsNimi);
-    // Wait for search results to load
-    await page.waitForLoadState('networkidle');
+    // await page.waitForLoadState('networkidle');
     await expect(page.getByRole('link', { name: opsNimi })).toBeVisible();
     await page.getByRole('link', { name: opsNimi }).click();
     await page.waitForURL(/\/opetussuunnitelma\//);

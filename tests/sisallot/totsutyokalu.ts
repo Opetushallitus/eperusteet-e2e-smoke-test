@@ -26,9 +26,7 @@ export async function amosaaOpetussuunnitelmaLuonti(
   opetussuunnitelmaUrlCallBack(page.url());
 
   await opsSisallot?.(testData);
-
-  // await page.getByText('Lisätoiminnot').click();
-  // await page.getByRole('menuitem').first().click();
+  
   await avaaLisatoiminto(page, 'tiedot');
   await startEditMode(page);
   await valitsePaiva(page, 'Päätöspäivämäärä', '1');
