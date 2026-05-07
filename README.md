@@ -1,6 +1,8 @@
 # eperusteet-e2e-smoke-test
 For testing services from outside
+
 [![Playwright Tests - qa environment](https://github.com/Opetushallitus/eperusteet-e2e-smoke-test/actions/workflows/playwright.yml/badge.svg)](https://github.com/Opetushallitus/eperusteet-e2e-smoke-test/actions/workflows/playwright.yml)
+
 [![Playwright Tests - untuva environment](https://github.com/Opetushallitus/eperusteet-e2e-smoke-test/actions/workflows/playwright-untuva.yml/badge.svg)](https://github.com/Opetushallitus/eperusteet-e2e-smoke-test/actions/workflows/playwright-untuva.yml)
 
 # Config
