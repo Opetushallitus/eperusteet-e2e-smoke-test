@@ -41,7 +41,10 @@ test.describe('Ammatillinen perustutkinto - Uusi peruste ja perusteesta OPS', as
       testData,
       ammatillinenPerusteSisallot,
       ammatillinenPerusteJulkinenTarkastukset,
-      (url: string) => perusteProjektiUrls.push(url),
+      (url: string) => {
+        console.log('Ammatillinen perustutkinto perusteprojekti url', url);
+        perusteProjektiUrls.push(url)
+      },
       ammatillinenLisaTarkistukset,
     );
 
@@ -50,7 +53,10 @@ test.describe('Ammatillinen perustutkinto - Uusi peruste ja perusteesta OPS', as
     await amosaaOpetussuunnitelmaLuonti(
       testData,
       ammatillinenToteutussuunnitelmaJulkinenTarkastukset,
-      (url: string) => opetussuunnitelmaUrls.push(url),
+      (url: string) => {
+        console.log('Ammatillinen perustutkinto ops url', url);
+        opetussuunnitelmaUrls.push(url)
+      },
       createToteutussuunnitelma,
       ammatillinenToteutussuunnitelmaSisallot,
     );

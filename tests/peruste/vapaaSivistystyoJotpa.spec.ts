@@ -1,8 +1,10 @@
 import { test, expect, Page } from '@playwright/test';
-import { createNimi } from "../../utils/commonmethods";
+import { createNimi, login } from "../../utils/commonmethods";
 import { TestData, archiveCurriculum } from "../utils/testUtils";
 import { createJotpaOpetussuunnitelma, jotpaOpetussuunnitelmaJulkinenTarkistukset, vstOpetussuunnitelmaSisallot } from '../sisallot/vstSisallot';
 import { amosaaOpetussuunnitelmaLuonti } from '../sisallot/totsutyokalu';
+import { luoTeemaJaOsaamismerkki, poistaOsaamismerkki } from '../sisallot/osaamismerkit';
+import { DEFAULT_VALUES } from '../../utils/defaultvalues';
 
 test.describe('Vapaa sivistystyö - jotpa - Uusi OPS', async () => {
   let page: Page;
@@ -29,6 +31,9 @@ test.describe('Vapaa sivistystyö - jotpa - Uusi OPS', async () => {
     testData.page = await browser.newPage();
 
     console.log('amosaaOpetussuunnitelmaLuonti - Vapaa sivistystyö - jotpa');
+    await login(page, DEFAULT_VALUES.basePerusteetUrl);
+    await luoTeemaJaOsaamismerkki(page);
+
     await amosaaOpetussuunnitelmaLuonti(
       testData,
       jotpaOpetussuunnitelmaJulkinenTarkistukset,
@@ -42,6 +47,7 @@ test.describe('Vapaa sivistystyö - jotpa - Uusi OPS', async () => {
     console.log('Archive ops - Vapaa sivistystyö - jotpa');
     for await (const url of opetussuunnitelmaUrls) {
       await archiveCurriculum(browser, url, opsNimi);
+      await poistaOsaamismerkki(browser);
     }
   });
 });

@@ -1,5 +1,5 @@
 import { expect, Page } from '@playwright/test';
-import { waitMedium, waitSmall } from '../../utils/commonmethods';
+import { startEditMode, waitMedium } from '../../utils/commonmethods';
 import { perusteenTekstikappale } from './perusteSisalto';
 import { TestData } from "../utils/testUtils";
 
@@ -53,33 +53,33 @@ export async function perusopetusOppiaine(page: Page, url: string) {
   await page.getByRole('button', { name: 'Hae koodistosta' }).click();
   await waitMedium(page);
   await page.getByText('A1-kieli').first().click();
-  await expect(page.locator('.modal-content')).not.toBeVisible();
+  await expect(page.locator('.p-dialog-content')).not.toBeVisible();
 
   await page.locator('button').filter({ hasText: 'Muokkaa tavoitealueita' }).click();
-  // await page.getByRole('button', { name: 'Muokkaa tavoitealueita' }).click();
-  await page.locator('.modal-content').getByRole('button', { name: 'Lisää tavoitealue' }).click();
-  await page.locator('.modal-content').getByRole('textbox').fill('tavoitealue 1');
-  await page.locator('.modal-content').getByRole('button', { name: 'Tallenna' }).click();
+  await page.locator('.p-dialog-content').getByRole('button', { name: 'Lisää tavoitealue' }).click();
+  await page.locator('.p-dialog-content').getByRole('textbox').fill('tavoitealue 1');
+  await page.locator('.p-dialog-footer').getByRole('button', { name: 'Tallenna' }).click();
+  await expect(page.locator('.p-dialog-content')).not.toBeVisible();
 
   await page.getByText('Vuosiluokat 1-1').click();
 
   await page.getByRole('button', { name: 'Muokkaa sisältöalueita' }).click();
-  await page.locator('.modal-content').getByRole('textbox').fill('sisältöalueet otsikko');
-  await page.locator('.modal-content').locator('.ProseMirror').fill('sisältöalueet kuvaus');
-  await page.locator('.modal-content').getByRole('button', { name: 'Lisää sisältöalue' }).click();
-  await page.locator('.modal-content').getByRole('textbox').nth(1).fill('sisältöalue 1');
-  await page.locator('.modal-content').locator('.ProseMirror').nth(1).fill('sisältöalueen kuvaus');
-  await page.locator('.modal-content').getByRole('button', { name: 'Tallenna' }).click();
+  await page.locator('.p-dialog-content').getByRole('textbox').fill('sisältöalueet otsikko');
+  await page.locator('.p-dialog-content').locator('.ProseMirror').fill('sisältöalueet kuvaus');
+  await page.locator('.p-dialog-content').getByRole('button', { name: 'Lisää sisältöalue' }).click();
+  await page.locator('.p-dialog-content').getByRole('textbox').nth(1).fill('sisältöalue 1');
+  await page.locator('.p-dialog-content').locator('.ProseMirror').nth(1).fill('sisältöalueen kuvaus');
+  await page.locator('.p-dialog-footer').getByRole('button', { name: 'Tallenna' }).click();
 
   await page.getByRole('button', { name: 'Lisää tavoite' }).click();
   await page.locator('.tavoite').getByRole('textbox').first().fill('tavoite 1');
-  await page.locator('.tavoite').locator('select').selectOption({ label: 'tavoitealue 1' });
+  await page.locator('.tavoite').locator('.p-select').click();
+  await page.locator('.p-select-overlay').getByText('tavoitealue 1').click();
   await page.locator('.tavoite').getByRole('button', { name: 'Lisää laaja-alainen osaaminen' }).click();
-  await page.locator('.tavoite').getByRole('menuitem', { name: 'Laaja-alainen osaaminen' }).click();
+  await page.locator('.p-popover-content').getByText('Laaja-alainen osaaminen').click();
   await page.locator('.tavoite').getByRole('button', { name: 'Lisää sisältöalue' }).click();
-  await page.locator('.tavoite').getByRole('menuitem', { name: 'sisältöalue' }).click();
+  await page.locator('.p-popover-content').getByText('sisältöalue').click();
 
-  // await page.getByRole('button', { name: 'Tallenna' }).click();
   await page.locator('button').filter({ hasText: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
@@ -97,9 +97,6 @@ export async function perusopetusOpsLuonti(testData: TestData) {
 export async function perusopetusOpsSisallot(testData: TestData) {
   let page = testData.page;
   await opsOppiaineenVuosiluokanMuokkaus(page);
-
-  await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
-
   await perusopetusValinnainenOppiaine(page, 'Valinnainen oppiaine 1');
   await perusopetusValinnainenOppiaine(page, 'Valinnainen oppiaine 2');
   await perusopetusValinnainenOppiaine(page, 'Valinnainen oppiaine 3');
@@ -115,6 +112,7 @@ export async function opsOppiaineenVuosiluokanMuokkaus(page: Page) {
   await page.getByRole('button', { name: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
+  await page.getByRole('link', { name: 'A1-kieli' }).click();
   await expect(page.locator('.navigation')).toContainText('Vuosiluokka 1');
   await page.locator('.navigation').getByRole('link', { name: 'Vuosiluokka 1' }).click();
   await expect(page.locator('.tavoite')).toContainText('tavoite 1');
@@ -123,7 +121,7 @@ export async function opsOppiaineenVuosiluokanMuokkaus(page: Page) {
   await expect(page.locator('.tavoite')).toContainText('Laaja-alainen osaaminen 1');
   await page.getByRole('button', { name: 'Laaja-alainen osaaminen 1' }).click();
   await expect(page.locator('.tavoite')).toContainText('Laaja-alainen osaaminen 1 Kuvausteksti');
-  await page.getByRole('button', { name: 'Muokkaa' }).click();
+  await startEditMode(page);
   await page.locator('.ProseMirror').nth(0).fill('tavoite 1 paikallinen tarkennus');
   await page.getByRole('button', { name: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
@@ -131,19 +129,20 @@ export async function opsOppiaineenVuosiluokanMuokkaus(page: Page) {
 }
 
 export async function perusopetusValinnainenOppiaine(page: Page, oppiaineNimi: string) {
+  await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
+  await page.reload();
   await page.getByRole('link', { name: 'Vuosiluokkakokonaisuus 1' }).click();
   await page.getByRole('link', { name: 'Valinnaisuus perusopetuksessa' }).click();
   await page.getByRole('button', { name: 'Lisää valinnainen oppiaine' }).click();
   await page.getByRole('textbox').first().fill(oppiaineNimi);
   await page.getByText('Syventävä').check();
-  await page.getByText('Valitse...').click();
-  await page.getByText('A1-kieli').click();
-  await page.getByText('1. lk').check();
+  await page.locator('.multiselect').getByText('Valitse...').click();
+  await page.locator('.multiselect').getByText('A1-kieli').click();
+  await page.locator('.ep-toggle').getByText('1. lk').check();
   await page.getByRole('button', { name: 'Tallenna' }).click();
   await expect(page.locator('.notification')).toContainText('Tallennus onnistui');
   await expect(page.locator('.editointi-container')).toContainText('Muokkaa');
   await expect(page.locator('body')).toContainText(oppiaineNimi);
-  await page.getByRole('link', { name: 'Yleisnäkymä' }).click();
 }
 
 export async function perusopetusJulkinenOpsTarkistukset(testData: TestData) {
