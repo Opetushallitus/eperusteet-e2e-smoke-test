@@ -1,7 +1,18 @@
 import { expect } from "@playwright/test";
 import { TestData } from "../utils/testUtils";
-import { login, saveAndCheck, startEditMode, vahvistaDialogi, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { login, saveAndCheck, startEditMode, vahvistaDialogi, waitMedium, waitSmall, PERUSTE_PDF_LINKKI, OPS_PDF_LINKKI, tarkistaPdfSisalto } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
+
+const TUVA_PERUSTE_TEKSTIT = [
+  'Digiosaaminen',
+  'laaja-alaisen osaamisen kuvaus',
+  'Perustaitojen vahvistaminen',
+  '1 - 2 viikkoa',
+  'koulutuksen osan kuvaus',
+  'koulutuksen osa tavoite 1',
+  'keskeisen sisällön kuvaus',
+  'osaamisen arvioinnin kuvaus',
+];
 
 export async function tuvaPerusteSisallot(testData: TestData) {
   let page = testData.page;
@@ -59,6 +70,12 @@ export async function tuvaPerusteJulkisetTarkistukset(testData: TestData) {
   await page.getByRole('link', { name: projektiNimi }).click();
   await waitMedium(page);
   await expect(page.locator('h1')).toContainText(projektiNimi);
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: PERUSTE_PDF_LINKKI }), [
+    projektiNimi,
+    ...TUVA_PERUSTE_TEKSTIT,
+  ]);
+
   await expect(page.locator('.navigation-tree')).toContainText('Digiosaaminen');
   await page.locator('.navigation-tree').getByText('Digiosaaminen').click();
   await expect(page.locator('.content')).toContainText('laaja-alaisen osaamisen kuvaus');
@@ -161,6 +178,20 @@ export async function tuvaOpetussuunnitelmaJulkinenTarkistukset(testData: TestDa
   await expect(page.locator('.opetussuunnitelma-container')).toContainText(opsNimi);
   await page.getByRole('link', { name: opsNimi }).click();
   await expect(page.locator('h1')).toContainText(opsNimi);
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: OPS_PDF_LINKKI }), [
+    opsNimi,
+    ...TUVA_PERUSTE_TEKSTIT,
+    'laaja-alaisen osaamisen kuvaus paikallinen tarkennus',
+    'Koulutuksen osat',
+    'tavoitteen paikallinen tarkennus',
+    'Monilukutaito',
+    'monilukutaito paikallinen tarkennus',
+    'arvioinninen paikallinen tarkennus',
+    'Aalto-korkeakoulusäätiö sr',
+    'www.google.com',
+    'käytännön toteutus paikallinen tarkennus',
+  ]);
 
   await expect(page.locator('.navigation-tree')).toContainText('Digiosaaminen');
   await page.locator('.navigation-tree').getByText('Digiosaaminen').click();

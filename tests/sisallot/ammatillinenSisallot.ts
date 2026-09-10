@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { login, saveAndCheck, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { login, saveAndCheck, startEditMode, waitMedium, waitSmall, PERUSTE_PDF_LINKKI, tarkistaPdfSisalto, TOTS_PDF_LINKKI } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { TestData } from "../utils/testUtils";
 
@@ -110,6 +110,9 @@ export async function ammatillinenPerusteJulkinenTarkastukset(testData: TestData
   await page.getByRole('link', { name: 'Voimaantulo:' }).click();
   await expect(page.locator('.content')).toContainText(projektiNimi);
 
+  await tarkistaPdfSisalto(page.getByRole('link', { name: PERUSTE_PDF_LINKKI }), [
+    projektiNimi,
+  ]);
 }
 
 export async function ammatillinenToteutussuunnitelmaJulkinenTarkastukset(testData: TestData) {
@@ -125,6 +128,17 @@ export async function ammatillinenToteutussuunnitelmaJulkinenTarkastukset(testDa
   await expect(page.locator('body')).toContainText(testData.opsNimi);
   await page.getByRole('link', { name: testData.opsNimi }).click();
   await expect(page.locator('.content')).toContainText(testData.opsNimi);
+  
+  await tarkistaPdfSisalto(page.getByRole('link', { name: TOTS_PDF_LINKKI }), [
+    projektiNimi,
+    testData.opsNimi!,
+    'Tutkinnon osat',
+    'Testiosa',
+    'Yhteinen osa',
+    'Testiosa',
+    'Yhteinen osa',
+  ]);
+
   await expect(page.locator('.navigation-tree')).toContainText('Tutkinnon osat');
   await page.locator('.navigation-tree').getByText('Tutkinnon osat').click();
   await expect(page.locator('.content')).toContainText('Testiosa');

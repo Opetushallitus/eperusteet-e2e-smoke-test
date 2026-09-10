@@ -3,7 +3,15 @@ import { perusteenTekstikappale } from "./perusteSisalto";
 import { TestData } from "../utils/testUtils";
 import { yleissivistavatJulkinenTarkistukset } from "./yleissivistavat";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
-import { saveAndCheck, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { saveAndCheck, startEditMode, waitMedium, waitSmall, PERUSTE_PDF_LINKKI, OPS_PDF_LINKKI, tarkistaPdfSisalto } from "../../utils/commonmethods";
+
+const TAIDE_PERUSTE_TEKSTIT = [
+  'Alkuvaihe',
+  'tekstikappale 1',
+  'alkuvaihe kuvaus',
+  'alkuvaiheteksti 1',
+  'alkuvaiheteksti 1 kuvaus',
+] as const;
 
 export async function taideSisallot(testData: TestData) {
   let page = testData.page;
@@ -36,6 +44,11 @@ export async function taideJulkinenPerusteTarkistukset(testData: TestData) {
   await waitMedium(page);
   await expect(page.locator('h1')).toContainText(projektiNimi);
 
+  await tarkistaPdfSisalto(page.getByRole('link', { name: PERUSTE_PDF_LINKKI }), [
+    projektiNimi!,
+    ...TAIDE_PERUSTE_TEKSTIT,
+  ]);
+
   await expect(page.locator('.navigation-tree')).toContainText('Alkuvaihe');
   await expect(page.locator('.navigation-tree')).toContainText('tekstikappale 1');
 
@@ -63,7 +76,23 @@ export async function taideOpsSisallot(testData: TestData) {
 
 export async function taideJulkinenOpsTarkistukset(testData: TestData) {
   let page = testData.page;
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: OPS_PDF_LINKKI }), [
+    testData.opsNimi!,
+    ...TAIDE_PERUSTE_TEKSTIT,
+    'alkuvaihe paikallinen tarkennus',
+  ]);
+
+  await expect(page.locator('.navigation-tree')).toContainText('tekstikappale 1');
+  await page.locator('.navigation-tree').getByText('tekstikappale 1').click();
+  await expect(page.locator('.content')).toContainText('tekstikappale 1 kuvaus');
+
   await expect(page.locator('.navigation-tree')).toContainText('Alkuvaihe');
+  await page.locator('.navigation-tree').getByText('Alkuvaihe').click();
+  await expect(page.locator('.content')).toContainText('alkuvaihe kuvaus');
+  await expect(page.locator('.navigation-tree')).toContainText('alkuvaiheteksti 1');
+  await page.locator('.navigation-tree').getByText('alkuvaiheteksti 1').click();
+  await expect(page.locator('.content')).toContainText('alkuvaiheteksti 1 kuvaus');
   await page.locator('.navigation-tree').getByText('Alkuvaihe').click();
   await expect(page.locator('.content')).toContainText('alkuvaihe paikallinen tarkennus');
 }

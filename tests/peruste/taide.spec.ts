@@ -1,9 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 import { createNimi } from "../../utils/commonmethods";
 import { TestData, archiveFoundation, archiveCurriculum } from "../utils/testUtils";
-import { varhaiskasvatusSisallot } from '../sisallot/varhaiskasvatusSisalto';
-import { yleissivistavatLisaTarkastukset, yleissivistavatJulkinenTarkistukset } from '../sisallot/yleissivistavat';
-import { varhaiskasvatusJulkinenOpsTarkistukset } from '../sisallot/varhaiskasvatusSisalto';
+import { yleissivistavatLisaTarkastukset } from '../sisallot/yleissivistavat';
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { opsTyokaluOpetussuunnitelmanLuontiJaTestit } from '../sisallot/opstyokalu';
 import { taideJulkinenOpsTarkistukset, taideJulkinenPerusteTarkistukset, taideOpsSisallot, taideSisallot } from '../sisallot/taideSisallot';

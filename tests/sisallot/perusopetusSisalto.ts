@@ -1,6 +1,6 @@
 import { expect, Page } from '@playwright/test';
-import { startEditMode, waitMedium } from '../../utils/commonmethods';
-import { perusteenTekstikappale } from './perusteSisalto';
+import { startEditMode, waitMedium, OPS_PDF_LINKKI, tarkistaPdfSisalto } from '../../utils/commonmethods';
+import { perusteenTekstikappale, PERUSTE_SMOKE } from './perusteSisalto';
 import { TestData } from "../utils/testUtils";
 
 export async function perusopetuksenSisallot(testData: TestData) {
@@ -147,6 +147,27 @@ export async function perusopetusValinnainenOppiaine(page: Page, oppiaineNimi: s
 
 export async function perusopetusJulkinenOpsTarkistukset(testData: TestData) {
   let page = testData.page;
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: OPS_PDF_LINKKI }), [
+    testData.opsNimi!,
+    PERUSTE_SMOKE.tekstikappaleNimi,
+    PERUSTE_SMOKE.tekstikappaleTeksti,
+    'Vuosiluokkakokonaisuus 1',
+    'Vuosiluokkakokonaisuus 2',
+    'Oppiaineet',
+    'A1-kieli',
+    'Valinnaisuus perusopetuksessa',
+    'Valinnainen oppiaine 1',
+    'Valinnainen oppiaine 2',
+    'Valinnainen oppiaine 3',
+    'Valinnainen oppiaine 4',
+    'Valinnainen oppiaine 5',
+  ]);
+
+  await expect(page.locator('.navigation-tree')).toContainText(PERUSTE_SMOKE.tekstikappaleNimi);
+  await page.locator('.navigation-tree').getByText(PERUSTE_SMOKE.tekstikappaleNimi).click();
+  await expect(page.locator('.content')).toContainText(PERUSTE_SMOKE.tekstikappaleTeksti);
+
   await expect(page.locator('.navigation-tree')).toContainText('Vuosiluokkakokonaisuus 1');
   await expect(page.locator('.navigation-tree')).toContainText('Vuosiluokkakokonaisuus 2');
   await expect(page.locator('.navigation-tree')).toContainText('Oppiaineet');

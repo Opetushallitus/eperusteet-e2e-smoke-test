@@ -1,7 +1,8 @@
 import { expect, Page } from "@playwright/test";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
-import { waitMedium } from "../../utils/commonmethods";
+import { PERUSTE_PDF_LINKKI, tarkistaPdfSisalto, waitMedium } from "../../utils/commonmethods";
 import { TestData } from "../utils/testUtils";
+import { PERUSTE_SMOKE } from "./perusteSisalto";
 
 export async function yleissivistavatLisaTarkastukset(testData: TestData) {
   let page = testData.page;
@@ -23,4 +24,14 @@ export async function yleissivistavatJulkinenTarkistukset(testData: TestData) {
   await page.getByRole('link', { name: projektiNimi }).click();
   await waitMedium(page);
   await expect(page.locator('h1')).toContainText(projektiNimi);
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: PERUSTE_PDF_LINKKI }), [
+    projektiNimi!,
+    PERUSTE_SMOKE.tekstikappaleNimi,
+    PERUSTE_SMOKE.tekstikappaleTeksti,
+  ]);
+  
+  await expect(page.locator('.navigation-tree')).toContainText(PERUSTE_SMOKE.tekstikappaleNimi);
+  await page.locator('.navigation-tree').getByText(PERUSTE_SMOKE.tekstikappaleNimi).click();
+  await expect(page.locator('.content')).toContainText(PERUSTE_SMOKE.tekstikappaleTeksti);
 }

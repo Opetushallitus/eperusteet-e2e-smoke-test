@@ -1,7 +1,26 @@
 import { expect } from "@playwright/test";
 import { TestData } from "../utils/testUtils";
-import { login, saveAndCheck, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { login, saveAndCheck, startEditMode, waitMedium, waitSmall, PERUSTE_PDF_LINKKI, OPS_PDF_LINKKI, tarkistaPdfSisalto, TOTS_PDF_LINKKI } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
+
+const KOTO_PERUSTE_TEKSTIT = [
+  'opinto 1',
+  'opinnon kuvaus',
+  'Monilukutaito',
+  'monilukutaito kuvaus',
+  'Työelämätaidot',
+  'työelämätaidot kuvaus',
+  'Työelämäjakso',
+  'työelämäjakso tavoitteet',
+  'vastaanottaminen kuvaus',
+  'tuottaminen kuvaus',
+  'meditaatio kuvaus',
+  'Yhteiskuntaosaaminen',
+  'yhteiskuntaosaaminen kuvaus',
+  'Ammatin valinta ja ohjaus, 1 - 2 op',
+  'tavoitteet kuvaus',
+  'osaaminen kuvaus',
+];
 
 export async function kotoPerusteSisallot(testData: TestData) {
   let page = testData.page;
@@ -91,6 +110,12 @@ export async function kotoPerusteJulkisetTarkistukset(testData: TestData) {
   await expect(page.locator('body')).toContainText(projektiNimi);
   await page.getByRole('link', { name: projektiNimi }).click();
   await expect(page.locator('h1')).toContainText(projektiNimi);
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: PERUSTE_PDF_LINKKI }), [
+    projektiNimi,
+    ...KOTO_PERUSTE_TEKSTIT,
+  ]);
+
   await expect(page.locator('.navigation-tree')).toContainText('opinto 1');
   await page.locator('.navigation-tree').getByText('opinto 1').click();
   await expect(page.locator('.content')).toContainText('opinnon kuvaus');
@@ -194,6 +219,16 @@ export async function kotoOpetussuunnitelmaJulkinenTarkistukset(testData: TestDa
   await expect(page.locator('.opetussuunnitelma-container')).toContainText(opsNimi);
   await page.getByRole('link', { name: opsNimi }).click();
   await expect(page.locator('h1')).toContainText(opsNimi);
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: TOTS_PDF_LINKKI }), [
+    opsNimi,
+    ...KOTO_PERUSTE_TEKSTIT,
+    'laaja-alaisen osaamisen paikallinen tarkennus',
+    'työelämätaidot paikallinen tarkennus',
+    'monilukutaito paikallinen tarkennus',
+    'tavoitteet paikallinen tarkennus',
+    'sisältöjen paikallinen tarkennus',
+  ]);
 
   await expect(page.locator('.navigation-tree')).toContainText('opinto 1');
   await page.locator('.navigation-tree').getByText('opinto 1').click();

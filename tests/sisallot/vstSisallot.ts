@@ -1,8 +1,40 @@
 import { expect } from "@playwright/test";
 import { TestData } from "../utils/testUtils";
-import { login, saveAndCheck, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { login, saveAndCheck, startEditMode, waitMedium, waitSmall, PERUSTE_PDF_LINKKI, OPS_PDF_LINKKI, tarkistaPdfSisalto } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { osaamismerkkiNimi } from "./osaamismerkit";
+
+function vstPerusteTekstit() {
+  return [
+    'Aktiivinen kansalaisuus',
+    '77',
+    'opintokokonaisuus kuvaus',
+    'opintokokonaisuus tavoitteet',
+    'opintokokonaisuus tavoite 1',
+    'opintokokonaisuus arvioinnin kriteeri 1',
+  ];
+}
+
+function vstPaikallisetOpsTekstit(opsNimi: string) {
+  return [
+    opsNimi,
+    'Aktiivinen kansalaisuus',
+    'opintokokonaisuus kuvaus',
+    'opintokokonaisuus tavoitteet',
+    'opintokokonaisuus tavoite 1',
+    'opintokokonaisuus arvioinnin kriteeri 1',
+    'paikallinen opintokokonaisuus',
+    '88 op',
+    'opintokokonaisuus kuvaus',
+    'opintokokonaisuus tavoitteet',
+    'tavoitteiden kuvaus teksti',
+    'opintokokonaisuus tavoite 1',
+    'keskeinen sisältö teksti',
+    'arvioinnin kuvaus teksti',
+    'opintokokonaisuus arvioinnin kriteeri 1',
+    'osaamismerkkikappale teksti',
+  ];
+}
 
 export async function vstPerusteSisallot(testData: TestData) {
   let page = testData.page;
@@ -37,6 +69,12 @@ export async function vstPerusteJulkisetTarkistukset(testData: TestData) {
   await page.getByRole('link', { name: projektiNimi }).click();
   await waitMedium(page);
   await expect(page.locator('h1')).toContainText(projektiNimi);
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: PERUSTE_PDF_LINKKI }), [
+    projektiNimi,
+    ...vstPerusteTekstit(),
+  ]);
+
   await expect(page.locator('.navigation-tree')).toContainText('Aktiivinen kansalaisuus');
   await page.locator('.navigation-tree').getByText('Aktiivinen kansalaisuus').click();
   await expect(page.locator('.content')).toContainText('77');
@@ -117,6 +155,16 @@ export async function vstOpetussuunnitelmaJulkinenTarkistukset(testData: TestDat
   await expect(page.locator('.opetussuunnitelma-container')).toContainText(opsNimi);
   await page.getByRole('link', { name: opsNimi }).click();
   await expect(page.locator('h1')).toContainText(opsNimi);
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: OPS_PDF_LINKKI }), vstPaikallisetOpsTekstit(opsNimi));
+
+  await expect(page.locator('.navigation-tree')).toContainText('Aktiivinen kansalaisuus');
+  await page.locator('.navigation-tree').getByText('Aktiivinen kansalaisuus').click();
+  await expect(page.locator('.content').last()).toContainText('opintokokonaisuus kuvaus');
+  await expect(page.locator('.content').last()).toContainText('opintokokonaisuus tavoitteet');
+  await expect(page.locator('.content').last()).toContainText('opintokokonaisuus tavoite 1');
+  await expect(page.locator('.content').last()).toContainText('opintokokonaisuus arvioinnin kriteeri 1');
+
   await expect(page.locator('.navigation-tree')).toContainText('paikallinen opintokokonaisuus');
   await page.locator('.navigation-tree').getByText('paikallinen opintokokonaisuus').click();
   await expect(page.locator('.content').last()).toContainText('88 op');
@@ -157,6 +205,9 @@ export async function jotpaOpetussuunnitelmaJulkinenTarkistukset(testData: TestD
   await expect(page.locator('.opetussuunnitelma-container')).toContainText(opsNimi);
   await page.getByRole('link', { name: opsNimi }).click();
   await expect(page.locator('h1')).toContainText(opsNimi);
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: OPS_PDF_LINKKI }), vstPaikallisetOpsTekstit(opsNimi!));
+
   await expect(page.locator('.navigation-tree')).toContainText('paikallinen opintokokonaisuus');
   await page.locator('.navigation-tree').getByText('paikallinen opintokokonaisuus').click();
   await expect(page.locator('.content').last()).toContainText('88 op');
