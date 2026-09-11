@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from '@playwright/test';
+import { PDFParse } from 'pdf-parse';
 
 /** Fills a field without logging the value in HTML reports or traces. */
 async function fillSecret(locator: Locator, value: string) {
@@ -119,4 +120,43 @@ export async function vahvistaDialogi(page: Page, dialogiTeksti: string) {
   await expect(dialog).toBeVisible();
   await dialog.getByRole('button', { name: dialogiTeksti, exact: true }).click();
   await expect(dialog).toBeHidden();
+}
+
+export const PERUSTE_PDF_LINKKI = 'Avaa peruste pdf:nä';
+export const OPS_PDF_LINKKI = 'Avaa opetussuunnitelma pdf:nä';
+export const TOTS_PDF_LINKKI = 'Avaa toteutussuunnitelma pdf:nä';
+
+export async function tarkistaPdfSisalto(pdfLink: Locator, tekstit: readonly string[]) {
+  const page = pdfLink.page();
+  await page.locator('.navigation-tree').getByRole('link').first().click();
+  await expect(pdfLink).toBeVisible();
+  const pdfText = await luePdfTeksti(pdfLink);
+  for (const teksti of tekstit) {
+    expect(pdfText).toContain(normalisoiPdfTeksti(teksti));
+  }
+}
+
+export async function luePdfTeksti(pdfLink: Locator) {
+  const page = pdfLink.page();
+  const href = await pdfLink.getAttribute('href');
+  expect(href).toBeTruthy();
+
+  const pdfUrl = new URL(href!, page.url()).toString();
+  const response = await page.request.get(pdfUrl);
+  expect(response.ok()).toBeTruthy();
+
+  const pdfData = await response.body();
+  expect(new TextDecoder().decode(pdfData.subarray(0, 4))).toBe('%PDF');
+
+  const parser = new PDFParse({ data: pdfData });
+  try {
+    const { text } = await parser.getText();
+    return normalisoiPdfTeksti(text);
+  } finally {
+    await parser.destroy();
+  }
+}
+
+export function normalisoiPdfTeksti(text: string) {
+  return text.replace(/[\u00AD\u2010-\u2015-]/g, '').replace(/\s+/g, ' ');
 }

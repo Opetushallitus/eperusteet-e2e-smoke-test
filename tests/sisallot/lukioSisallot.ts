@@ -1,8 +1,9 @@
 import { expect, Page } from "@playwright/test";
-import { startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { startEditMode, waitMedium, waitSmall, PERUSTE_PDF_LINKKI, OPS_PDF_LINKKI, tarkistaPdfSisalto } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { yleissivistavatJulkinenTarkistukset } from "./yleissivistavat";
 import { TestData } from "../utils/testUtils";
+import { perusteenTekstikappale } from "./perusteSisalto";
 
 const oppiaineet = [
   {nimi: 'Historia', moduuliNimi: 'Antiikin elämää', oppimaaraNimi: 'Biologia'},
@@ -15,9 +16,31 @@ const laot = [
   {nimi: 'Yhteiskunnallinen osaaminen'},
 ];
 
+function lukioPerusteTekstit() {
+  return [
+    ...oppiaineet.flatMap((oppiaine) => [
+      oppiaine.nimi,
+      oppiaine.oppimaaraNimi,
+      oppiaine.nimi + ' tehtava',
+      oppiaine.nimi + ' lao',
+      oppiaine.nimi + ' tavoite',
+      oppiaine.nimi + ' tavoitealue',
+      oppiaine.nimi + ' osaamisen arviointi',
+      oppiaine.moduuliNimi,
+    ]),
+    '4 op',
+  ];
+}
+
+const vainPerusteenTekstit = [
+  'Pakolliset moduulit',
+];
+
 export async function lukioSisallot(testData: TestData) {
   let page = testData.page;
   let url = testData.url;
+
+  await perusteenTekstikappale(testData.page);
 
   for (const oppiaine of oppiaineet) {
     await page.goto(url + 'lukio/oppiaineet');
@@ -115,6 +138,9 @@ export async function lukioJulkinenTarkistukset(testData: TestData) {
     await expect(page.locator('.content')).toContainText('Pakollinen');
     await expect(page.locator('.content')).toContainText('4 op');
   }
+
+  await tarkistaPdfSisalto(page.getByRole('link', { name: PERUSTE_PDF_LINKKI }), 
+    [...lukioPerusteTekstit(), ...vainPerusteenTekstit]);
 }
 
 export async function lukioOpsLuonti(testData: TestData) {
@@ -156,6 +182,11 @@ export async function lukioOpsSisallot(testData: TestData) {
 export async function lukioJulkinenOpsTarkistukset(testData: TestData) {
   let page = testData.page;
 
+  await tarkistaPdfSisalto(page.getByRole('link', { name: OPS_PDF_LINKKI }), [
+    testData.opsNimi!,
+    ...lukioPerusteTekstit(),
+    ...oppiaineet.map((oppiaine) => oppiaine.oppimaaraNimi + ' opintojakso'),
+  ]);
 
   await page.locator('.navigation-tree').getByText('Oppiaineet').click();
   for (const oppiaine of oppiaineet) {

@@ -2,7 +2,7 @@ import { expect, Page } from "@playwright/test";
 import { PERUSTE_SMOKE, perusteenTekstikappale } from "./perusteSisalto";
 import { TestData } from "../utils/testUtils";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
-import { saveAndCheck, startEditMode, waitMedium, waitSmall } from "../../utils/commonmethods";
+import { saveAndCheck, startEditMode, waitMedium, waitSmall, PERUSTE_PDF_LINKKI, OPS_PDF_LINKKI, tarkistaPdfSisalto } from "../../utils/commonmethods";
 
 /** Virkailija-UI:n perusteen relatiivipolku */
 const AIPE_PATH = "aikuistenperusopetus/";
@@ -26,6 +26,21 @@ export const AIPE_SMOKE = {
   opetussuunnitelmaOppiainePaikallinenTarkennus: "AIPE opetussuunnitelma oppiaine paikallinen tarkennus",
   opetussuunnitelmaKurssiPaikallinenTarkennus: "AIPE opetussuunnitelma kurssi paikallinen tarkennus",
 } as const;
+
+const AIPE_PERUSTE_TEKSTIT = [
+  PERUSTE_SMOKE.tekstikappaleNimi,
+  AIPE_SMOKE.vaiheNimi,
+  AIPE_SMOKE.laajaAlainenNimi,
+  AIPE_SMOKE.laajaAlainenKuvaus,
+  AIPE_SMOKE.vaiheTekstiOtsikko,
+  AIPE_SMOKE.vaiheTekstiSisalto,
+  AIPE_SMOKE.vaiheTavoitealue,
+  AIPE_SMOKE.oppiaineNimi,
+  AIPE_SMOKE.tavoitteenNimi,
+  AIPE_SMOKE.tavoiteJohdetutOppimiset,
+  AIPE_SMOKE.kurssiNimi,
+  AIPE_SMOKE.kurssiTekstiSisalto,
+];
 
 export async function aikuistenperusopetusSisallot(testData: TestData) {
   const page = testData.page;
@@ -134,6 +149,11 @@ export async function aikuistenperusopetusJulkinenPerusteTarkistukset(testData: 
   await waitMedium(page);
   await expect(page.locator("h1")).toContainText(projektiNimi);
 
+  await tarkistaPdfSisalto(page.getByRole('link', { name: PERUSTE_PDF_LINKKI }), [
+    projektiNimi,
+    ...AIPE_PERUSTE_TEKSTIT,
+  ]);
+
   const tree = page.locator(".navigation-tree");
   await expect(tree).toContainText("tekstikappale 1");
   await expect(tree).toContainText(AIPE_SMOKE.vaiheNimi);
@@ -161,17 +181,32 @@ export async function aikuistenperusopetusJulkinenOpsTarkistukset(testData: Test
   const page = testData.page;
   const tree = page.locator(".navigation-tree");
 
+  await tarkistaPdfSisalto(page.getByRole('link', { name: OPS_PDF_LINKKI }), [
+    testData.opsNimi!,
+    ...AIPE_PERUSTE_TEKSTIT,
+    PERUSTE_SMOKE.tekstikappaleTeksti,
+    AIPE_SMOKE.opetussuunnitelmaVaihePaikallinenTarkennus,
+    AIPE_SMOKE.oppiaineTekstiOtsikko,
+    AIPE_SMOKE.oppiaineTekstiSisalto,
+    AIPE_SMOKE.opetussuunnitelmaOppiainePaikallinenTarkennus,
+    AIPE_SMOKE.opetussuunnitelmaKurssiPaikallinenTarkennus,
+  ]);
+
   await expect(tree).toContainText(PERUSTE_SMOKE.tekstikappaleNimi);
   await tree.getByText(PERUSTE_SMOKE.tekstikappaleNimi).click();
   await expect(page.locator(".content")).toContainText(PERUSTE_SMOKE.tekstikappaleNimi);
   await expect(page.locator(".content")).toContainText(PERUSTE_SMOKE.tekstikappaleTeksti);
+
+  await tree.getByText("Laaja-alaiset osaamiset").click();
+  await expect(page.locator(".content")).toContainText(AIPE_SMOKE.laajaAlainenNimi);
+  await expect(page.locator(".content")).toContainText(AIPE_SMOKE.laajaAlainenKuvaus);
 
   await expect(tree).toContainText(AIPE_SMOKE.vaiheNimi);
   await tree.getByText(AIPE_SMOKE.vaiheNimi).click();
   await expect(page.locator(".content")).toContainText(AIPE_SMOKE.vaiheTekstiOtsikko);
   await expect(page.locator(".content")).toContainText(AIPE_SMOKE.vaiheTekstiSisalto);
   await expect(page.locator(".content")).toContainText(AIPE_SMOKE.opetussuunnitelmaVaihePaikallinenTarkennus);
-
+  
   await expect(tree).toContainText(AIPE_SMOKE.oppiaineNimi);
   await tree.getByText(AIPE_SMOKE.oppiaineNimi).click();
   await expect(page.locator(".content")).toContainText(AIPE_SMOKE.oppiaineTekstiOtsikko);
@@ -179,6 +214,7 @@ export async function aikuistenperusopetusJulkinenOpsTarkistukset(testData: Test
   await expect(page.locator(".content")).toContainText(AIPE_SMOKE.tavoitteenNimi);
   await page.locator(".content").getByText(AIPE_SMOKE.tavoitteenNimi).click();
   await expect(page.locator(".content")).toContainText(AIPE_SMOKE.tavoiteJohdetutOppimiset);
+  await expect(page.locator(".content")).toContainText(AIPE_SMOKE.vaiheTavoitealue);
   await expect(page.locator(".content")).toContainText(AIPE_SMOKE.opetussuunnitelmaOppiainePaikallinenTarkennus);
 
   await expect(tree).toContainText(AIPE_SMOKE.kurssiNimi);
