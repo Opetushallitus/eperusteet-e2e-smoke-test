@@ -47,5 +47,5 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           curl -fsS -X POST -H 'Content-type: application/json' \
-            --data "{\"text\":\"Playwright qa epäonnistui: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+            --data "{\"text\":\"E2E testi QA:lla epäonnistui: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
             "$SLACK_WEBHOOK_URL"
