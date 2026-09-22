@@ -39,7 +39,7 @@ jobs:
 
   notify-failure:
     needs: test
-    if: ${{ failure() }}
+    if: ${{ github.event_name == 'schedule' && failure() }}
     runs-on: ubuntu-22.04
     steps:
       - name: Notify Slack
