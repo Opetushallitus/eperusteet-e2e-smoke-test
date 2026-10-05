@@ -220,7 +220,7 @@ export async function kotoOpetussuunnitelmaJulkinenTarkistukset(testData: TestDa
   await page.getByRole('link', { name: opsNimi }).click();
   await expect(page.locator('h1')).toContainText(opsNimi);
 
-  await tarkistaPdfSisalto(page.getByRole('link', { name: TOTS_PDF_LINKKI }), [
+  await tarkistaPdfSisalto(page.getByRole('link', { name: OPS_PDF_LINKKI }), [
     opsNimi,
     ...KOTO_PERUSTE_TEKSTIT,
     'laaja-alaisen osaamisen paikallinen tarkennus',
