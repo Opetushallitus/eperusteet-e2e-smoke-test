@@ -142,7 +142,7 @@ export async function kotoPerusteJulkisetTarkistukset(testData: TestData) {
 export async function createKotoOpetussuunnitelma(testData: TestData){
   let page = testData.page;
 
-  await login(page, DEFAULT_VALUES.loginKotoutumiskoulutus);
+  await login(page, DEFAULT_VALUES.loginKotoutuminen);
   await waitMedium(page);
 
   await page.goto(DEFAULT_VALUES.kotoOpsUrl);
