@@ -5,7 +5,7 @@ import { createKotoOpetussuunnitelma, kotoOpetussuunnitelmaJulkinenTarkistukset,
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { amosaaOpetussuunnitelmaLuonti } from '../sisallot/totsutyokalu';
 
-test.describe('Kotoutumiskoulutus - Uusi peruste ja perusteesta OPS', async () => {
+test.describe('Kotoutuminen - Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
   let perusteProjektiUrls: string[] = [];
   let opetussuunnitelmaUrls: string[] = [];
@@ -34,7 +34,7 @@ test.describe('Kotoutumiskoulutus - Uusi peruste ja perusteesta OPS', async () =
   test(`Luo, päivitä ja julkaise peruste ja ops - ${koulutustyyppi}`, async ({ page, browser }) => {
     testData.page = await browser.newPage();
 
-    console.log('perusteenLuontiJaTestit - Kotoutumiskoulutus');
+    console.log('perusteenLuontiJaTestit - Kotoutuminen');
     await perusteenLuontiJaTestit(
       testData,
       kotoPerusteSisallot,
@@ -43,7 +43,7 @@ test.describe('Kotoutumiskoulutus - Uusi peruste ja perusteesta OPS', async () =
     );
 
     testData.page = await browser.newPage();
-    console.log('amosaaOpetussuunnitelmaLuonti - Kotoutumiskoulutus');
+    console.log('amosaaOpetussuunnitelmaLuonti - Kotoutuminen');
     await amosaaOpetussuunnitelmaLuonti(
       testData,
       kotoOpetussuunnitelmaJulkinenTarkistukset,
@@ -54,7 +54,7 @@ test.describe('Kotoutumiskoulutus - Uusi peruste ja perusteesta OPS', async () =
   });
 
   test.afterAll(async ({ browser }) => {
-    console.log('Archive peruste ja ops - Kotoutumiskoulutus');
+    console.log('Archive peruste ja ops - Kotoutuminen');
     for await (const url of perusteProjektiUrls) {
       await archiveFoundation(browser, url, projektiNimi);
     }

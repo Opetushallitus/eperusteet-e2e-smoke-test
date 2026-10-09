@@ -55,7 +55,7 @@ Yhteinen perusteputki: luodaan peruste, julkaistaan se, tarkistetaan pdf ja ettÃ
 * Ammatillinen perustutkinto: peruste ja toteutussuunnitelma.
 * Vapaa sivistystyÃ¶: peruste ja opetussuunnitelma.
 * Tutkintokoulutukseen valmentava koulutus (TUVA): peruste ja opetussuunnitelma.
-* Kotoutumiskoulutus: peruste ja opetussuunnitelma.
+* Kotoutuminen: peruste ja opetussuunnitelma.
 
 ### eperusteet-service, ylops-service ja pdf-service
 
