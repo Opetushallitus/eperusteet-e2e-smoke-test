@@ -5,7 +5,7 @@ import { createKotoOpetussuunnitelma, kotoOpetussuunnitelmaJulkinenTarkistukset,
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { amosaaOpetussuunnitelmaLuonti } from '../sisallot/totsutyokalu';
 
-test.describe('Kotoutumiskoulutus - Uusi peruste ja perusteesta OPS', async () => {
+test.describe('Kotoutuminen - Uusi peruste ja perusteesta OPS', async () => {
   let page: Page;
   let perusteProjektiUrls: string[] = [];
   let opetussuunnitelmaUrls: string[] = [];
