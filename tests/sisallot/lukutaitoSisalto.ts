@@ -6,57 +6,64 @@ import { perusteenTekstikappale, PERUSTE_SMOKE } from "./perusteSisalto";
 
 const LUKUTAITO_PAIKALLINEN_TARKENNUS = 'tekstikappale paikallinen tarkennus';
 
-const LUKUTAITO_TAVOITTEET = {
-  nimi: 'lukutaito tavoite ja sisältöalue',
-  tavoitealueOtsikko: 'tavoite 1',
-  tavoite1: 'opiskella',
-  tavoite2: 'ajatella',
-  paikallinenTarkennus: 'tavoitteiden paikallinen tarkennus',
+const LUKUTAITO_TAVOITESISALTOALUE = {
+  otsikko: 'Monilukutaito',
+  teksti: 'monilukutaitoteksti',
+  tavoitealueenOtsikko: 'Numeeriset taidot',
+  tavoite: 'tavoite1',
+  keskeinenSisaltoalue: 'keskeinensisältöalue',
+  paikallinenTarkennus: 'tavoitesisältöalue paikallinen tarkennus',
 } as const;
 
-const LUKUTAITO_TAVOITTEET_TEKSTIT = [
-  LUKUTAITO_TAVOITTEET.nimi,
-  LUKUTAITO_TAVOITTEET.tavoitealueOtsikko,
-  'Opiskelija osaa',
-  LUKUTAITO_TAVOITTEET.tavoite1,
-  LUKUTAITO_TAVOITTEET.tavoite2,
-] as const;
+const LUKUTAITO_TAVOITESISALTOALUE_TEKSTIT = [
+  LUKUTAITO_TAVOITESISALTOALUE.otsikko,
+  LUKUTAITO_TAVOITESISALTOALUE.teksti,
+  LUKUTAITO_TAVOITESISALTOALUE.tavoitealueenOtsikko,
+  LUKUTAITO_TAVOITESISALTOALUE.tavoite,
+  LUKUTAITO_TAVOITESISALTOALUE.keskeinenSisaltoalue,
+];
 
-async function tarkistaTavoitteet(kohde: Locator) {
-  for (const teksti of LUKUTAITO_TAVOITTEET_TEKSTIT) {
-    await expect(kohde).toContainText(teksti);
+async function valitseKoodistosta(page: Page, hakuNappi: Locator, koodi: string) {
+  await hakuNappi.click();
+  await expect(page.locator('.ep-modal')).toBeVisible();
+  await page.locator('.ep-modal').getByRole('searchbox').fill(koodi);
+  await expect(page.locator('.ep-modal')).toContainText(koodi);
+  await page.locator('.ep-modal').getByText(koodi, { exact: true }).first().click();
+  await expect(page.locator('.ep-modal')).not.toBeVisible();
+}
+
+async function tarkistaTavoitesisaltoalueenSisallot(sisalto: Locator) {
+  for (const teksti of LUKUTAITO_TAVOITESISALTOALUE_TEKSTIT) {
+    await expect(sisalto).toContainText(teksti);
   }
 }
 
-async function lisaaTavoitteetJaSisaltoalueet(page: Page) {
-  await page.getByRole('button', { name: 'Tavoitteet ja sisältöalueet', exact: true }).click();
-  const dialogi = page.locator('.ep-modal');
-  await expect(dialogi).toBeVisible();
-  await dialogi.getByRole('button', { name: 'Lisää tavoite ja sisältöalue' }).click();
-  await expect(dialogi).not.toBeVisible();
-  await page.waitForURL(/lukutaitokoulutus_tavoitteetjasisaltoalueet\/\d+/);
-  await expect(page.getByRole('heading', { name: 'Nimetön tavoite ja sisältöalue', exact: true })).toBeVisible();
+export async function lukutaitoPerusteSisallot(testData: TestData) {
+  let page = testData.page;
 
+  await perusteenTekstikappale(page);
+
+  await page.goto(testData.url!);
+  await page.locator('button').filter({ hasText: 'Tavoitteet ja sisältöalueet' }).first().click();
+  await page.locator('button').filter({ hasText: 'Lisää tavoite ja sisältöalue' }).click();
+  await expect(page.locator('.ep-modal')).not.toBeVisible();
   await startEditMode(page);
-  await page.getByRole('button', { name: 'Lisää tavoitealue', exact: true }).click();
-  const lisaaTavoite = page.getByRole('button', { name: 'Lisää tavoite', exact: true });
-  await lisaaTavoite.click();
-  await lisaaTavoite.click();
 
-  const tavoitealue = page.locator('.tavoitealue');
-  await expect(tavoitealue.getByRole('textbox')).toHaveCount(3);
-  await page.locator('.ep-form-group').filter({ hasText: 'Nimi' }).getByRole('textbox').fill(LUKUTAITO_TAVOITTEET.nimi);
-  await tavoitealue.getByRole('textbox').nth(0).fill(LUKUTAITO_TAVOITTEET.tavoitealueOtsikko);
-  await tavoitealue.getByRole('textbox').nth(1).fill(LUKUTAITO_TAVOITTEET.tavoite1);
-  await tavoitealue.getByRole('textbox').nth(2).fill(LUKUTAITO_TAVOITTEET.tavoite2);
+  await valitseKoodistosta(page, page.locator('button').filter({ hasText: 'Hae koodistosta' }).first(), LUKUTAITO_TAVOITESISALTOALUE.otsikko);
+  await page.locator('.ProseMirror').first().fill(LUKUTAITO_TAVOITESISALTOALUE.teksti);
+
+  await page.locator('button').filter({ hasText: 'Lisää tavoitealueen otsikko' }).click();
+  await valitseKoodistosta(page, page.locator('.tavoitealue button').filter({ hasText: 'Hae koodistosta' }).last(), LUKUTAITO_TAVOITESISALTOALUE.tavoitealueenOtsikko);
+
+  await page.locator('button').filter({ hasText: 'Lisää tavoitteet ja sisältöalueet' }).click();
+  await page.locator('.tavoitesisaltoalue button').filter({ hasText: /Lisää tavoite$/ }).click();
+  await page.locator('.tavoitesisaltoalue input').first().fill(LUKUTAITO_TAVOITESISALTOALUE.tavoite);
+
+  await page.locator('.tavoitesisaltoalue button').filter({ hasText: 'Lisää keskeinen sisältöalue' }).click();
+  await page.locator('.tavoitesisaltoalue input').last().fill(LUKUTAITO_TAVOITESISALTOALUE.keskeinenSisaltoalue);
 
   await saveAndCheck(page);
-  await tarkistaTavoitteet(page.locator('.editointi-container'));
-}
-
-export async function lukutaitoPerusteSisallot(testData: TestData) {
-  await perusteenTekstikappale(testData.page);
-  await lisaaTavoitteetJaSisaltoalueet(testData.page);
+  await tarkistaTavoitesisaltoalueenSisallot(page.locator('.editointi-container'));
 }
 
 export async function lukutaitoPerusteJulkisetTarkistukset(testData: TestData) {
@@ -72,16 +79,16 @@ export async function lukutaitoPerusteJulkisetTarkistukset(testData: TestData) {
     projektiNimi,
     PERUSTE_SMOKE.tekstikappaleNimi,
     PERUSTE_SMOKE.tekstikappaleTeksti,
-    ...LUKUTAITO_TAVOITTEET_TEKSTIT,
+    ...LUKUTAITO_TAVOITESISALTOALUE_TEKSTIT,
   ]);
 
   await expect(page.locator('.navigation-tree')).toContainText(PERUSTE_SMOKE.tekstikappaleNimi);
   await page.locator('.navigation-tree').getByText(PERUSTE_SMOKE.tekstikappaleNimi).click();
   await expect(page.locator('.content')).toContainText(PERUSTE_SMOKE.tekstikappaleTeksti);
 
-  await expect(page.locator('.navigation-tree')).toContainText(LUKUTAITO_TAVOITTEET.nimi);
-  await page.locator('.navigation-tree').getByText(LUKUTAITO_TAVOITTEET.nimi).click();
-  await tarkistaTavoitteet(page.locator('.content'));
+  await expect(page.locator('.navigation-tree')).toContainText(LUKUTAITO_TAVOITESISALTOALUE.otsikko);
+  await page.locator('.navigation-tree').getByText(LUKUTAITO_TAVOITESISALTOALUE.otsikko).click();
+  await tarkistaTavoitesisaltoalueenSisallot(page.locator('.content'));
 }
 
 export async function createLukutaitoOpetussuunnitelma(testData: TestData){
@@ -115,23 +122,21 @@ export async function lukutaitoOpetussuunnitelmaSisallot(testData: TestData) {
 
   await saveAndCheck(page);
 
-  await expect(page.locator('.navigation')).toContainText(LUKUTAITO_TAVOITTEET.nimi);
-  await page.locator('.navigation').getByText(LUKUTAITO_TAVOITTEET.nimi, { exact: true }).click();
-  await tarkistaTavoitteet(page.locator('.editointikontrolli'));
-  await expect(page.locator('.editointikontrolli input')).toHaveCount(0);
+  await expect(page.locator('.navigation')).toContainText(LUKUTAITO_TAVOITESISALTOALUE.otsikko);
+  await page.locator('.navigation').getByText(LUKUTAITO_TAVOITESISALTOALUE.otsikko).click();
+  await expect(page.locator('.editointikontrolli')).toContainText(LUKUTAITO_TAVOITESISALTOALUE.otsikko);
+  await tarkistaTavoitesisaltoalueenSisallot(page.locator('.editointikontrolli'));
 
   await startEditMode(page);
-  await expect(page.locator('.editointikontrolli input')).toHaveCount(0);
-  const paikallinenTarkennus = page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror');
-  await expect(paikallinenTarkennus).toHaveCount(1);
-  await expect(paikallinenTarkennus).not.toContainText(LUKUTAITO_TAVOITTEET.tavoitealueOtsikko);
-  await expect(paikallinenTarkennus).not.toContainText(LUKUTAITO_TAVOITTEET.tavoite1);
-  await expect(paikallinenTarkennus).not.toContainText(LUKUTAITO_TAVOITTEET.tavoite2);
-  await paikallinenTarkennus.fill(LUKUTAITO_TAVOITTEET.paikallinenTarkennus);
+
+  await expect(page.locator('.editointikontrolli .tavoitealue input')).toHaveCount(0);
+  await expect(page.locator('.editointikontrolli button').filter({ hasText: 'Hae koodistosta' })).toHaveCount(0);
+  await expect(page.locator('.editointikontrolli')).toContainText('Tavoitesisältöalueen paikallinen tarkennus');
+  await expect(page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror')).toHaveCount(1);
+  await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').fill(LUKUTAITO_TAVOITESISALTOALUE.paikallinenTarkennus);
 
   await saveAndCheck(page);
-  await expect(page.locator('.editointikontrolli')).toContainText(LUKUTAITO_TAVOITTEET.paikallinenTarkennus);
-  await tarkistaTavoitteet(page.locator('.editointikontrolli'));
+  await expect(page.locator('.editointikontrolli')).toContainText(LUKUTAITO_TAVOITESISALTOALUE.paikallinenTarkennus);
 }
 
 export async function lukutaitoOpetussuunnitelmaJulkinenTarkistukset(testData: TestData) {
@@ -151,8 +156,8 @@ export async function lukutaitoOpetussuunnitelmaJulkinenTarkistukset(testData: T
     PERUSTE_SMOKE.tekstikappaleNimi,
     PERUSTE_SMOKE.tekstikappaleTeksti,
     LUKUTAITO_PAIKALLINEN_TARKENNUS,
-    ...LUKUTAITO_TAVOITTEET_TEKSTIT,
-    LUKUTAITO_TAVOITTEET.paikallinenTarkennus,
+    ...LUKUTAITO_TAVOITESISALTOALUE_TEKSTIT,
+    LUKUTAITO_TAVOITESISALTOALUE.paikallinenTarkennus,
   ]);
 
   await expect(page.locator('.navigation-tree')).toContainText(PERUSTE_SMOKE.tekstikappaleNimi);
@@ -161,8 +166,8 @@ export async function lukutaitoOpetussuunnitelmaJulkinenTarkistukset(testData: T
   await expect(page.locator('.content').last()).toContainText(PERUSTE_SMOKE.tekstikappaleTeksti);
   await expect(page.locator('.content').last()).toContainText(LUKUTAITO_PAIKALLINEN_TARKENNUS);
 
-  await expect(page.locator('.navigation-tree')).toContainText(LUKUTAITO_TAVOITTEET.nimi);
-  await page.locator('.navigation-tree').getByText(LUKUTAITO_TAVOITTEET.nimi).click();
-  await tarkistaTavoitteet(page.locator('.content').last());
-  await expect(page.locator('.content').last()).toContainText(LUKUTAITO_TAVOITTEET.paikallinenTarkennus);
+  await expect(page.locator('.navigation-tree')).toContainText(LUKUTAITO_TAVOITESISALTOALUE.otsikko);
+  await page.locator('.navigation-tree').getByText(LUKUTAITO_TAVOITESISALTOALUE.otsikko).click();
+  await tarkistaTavoitesisaltoalueenSisallot(page.locator('.content').last());
+  await expect(page.locator('.content').last()).toContainText(LUKUTAITO_TAVOITESISALTOALUE.paikallinenTarkennus);
 }
