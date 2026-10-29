@@ -117,6 +117,7 @@ export async function opsOppiaineenVuosiluokanMuokkaus(page: Page) {
   await page.locator('.navigation').getByRole('link', { name: 'Vuosiluokka 1' }).click();
   await expect(page.locator('.tavoite')).toContainText('tavoite 1');
   await expect(page.locator('.tavoite')).toContainText('sisältöalue 1');
+  await page.locator('.tavoite').getByText('sisältöalue 1', { exact: true }).click();
   await expect(page.locator('.tavoite')).toContainText('sisältöalueen kuvaus');
   await expect(page.locator('.tavoite')).toContainText('Laaja-alainen osaaminen 1');
   await page.getByRole('button', { name: 'Laaja-alainen osaaminen 1' }).click();

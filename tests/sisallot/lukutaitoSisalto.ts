@@ -3,6 +3,7 @@ import { TestData } from "../utils/testUtils";
 import { login, saveAndCheck, startEditMode, waitMedium, PERUSTE_PDF_LINKKI, OPS_PDF_LINKKI, tarkistaPdfSisalto } from "../../utils/commonmethods";
 import { DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { perusteenTekstikappale, PERUSTE_SMOKE } from "./perusteSisalto";
+import { vaihdaKieli } from "./ammatillinenSisallot";
 
 const LUKUTAITO_PAIKALLINEN_TARKENNUS = 'tekstikappale paikallinen tarkennus';
 
@@ -11,6 +12,7 @@ const LUKUTAITO_TAVOITESISALTOALUE = {
   teksti: 'monilukutaitoteksti',
   tavoitealueenOtsikko: 'Numeeriset taidot',
   tavoite: 'tavoite1',
+  tavoiteSv: 'tavoite1 sv',
   keskeinenSisaltoalue: 'keskeinensisältöalue',
   paikallinenTarkennus: 'tavoitesisältöalue paikallinen tarkennus',
 } as const;
@@ -58,6 +60,9 @@ export async function lukutaitoPerusteSisallot(testData: TestData) {
   await page.locator('button').filter({ hasText: 'Lisää tavoitteet ja sisältöalueet' }).click();
   await page.locator('.tavoitesisaltoalue button').filter({ hasText: /Lisää tavoite$/ }).click();
   await page.locator('.tavoitesisaltoalue input').first().fill(LUKUTAITO_TAVOITESISALTOALUE.tavoite);
+  await vaihdaKieli(page, 'Svenska');
+  await page.locator('.tavoitesisaltoalue input').first().fill(LUKUTAITO_TAVOITESISALTOALUE.tavoiteSv);
+  await vaihdaKieli(page, 'Suomi');
 
   await page.locator('.tavoitesisaltoalue button').filter({ hasText: 'Lisää keskeinen sisältöalue' }).click();
   await page.locator('.tavoitesisaltoalue input').last().fill(LUKUTAITO_TAVOITESISALTOALUE.keskeinenSisaltoalue);
@@ -131,7 +136,7 @@ export async function lukutaitoOpetussuunnitelmaSisallot(testData: TestData) {
 
   await expect(page.locator('.editointikontrolli .tavoitealue input')).toHaveCount(0);
   await expect(page.locator('.editointikontrolli button').filter({ hasText: 'Hae koodistosta' })).toHaveCount(0);
-  await expect(page.locator('.editointikontrolli')).toContainText('Tavoitesisältöalueen paikallinen tarkennus');
+  await expect(page.locator('.editointikontrolli')).toContainText('Paikallinen tarkennus');
   await expect(page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror')).toHaveCount(1);
   await page.locator('.editointikontrolli .ep-content .is-editable .ProseMirror').fill(LUKUTAITO_TAVOITESISALTOALUE.paikallinenTarkennus);
 

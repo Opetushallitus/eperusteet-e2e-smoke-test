@@ -218,7 +218,7 @@ export async function lisaaTutkinnonOsa(page: Page, nimi: string, yhteinen: bool
   await waitSmall(page);
 }
 
-async function vaihdaKieli(page: Page, kieli: string) {
+export async function vaihdaKieli(page: Page, kieli: string) {
   await page.locator('.ep-navbar .kieli-valikko').click();
   await page.locator('.ep-dropdown-popover .ep-dropdown-item').filter({ hasText: kieli }).click();
 }
