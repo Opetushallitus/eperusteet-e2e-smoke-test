@@ -10,8 +10,8 @@ const KOTO_PERUSTE_TEKSTIT = [
   'monilukutaito kuvaus',
   'Työelämätaidot',
   'työelämätaidot kuvaus',
-  'Työelämäjakso',
-  'työelämäjakso tavoitteet',
+  'Ammatin valinta ja ohjaus',
+  'Ammatin valinta ja ohjaus tavoitteet',
   'vastaanottaminen kuvaus',
   'tuottaminen kuvaus',
   'meditaatio kuvaus',
@@ -60,10 +60,10 @@ export async function kotoPerusteSisallot(testData: TestData) {
   await page.locator('button').filter({ hasText: 'Lisää kielitaitotaso' }).click();
   await page.locator('button').filter({ hasText: 'Hae koodistosta' }).last().click();
   await expect(page.locator('.ep-modal')).toBeVisible();
-  await expect(page.locator('.ep-modal')).toContainText('Työelämäjakso');
-  await page.getByText('Työelämäjakso').click();
+  await expect(page.locator('.ep-modal')).toContainText('Ammatin valinta ja ohjaus');
+  await page.getByText('Ammatin valinta ja ohjaus').click();
   await expect(page.locator('.ep-modal')).not.toBeVisible();
-  await page.locator('.editointi-container .taitotaso .ProseMirror').nth(0).fill('työelämäjakso tavoitteet');
+  await page.locator('.editointi-container .taitotaso .ProseMirror').nth(0).fill('Ammatin valinta ja ohjaus tavoitteet');
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(1).fill('vastaanottaminen kuvaus');
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(2).fill('tuottaminen kuvaus');
   await page.locator('.editointi-container .taitotaso .ProseMirror').nth(3).fill('meditaatio kuvaus');
@@ -125,8 +125,8 @@ export async function kotoPerusteJulkisetTarkistukset(testData: TestData) {
   await expect(page.locator('.navigation-tree')).toContainText('Työelämätaidot');
   await page.locator('.navigation-tree').getByText('Työelämätaidot').click();
   await expect(page.locator('.content')).toContainText('työelämätaidot kuvaus');
-  await expect(page.locator('.content')).toContainText('Työelämäjakso');
-  await expect(page.locator('.content')).toContainText('työelämäjakso tavoitteet');
+  await expect(page.locator('.content')).toContainText('Ammatin valinta ja ohjaus');
+  await expect(page.locator('.content')).toContainText('Ammatin valinta ja ohjaus tavoitteet');
   await expect(page.locator('.content')).toContainText('vastaanottaminen kuvaus');
   await expect(page.locator('.content')).toContainText('tuottaminen kuvaus');
   await expect(page.locator('.content')).toContainText('meditaatio kuvaus');
@@ -176,8 +176,8 @@ export async function kotoOpetussuunnitelmaSisallot(testData: TestData) {
   await page.locator('.navigation').getByText('Työelämätaidot').click();
   await expect(page.locator('.editointikontrolli')).toContainText('Työelämätaidot');
   await expect(page.locator('.editointikontrolli')).toContainText('työelämätaidot kuvaus');
-  await expect(page.locator('.editointikontrolli')).toContainText('Työelämäjakso');
-  await expect(page.locator('.editointikontrolli')).toContainText('työelämäjakso tavoitteet');
+  await expect(page.locator('.editointikontrolli')).toContainText('Ammatin valinta ja ohjaus');
+  await expect(page.locator('.editointikontrolli')).toContainText('Ammatin valinta ja ohjaus tavoitteet');
   await expect(page.locator('.editointikontrolli')).toContainText('vastaanottaminen kuvaus');
   await expect(page.locator('.editointikontrolli')).toContainText('tuottaminen kuvaus');
   await expect(page.locator('.editointikontrolli')).toContainText('meditaatio kuvaus');
@@ -242,8 +242,8 @@ export async function kotoOpetussuunnitelmaJulkinenTarkistukset(testData: TestDa
   await page.locator('.navigation-tree').getByText('Työelämätaidot').click();
   await expect(page.locator('.content').last()).toContainText('Työelämätaidot');
   await expect(page.locator('.content').last()).toContainText('työelämätaidot kuvaus');
-  await expect(page.locator('.content').last()).toContainText('Työelämäjakso');
-  await expect(page.locator('.content').last()).toContainText('työelämäjakso tavoitteet');
+  await expect(page.locator('.content').last()).toContainText('Ammatin valinta ja ohjaus');
+  await expect(page.locator('.content').last()).toContainText('Ammatin valinta ja ohjaus tavoitteet');
   await expect(page.locator('.content').last()).toContainText('vastaanottaminen kuvaus');
   await expect(page.locator('.content').last()).toContainText('tuottaminen kuvaus');
   await expect(page.locator('.content').last()).toContainText('meditaatio kuvaus');

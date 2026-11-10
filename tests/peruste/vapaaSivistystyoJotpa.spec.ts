@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { createNimi, login } from "../../utils/commonmethods";
-import { TestData, archiveCurriculum } from "../utils/testUtils";
+import { TestData, archiveCurriculum, testAutomationPrefix } from "../utils/testUtils";
 import { createJotpaOpetussuunnitelma, jotpaOpetussuunnitelmaJulkinenTarkistukset, vstOpetussuunnitelmaSisallot } from '../sisallot/vstSisallot';
 import { amosaaOpetussuunnitelmaLuonti } from '../sisallot/totsutyokalu';
 import { luoTeemaJaOsaamismerkki, poistaOsaamismerkki } from '../sisallot/osaamismerkit';
@@ -19,7 +19,7 @@ test.describe('Vapaa sivistystyö - jotpa - Uusi OPS', async () => {
   });
 
   const koulutustyyppi = 'Vapaa sivistystyö - jotpa';
-  const opsNimi = createNimi('Testautomation vst ops');
+  const opsNimi = createNimi(`${testAutomationPrefix}vst ops`);
 
   const testData: TestData = {
     page,

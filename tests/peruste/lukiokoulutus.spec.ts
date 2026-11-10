@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { createNimi } from "../../utils/commonmethods";
-import { TestData, archiveFoundation, archiveCurriculum } from "../utils/testUtils";
+import { TestData, archiveFoundation, archiveCurriculum, testAutomationPrefix } from "../utils/testUtils";
 import { lukioJulkinenOpsTarkistukset, lukioJulkinenTarkistukset, lukioOpsSisallot, lukioSisallot } from '../sisallot/lukioSisallot';
 import { yleissivistavatLisaTarkastukset } from '../sisallot/yleissivistavat';
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
@@ -21,9 +21,9 @@ test.describe('Lukiokoulutus - Uusi peruste ja perusteesta OPS', async () => {
 
   const koulutustyyppi = 'Lukiokoulutus';
   const perusteDiaari = `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`;
-  const projektiNimi = createNimi('TestAutomation Lukiokoulutus');
-  const opsNimi = createNimi('Testautomation Lukiokoulutus ops');
-  const pohjaNimi = createNimi('Testautomation Lukiokoulutus pohja');
+  const projektiNimi = createNimi(`${testAutomationPrefix}Lukiokoulutus`);
+  const opsNimi = createNimi(`${testAutomationPrefix}Lukiokoulutus ops`);
+  const pohjaNimi = createNimi(`${testAutomationPrefix}Lukiokoulutus pohja`);
 
   const testData: TestData = {
     page,
