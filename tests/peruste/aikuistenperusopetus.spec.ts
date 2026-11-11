@@ -1,6 +1,6 @@
 import { test, Page } from '@playwright/test';
 import { createNimi } from "../../utils/commonmethods";
-import { TestData, archiveFoundation, archiveCurriculum } from "../utils/testUtils";
+import { TestData, archiveFoundation, archiveCurriculum, testAutomationPrefix } from "../utils/testUtils";
 import {
   aikuistenperusopetusSisallot,
   aikuistenperusopetusJulkinenOpsTarkistukset,
@@ -27,9 +27,9 @@ test.describe('Aikuisten perusopetus - Uusi peruste ja perusteesta OPS', async (
 
   const koulutustyyppi = 'Aikuisten perusopetus';
   const perusteDiaari = `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`;
-  const projektiNimi = createNimi('TestAutomation Aikuisten perusopetus');
-  const opsNimi = createNimi('Testautomation aikuisten perusopetus ops');
-  const pohjaNimi = createNimi('Testautomation aikuisten perusopetus pohja');
+  const projektiNimi = createNimi(`${testAutomationPrefix}Aikuisten perusopetus`);
+  const opsNimi = createNimi(`${testAutomationPrefix}aikuisten perusopetus ops`);
+  const pohjaNimi = createNimi(`${testAutomationPrefix}aikuisten perusopetus pohja`);
 
   const testData: TestData = {
     page,

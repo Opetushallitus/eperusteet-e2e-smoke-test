@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { createNimi } from "../../utils/commonmethods";
-import { TestData, archiveFoundation, archiveCurriculum } from "../utils/testUtils";
+import { TestData, archiveFoundation, archiveCurriculum, testAutomationPrefix } from "../utils/testUtils";
 import { ammatillinenLisaTarkistukset, ammatillinenPerusteJulkinenTarkastukset, ammatillinenPerusteSisallot, ammatillinenToteutussuunnitelmaJulkinenTarkastukset, ammatillinenToteutussuunnitelmaSisallot, createToteutussuunnitelma } from '../sisallot/ammatillinenSisallot';
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { amosaaOpetussuunnitelmaLuonti } from '../sisallot/totsutyokalu';
@@ -20,8 +20,8 @@ test.describe('Ammatillinen perustutkinto - Uusi peruste ja perusteesta OPS', as
 
   const koulutustyyppi = 'Ammatillinen perustutkinto';
   const perusteDiaari = `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`;
-  const projektiNimi = createNimi('TestAutomation ammatillinen');
-  const opsNimi = createNimi('Testautomation ammatillinen totsu');
+  const projektiNimi = createNimi(`${testAutomationPrefix}ammatillinen`);
+  const opsNimi = createNimi(`${testAutomationPrefix}ammatillinen totsu`);
 
   const testData: TestData = {
     page,

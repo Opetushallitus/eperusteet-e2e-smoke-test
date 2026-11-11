@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { createNimi } from "../../utils/commonmethods";
-import { TestData, archiveFoundation, archiveCurriculum } from "../utils/testUtils";
+import { TestData, archiveFoundation, archiveCurriculum, testAutomationPrefix } from "../utils/testUtils";
 import { createKotoOpetussuunnitelma, kotoOpetussuunnitelmaJulkinenTarkistukset, kotoOpetussuunnitelmaSisallot, kotoPerusteJulkisetTarkistukset, kotoPerusteSisallot } from '../sisallot/kotoSisalto';
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { amosaaOpetussuunnitelmaLuonti } from '../sisallot/totsutyokalu';
@@ -20,8 +20,8 @@ test.describe('Kotoutuminen - Uusi peruste ja perusteesta OPS', async () => {
 
   const koulutustyyppi = 'Kotoutuminen';
   const perusteDiaari = `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`;
-  const projektiNimi = createNimi('TestAutomation koto');
-  const opsNimi = createNimi('Testautomation koto ops');
+  const projektiNimi = createNimi(`${testAutomationPrefix}koto`);
+  const opsNimi = createNimi(`${testAutomationPrefix}koto ops`);
 
   const testData: TestData = {
     page,

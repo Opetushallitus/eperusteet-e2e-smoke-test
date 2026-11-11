@@ -2,6 +2,8 @@ import { Page, test, expect } from '@playwright/test';
 import { CI_baseUrl, DEFAULT_VALUES } from "../../utils/defaultvalues";
 import { login, waitMedium, waitSmall } from "../../utils/commonmethods";
 
+export const testAutomationPrefix = 'TestAutomation ';
+
 export interface TestData {
   page: Page;
   projektiNimi?: string;

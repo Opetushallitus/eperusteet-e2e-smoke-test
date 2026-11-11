@@ -1,7 +1,7 @@
 export const CI_baseUrl = `https://virkailija.${process.env.CI}.fi`;
 export const julkinenBaseUrl = `https://eperusteet.${process.env.CI}.fi`;
-export const koulutustoimija = process.env.CI ? '98278' : process.env.test_koulutustoimija;
-export const amosaaOphKoulutustoimija = process.env.CI ? '10' : process.env.test_amosaa_oph_koulutustoimija;
+export const koulutustoimija = process.env.CI ? '98278' : 8;
+export const amosaaOphKoulutustoimija = process.env.CI ? '10' : 4;
 
 export const CI_VALUES = {
   basePerusteetUrl: `${CI_baseUrl}/eperusteet-service/ui`,

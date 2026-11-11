@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { createNimi } from "../../utils/commonmethods";
-import { TestData, archiveFoundation, archiveCurriculum } from "../utils/testUtils";
+import { TestData, archiveFoundation, archiveCurriculum, testAutomationPrefix } from "../utils/testUtils";
 import { varhaiskasvatusSisallot } from '../sisallot/varhaiskasvatusSisalto';
 import { yleissivistavatLisaTarkastukset, yleissivistavatJulkinenTarkistukset } from '../sisallot/yleissivistavat';
 import { varhaiskasvatusJulkinenOpsTarkistukset } from '../sisallot/varhaiskasvatusSisalto';
@@ -22,9 +22,9 @@ test.describe('Varhaiskasvatus - Uusi peruste ja perusteesta OPS', async () => {
 
   const koulutustyyppi = 'Varhaiskasvatus';
   const perusteDiaari = `${Math.floor(100 + Math.random() * 900)}/${Math.floor(100 + Math.random() * 900)}/${Math.floor(1000 + Math.random() * 9000)}`;
-  const projektiNimi = createNimi('TestAutomation Varhaiskasvatus');
-  const opsNimi = createNimi('Testautomation varhaiskasvatus ops');
-  const pohjaNimi = createNimi('Testautomation varhaiskasvatus pohja');
+  const projektiNimi = createNimi(`${testAutomationPrefix}Varhaiskasvatus`);
+  const opsNimi = createNimi(`${testAutomationPrefix}varhaiskasvatus ops`);
+  const pohjaNimi = createNimi(`${testAutomationPrefix}varhaiskasvatus pohja`);
 
   const testData: TestData = {
     page,
