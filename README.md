@@ -39,11 +39,19 @@ yarn playwright install
 
 Pilvessä kirjautuminen käyttää ympäristömuuttujia `TEST_AUTOMATION_USERNAME` ja `TEST_AUTOMATION_PASSWORD`.
 
+## Lokaali kanta
+
+Ennen lokaalia ajoa (`yarn test:dev:local` tai tyhjä `CI`) lataa palveluiden mukana tuleva tietokantadump. Aja `db-load.sh` palvelun `db`-hakemistossa. Dockerin on oltava käynnissä. Skripti käynnistää Postgres-kontin, jos se ei ole jo käynnissä, ja korvaa kannan hakemiston zip-dumpilla. Jos sovellus pitää kantaan yhteyksiä, pysäytä sovellus ja aja skripti uudelleen.
+
+* eperusteet-service: `eperusteet/eperusteet/eperusteet-service/db/db-load.sh`. Dump on `eperusteet.zip`, kanta on `eperusteet`.
+* amosaa-service: `eperusteet-amosaa/eperusteet-amosaa-service/db/db-load.sh`. Dump on `amosaa.zip`, kanta on `amosaa`. Lokaalit koulutustoimija-id:t `8` ja `4` tulevat tästä dumpista.
+* ylops-service: `eperusteet-ylops/eperusteet-ylops-service/db/db-load.sh`. Dump on `ylops.zip`, kanta on `ylops`.
+
 ## Koulutustoimijat
 
 * Testeissä käytetään koulutustoimijaa Jyväskylän kaupunki. Ylops-opetussuunnitelman luonnissa organisaatio valitaan nimellä.
-* Pilven koulutustoimijan id on `98278` (`utils/defaultvalues.ts`). Lokaalissa id tulee ympäristömuuttujasta `test_koulutustoimija`.
-* TUVA:n OPH-pohjat käyttävät pilvessä id:tä `10`. Lokaalissa id tulee ympäristömuuttujasta `test_amosaa_oph_koulutustoimija`.
+* Id:t ovat tiedostossa `utils/defaultvalues.ts`. Kun `CI` on asetettu, koulutustoimija on `98278` ja TUVA:n OPH-pohjat käyttävät id:tä `10`.
+* Lokaalissa (`CI` tyhjä) koulutustoimija on `8` (Jyväskylän kaupunki amosaa-dumpissa) ja TUVA:n OPH-pohjat käyttävät id:tä `4` (Opetushallitus amosaa-dumpissa). Id:t on sidottu ladattuun dumppiin.
 * Pilven testitunnuksella on oltava pääkäyttäjäoikeudet Jyväskylän kaupunkiin.
 
 # Testataan seuraavat putket
