@@ -4,7 +4,7 @@ import { TestData, archiveFoundation, archiveCurriculum, testAutomationPrefix } 
 import { yleissivistavatLisaTarkastukset } from '../sisallot/yleissivistavat';
 import { perusteenLuontiJaTestit } from '../sisallot/perusteSisalto';
 import { opsTyokaluOpetussuunnitelmanLuontiJaTestit } from '../sisallot/opstyokalu';
-import { taideJulkinenOpsTarkistukset, taideJulkinenPerusteTarkistukset, taideOpsSisallot, taideSisallot } from '../sisallot/taideSisallot';
+import { taideJulkinenOpsTarkistukset, taideJulkinenPerusteTarkistukset, taideOpsLuonti, taideOpsSisallot, taideSisallot } from '../sisallot/taideSisallot';
 import { DEFAULT_VALUES } from '../../utils/defaultvalues';
 
 test.describe('Taiteen perusopetus - Uusi peruste ja perusteesta OPS', async () => {
@@ -55,7 +55,7 @@ test.describe('Taiteen perusopetus - Uusi peruste ja perusteesta OPS', async () 
       testData,
       taideJulkinenOpsTarkistukset,
       (url: string) => opetussuunnitelmaUrls.push(url),
-      async (testData: TestData) => {},
+      taideOpsLuonti,
       taideOpsSisallot,
     );
   });
