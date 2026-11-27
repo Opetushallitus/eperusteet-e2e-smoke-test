@@ -15,9 +15,9 @@ export async function opsTyokaluOpetussuunnitelmanLuontiJaTestit(
     let pohjaNimi = testData.pohjaNimi!;
     let opsNimi = testData.opsNimi!;
 
-    await login(page, DEFAULT_VALUES.baseYlopsUrl)
+    await login(page, DEFAULT_VALUES.baseYlopsUrl);
+    await expect(page.getByRole('heading', { name: /tervetuloa ePerusteet OPS-työkaluun/i })).toBeVisible();
     await page.goto(DEFAULT_VALUES.opsPohjatUrl);
-    await expect(page.locator('.uusi')).toContainText('Luo uusi');
     await page.getByRole('link', { name: 'Luo uusi' }).click();
     // odotetaan, että perustelistaus ladataan
     await waitMedium(page);
