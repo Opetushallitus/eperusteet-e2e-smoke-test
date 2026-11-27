@@ -37,7 +37,9 @@ export async function perusteenLuontiJaTestit(
   await page.getByText('Seuraava').click();
   await page.getByPlaceholder('Kirjoita projektin nimi').fill(projektiNimi);
   await page.locator('.multiselect').first().click();
-  await page.getByText(koulutustyyppi, { exact: true }).click();
+  // This is a temporary solution until old Telma is no longer used.
+  // Old Telma (koulutustyyppi_5) and new Telma (koulutustyyppi_32) have the same name; the new one is listed last.
+  await page.getByText(koulutustyyppi, { exact: true }).last().click();
   await page.getByText('Seuraava').click();
   await page.getByText('Seuraava').click();
   await page.getByRole('button', { name: 'Luo perusteprojekti' }).click();
